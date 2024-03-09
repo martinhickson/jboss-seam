@@ -3,12 +3,12 @@
 
 	<parent>
 		<groupId>org.jboss.seam</groupId>
-		<artifactId>jboss-seam-parent</artifactId>
-		<version>2.3.1.Final</version>
+		<artifactId>seam-parent</artifactId>
+		<version>2.3.1.Final.jdk17.3</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>jboss-seam</artifactId>
+	<artifactId>seam</artifactId>
 	<packaging>ejb</packaging>
 	<name>Seam Core JSF2</name>
 	<description>Seam core module for Seam framework integrated with JSF2</description>
@@ -48,6 +48,7 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
+                    <skip>true</skip>
                     <links>
                         <link>http://docs.oracle.com/javase/6/docs/api/</link>
                     </links>
@@ -400,6 +401,11 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-core</artifactId>
+			<version>3.4.10</version>
 		</dependency>
 	</dependencies>
 

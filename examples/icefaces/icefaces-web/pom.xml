@@ -36,21 +36,21 @@
       </dependency>
       <dependency>
          <groupId>org.jboss.seam</groupId>
-         <artifactId>jboss-seam-ui</artifactId>
+         <artifactId>seam-ui</artifactId>
          <exclusions>
             <exclusion>
                <groupId>org.jboss.seam</groupId>
-               <artifactId>jboss-seam</artifactId>
+               <artifactId>seam</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-debug</artifactId>
+            <artifactId>seam-debug</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.jboss.seam</groupId>
-                    <artifactId>jboss-seam</artifactId>
+                    <artifactId>seam</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>      

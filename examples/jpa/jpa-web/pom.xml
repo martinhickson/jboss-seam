@@ -20,18 +20,18 @@
     <dependencies>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam</artifactId>
+            <artifactId>seam</artifactId>
             <type>ejb</type>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-ui</artifactId>
+            <artifactId>seam-ui</artifactId>
         </dependency>
 <!--
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-debug</artifactId>
+            <artifactId>seam-debug</artifactId>
         </dependency>
 -->
         <dependency>

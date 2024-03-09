@@ -1163,57 +1163,57 @@
 
     <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam</artifactId>
+  <artifactId>seam</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-ui</artifactId>
+  <artifactId>seam-ui</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-pdf</artifactId>
+  <artifactId>seam-pdf</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-mail</artifactId>
+  <artifactId>seam-mail</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-debug</artifactId>
+  <artifactId>seam-debug</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-remoting</artifactId>
+  <artifactId>seam-remoting</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-ioc</artifactId>
+  <artifactId>seam-ioc</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-excel</artifactId>
+  <artifactId>seam-excel</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-resteasy</artifactId>
+  <artifactId>seam-resteasy</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-rss</artifactId>
+  <artifactId>seam-rss</artifactId>
 </dependency>]]></programlisting>
 
 <programlisting role="XML"><![CDATA[<dependency>
   <groupId>org.jboss.seam</groupId>
-  <artifactId>jboss-seam-wicket</artifactId>
+  <artifactId>seam-wicket</artifactId>
 </dependency>]]></programlisting>
   <para>
   
@@ -1271,7 +1271,7 @@
 
     <dependency>
       <groupId>org.jboss.seam</groupId>
-      <artifactId>jboss-seam</artifactId>
+      <artifactId>seam</artifactId>
     </dependency>
     
   </dependencies>

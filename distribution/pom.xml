@@ -3,8 +3,8 @@
 
 	<parent>
 	   <groupId>org.jboss.seam</groupId>
-       <artifactId>jboss-seam-parent</artifactId>		
-		<version>2.3.1.Final</version>
+       <artifactId>seam-parent</artifactId>		
+		<version>2.3.1.Final.jdk17.3</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -76,7 +76,7 @@
 
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam</artifactId>
+			<artifactId>seam</artifactId>
 			<type>ejb</type>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
@@ -84,39 +84,39 @@
 		
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-excel</artifactId>
+			<artifactId>seam-excel</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-flex</artifactId>
+			<artifactId>seam-flex</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-ioc</artifactId>
+			<artifactId>seam-ioc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-mail</artifactId>
+			<artifactId>seam-mail</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-pdf</artifactId>
+			<artifactId>seam-pdf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-remoting</artifactId>
+			<artifactId>seam-remoting</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-resteasy</artifactId>
+			<artifactId>seam-resteasy</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-rss</artifactId>
+			<artifactId>seam-rss</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-wicket</artifactId>
+			<artifactId>seam-wicket</artifactId>
 		</dependency>
 		
 		<dependency>
@@ -127,101 +127,101 @@
 		
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-debug</artifactId>
+			<artifactId>seam-debug</artifactId>
 			<classifier>sources</classifier>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-excel</artifactId>
+			<artifactId>seam-excel</artifactId>
 			<classifier>sources</classifier>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-flex</artifactId>
+			<artifactId>seam-flex</artifactId>
 			<classifier>sources</classifier>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-ioc</artifactId>
+			<artifactId>seam-ioc</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-mail</artifactId>
+			<artifactId>seam-mail</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-pdf</artifactId>
+			<artifactId>seam-pdf</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-remoting</artifactId>
+			<artifactId>seam-remoting</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-resteasy</artifactId>
+			<artifactId>seam-resteasy</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-rss</artifactId>
+			<artifactId>seam-rss</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-ui</artifactId>
+			<artifactId>seam-ui</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-wicket</artifactId>
+			<artifactId>seam-wicket</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-ui</artifactId>
+			<artifactId>seam-ui</artifactId>
 			<version>${project.version}</version>
 			<classifier>javadoc</classifier>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam</artifactId>
+			<artifactId>seam</artifactId>
 			<version>${project.version}</version>
 			<type>ejb</type>
 			<classifier>javadoc</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-gen</artifactId>
+			<artifactId>seam-gen</artifactId>
 			<version>${project.version}</version>
 			<classifier>distribution</classifier>
 			<type>zip</type>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.seam</groupId>
-			<artifactId>jboss-seam-gen</artifactId>
+			<artifactId>seam-gen</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-gen</artifactId>
+            <artifactId>seam-gen</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -233,16 +233,16 @@
 	
        <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam</artifactId>
+            <artifactId>seam</artifactId>
             <type>ejb</type>
        </dependency>                
        <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-debug</artifactId>
+            <artifactId>seam-debug</artifactId>
        </dependency>
        <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-ui</artifactId>
+            <artifactId>seam-ui</artifactId>
        </dependency>                
                 
       <dependency>

@@ -27,30 +27,30 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam</artifactId>
+            <artifactId>seam</artifactId>
             <type>ejb</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-mail</artifactId>
+            <artifactId>seam-mail</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-ui</artifactId>
+            <artifactId>seam-ui</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-debug</artifactId>
+            <artifactId>seam-debug</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-pdf</artifactId>
+            <artifactId>seam-pdf</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
         	<groupId>org.jboss.seam</groupId>
-        	<artifactId>jboss-seam-excel</artifactId>
+        	<artifactId>seam-excel</artifactId>
         	<scope>runtime</scope>
         </dependency>
         <dependency>

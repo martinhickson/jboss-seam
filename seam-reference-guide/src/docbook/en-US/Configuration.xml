@@ -1048,7 +1048,7 @@ Authenticator authenticator;
             </jarModule> 
             <ejbModule> 
                 <groupId>org.jboss.seam</groupId> 
-                <artifactId>jboss-seam</artifactId> 
+                <artifactId>seam</artifactId> 
                 <bundleFileName>jboss-seam.jar</bundleFileName>                         
             </ejbModule> 
             <ejbModule> 

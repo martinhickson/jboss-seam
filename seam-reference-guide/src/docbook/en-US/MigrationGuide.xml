@@ -358,7 +358,7 @@ public static Archive<?> createDeployment()
    <dependencies>
       <dependency>
          <groupId>org.jboss.seam</groupId>
-         <artifactId>jboss-seam</artifactId>
+         <artifactId>seam</artifactId>
          <type>ejb</type>
       <dependency>
       ...

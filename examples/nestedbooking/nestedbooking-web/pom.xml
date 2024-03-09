@@ -27,13 +27,13 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam</artifactId>
+            <artifactId>seam</artifactId>
             <type>ejb</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-ui</artifactId>
+            <artifactId>seam-ui</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>commons-beanutils</groupId>
@@ -43,7 +43,7 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-debug</artifactId>
+            <artifactId>seam-debug</artifactId>
         </dependency>
         <dependency>
             <groupId>org.richfaces.ui</groupId>
