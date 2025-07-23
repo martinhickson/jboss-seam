@@ -2,7 +2,7 @@ package org.jboss.seam.deployment;
 
 import java.io.File;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 
 public abstract class ForwardingAbstractScanner extends AbstractScanner

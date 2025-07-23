@@ -16,12 +16,13 @@
 
 package org.jboss.seam.mock;
 
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Delegating implementation of {@link javax.servlet.ServletInputStream}.
+ * Delegating implementation of {@link jakarta.servlet.ServletInputStream}.
  * <p/>
  * <p>Used by {@link MockHttpServletRequest}; typically not directly
  * used for testing application controllers.
@@ -68,4 +69,21 @@ public class DelegatingServletInputStream extends ServletInputStream
       this.sourceStream.close();
 	}
 
+    @Override
+    public boolean isFinished() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isReady() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void setReadListener(ReadListener readListener) {
+        // TODO Auto-generated method stub
+
+    }
 }

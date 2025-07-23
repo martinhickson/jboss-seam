@@ -15,17 +15,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterRegistration;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-import javax.servlet.ServletRegistration.Dynamic;
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.ServletRegistration.Dynamic;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
 
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -38,14 +38,14 @@ public class MockServletContext implements ServletContext
 {
 
    private transient LogProvider log = Logging.getLogProvider(MockServletContext.class);
-   
+
    private Map<String, String> initParameters = new HashMap<String, String>();
    private Map<String, Object> attributes = new HashMap<String, Object>();
-   
+
    private File webappRoot;
    private File webInfRoot;
    private File webInfClassesRoot;
-   
+
    public MockServletContext()
    {
       try
@@ -72,18 +72,18 @@ public class MockServletContext implements ServletContext
          log.warn("Unable to find web.xml", e);
       }
    }
-   
+
    private void processContextParameters(URL webXML)
    {
       try
       {
-         Element root = XML.getRootElementSafely(webXML.openStream());         
+         Element root = XML.getRootElementSafely(webXML.openStream());
          for (Element element : (List<Element>) root.elements("context-param"))
          {
             getInitParameters().put(element.elementText("param-name"), element.elementText("param-value"));
          }
       }
-      catch (IOException e) 
+      catch (IOException e)
       {
          throw new RuntimeException("Error parsing web.xml", e);
       }
@@ -91,30 +91,30 @@ public class MockServletContext implements ServletContext
       {
          throw new RuntimeException("Error parsing web.xml", e);
       }
-      
+
 
    }
-   
+
    public Map<String, String> getInitParameters()
    {
       return initParameters;
    }
-   
+
    public Map<String, Object> getAttributes()
    {
       return attributes;
    }
-   
+
    public ServletContext getContext(String name)
    {
       return this;
    }
-   
+
    public int getMajorVersion()
    {
       return 2;
    }
-   
+
    public int getMinorVersion()
    {
       return 4;
@@ -124,7 +124,7 @@ public class MockServletContext implements ServletContext
    {
       return null;
    }
-   
+
    public Set getResourcePaths(String name)
    {
       Enumeration<URL> enumeration = null;
@@ -150,7 +150,7 @@ public class MockServletContext implements ServletContext
       }
       return result;
    }
-   
+
    private static void addPaths(Set<String> result, File[] files, String rootPath)
    {
       for (File file : files)
@@ -170,7 +170,7 @@ public class MockServletContext implements ServletContext
    /**
     * Get the URL for a particular resource that is relative to the web app root
     * directory.
-    * 
+    *
     * @param name The name of the resource to get
     * @return The resource, or null if resource not found
     * @throws MalformedURLException If the URL is invalid
@@ -178,17 +178,17 @@ public class MockServletContext implements ServletContext
    public URL getResource(String name) throws MalformedURLException
    {
       File file = getFile(name, webappRoot);
-      
+
       if (file == null)
       {
          file = getFile(name, webInfRoot);
       }
-      
+
       if (file == null)
       {
          file = getFile(name, webInfClassesRoot);
       }
-      
+
       if (file != null)
       {
          return file.toURI().toURL();
@@ -205,12 +205,12 @@ public class MockServletContext implements ServletContext
       {
          return null;
       }
-      
+
       if (name.startsWith("/"))
       {
          name = name.substring(1);
       }
-      
+
       File f = new File(root, name);
       if (!f.exists())
       {
@@ -395,21 +395,21 @@ public class MockServletContext implements ServletContext
    }
 
    @Override
-   public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className)
+   public jakarta.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className)
    {
       // TODO Auto-generated method stub
       return null;
    }
 
    @Override
-   public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter)
+   public jakarta.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter)
    {
       // TODO Auto-generated method stub
       return null;
    }
 
    @Override
-   public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass)
+   public jakarta.servlet.FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass)
    {
       // TODO Auto-generated method stub
       return null;
@@ -447,7 +447,7 @@ public class MockServletContext implements ServletContext
    public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
@@ -468,21 +468,21 @@ public class MockServletContext implements ServletContext
    public void addListener(String className)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
    public <T extends EventListener> void addListener(T t)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
    public void addListener(Class<? extends EventListener> listenerClass)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
@@ -510,8 +510,54 @@ public class MockServletContext implements ServletContext
    public void declareRoles(String... roleNames)
    {
       // TODO Auto-generated method stub
-      
-   }
-   
 
+   }
+
+    @Override
+    public Dynamic addJspFile(String servletName, String jspFile) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getVirtualServerName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int getSessionTimeout() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public void setSessionTimeout(int sessionTimeout) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String getRequestCharacterEncoding() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setRequestCharacterEncoding(String encoding) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String getResponseCharacterEncoding() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setResponseCharacterEncoding(String encoding) {
+        // TODO Auto-generated method stub
+
+    }
 }

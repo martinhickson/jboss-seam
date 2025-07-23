@@ -3,8 +3,8 @@ package org.jboss.seam.mock;
 import java.util.Collections;
 import java.util.Enumeration;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
 
 import org.jboss.seam.util.IteratorEnumeration;
 

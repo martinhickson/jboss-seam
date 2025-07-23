@@ -1,6 +1,6 @@
 package org.jboss.seam.util;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 
 public class Exceptions
 {

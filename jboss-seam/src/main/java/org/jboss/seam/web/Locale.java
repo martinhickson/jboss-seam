@@ -2,7 +2,7 @@ package org.jboss.seam.web;
 
 import static org.jboss.seam.annotations.Install.FRAMEWORK;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;

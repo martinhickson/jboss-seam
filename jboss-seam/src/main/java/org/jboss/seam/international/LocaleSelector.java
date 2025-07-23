@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;

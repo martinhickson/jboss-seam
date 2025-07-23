@@ -16,17 +16,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterRegistration;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-import javax.servlet.ServletRegistration.Dynamic;
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.ServletRegistration.Dynamic;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
 
 import org.jboss.seam.util.IteratorEnumeration;
 
@@ -36,11 +36,11 @@ import org.jboss.seam.util.IteratorEnumeration;
  * @author Marek Schmidt
  */
 public class ServletContextWrapper implements ServletContext {
-   
-   private ServletContext delegate; 
-   
+
+   private ServletContext delegate;
+
    private Map<String, Object> attributes = new HashMap<String, Object>();
-   
+
    public ServletContextWrapper(ServletContext delegate) {
       this.delegate = delegate;
    }
@@ -110,28 +110,12 @@ public class ServletContextWrapper implements ServletContext {
       return delegate.getServerInfo();
    }
 
-   public Servlet getServlet(String arg0) throws ServletException {
-      return delegate.getServlet(arg0);
-   }
-
    public String getServletContextName() {
       return "Wrap";
    }
 
-   public Enumeration getServletNames() {
-      return delegate.getServletNames();
-   }
-
-   public Enumeration getServlets() {
-      return delegate.getServlets();
-   }
-
    public void log(String arg0) {
       delegate.log(arg0);
-   }
-
-   public void log(Exception arg0, String arg1) {
-      delegate.log(arg0, arg1);
    }
 
    public void log(String arg0, Throwable arg1) {
@@ -198,17 +182,17 @@ public class ServletContextWrapper implements ServletContext {
       return delegate.getServletRegistrations();
    }
 
-   public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className)
+   public jakarta.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className)
    {
       return delegate.addFilter(filterName, className);
    }
 
-   public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter)
+   public jakarta.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter)
    {
       return delegate.addFilter(filterName, filter);
    }
 
-   public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass)
+   public jakarta.servlet.FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass)
    {
       return delegate.addFilter(filterName, filterClass);
    }
@@ -282,4 +266,52 @@ public class ServletContextWrapper implements ServletContext {
    {
       delegate.declareRoles(roleNames);
    }
+
+@Override
+public Dynamic addJspFile(String servletName, String jspFile) {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+@Override
+public String getVirtualServerName() {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+@Override
+public int getSessionTimeout() {
+    // TODO Auto-generated method stub
+    return 0;
+}
+
+@Override
+public void setSessionTimeout(int sessionTimeout) {
+    // TODO Auto-generated method stub
+
+}
+
+@Override
+public String getRequestCharacterEncoding() {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+@Override
+public void setRequestCharacterEncoding(String encoding) {
+    // TODO Auto-generated method stub
+
+}
+
+@Override
+public String getResponseCharacterEncoding() {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+@Override
+public void setResponseCharacterEncoding(String encoding) {
+    // TODO Auto-generated method stub
+
+}
 }

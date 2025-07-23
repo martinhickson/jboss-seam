@@ -2,14 +2,14 @@ package org.jboss.seam.mock;
 
 import org.jboss.seam.servlet.SeamResourceServlet;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
-import javax.servlet.ServletRequest;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 import java.util.Collections;
 import java.util.Set;
 import java.util.List;

@@ -3,7 +3,7 @@ package org.jboss.seam.deployment;
 import java.io.File;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;

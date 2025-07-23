@@ -4,8 +4,8 @@ import static org.jboss.seam.annotations.Install.BUILT_IN;
 
 import java.security.Principal;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;

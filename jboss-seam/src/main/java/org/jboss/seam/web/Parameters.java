@@ -6,7 +6,7 @@ import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;

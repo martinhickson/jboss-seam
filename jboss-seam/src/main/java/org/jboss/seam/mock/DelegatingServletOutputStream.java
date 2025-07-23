@@ -16,13 +16,15 @@
 
 package org.jboss.seam.mock;
 
-import javax.servlet.ServletOutputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
 
 /**
- * Delegating implementation of {@link javax.servlet.ServletOutputStream}.
+ * Delegating implementation of {@link jakarta.servlet.ServletOutputStream}.
  * <p/>
  * <p>Used by {@link MockHttpServletResponse}; typically not directly
  * used for testing application controllers.
@@ -73,4 +75,14 @@ public class DelegatingServletOutputStream extends ServletOutputStream
       this.targetStream.close();
    }
 
+    @Override
+    public boolean isReady() {
+        return true;
+    }
+
+    @Override
+    public void setWriteListener(WriteListener writeListener) {
+        // TODO Auto-generated method stub
+
+    }
 }

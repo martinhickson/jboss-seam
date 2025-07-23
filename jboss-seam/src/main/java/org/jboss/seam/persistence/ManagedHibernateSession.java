@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.naming.NamingException;
-import javax.servlet.http.HttpSessionActivationListener;
-import javax.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionActivationListener;
+import jakarta.servlet.http.HttpSessionEvent;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 

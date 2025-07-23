@@ -6,7 +6,7 @@ import static org.jboss.seam.annotations.Install.BUILT_IN;
 import java.io.IOException;
 
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;

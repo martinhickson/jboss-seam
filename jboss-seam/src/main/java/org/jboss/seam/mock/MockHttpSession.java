@@ -10,9 +10,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 
 import org.jboss.seam.util.IteratorEnumeration;
 
@@ -21,21 +20,20 @@ import org.jboss.seam.util.IteratorEnumeration;
  * @author <a href="mailto:theute@jboss.org">Thomas Heute</a>
  * @version $Revision: 9668 $
  */
-@SuppressWarnings("deprecation")
 public class MockHttpSession implements HttpSession
 {
-   
+
    private Map<String, Object> attributes = new HashMap<String, Object>();
    private boolean isInvalid;
    private ServletContext servletContext;
-   
+
    public MockHttpSession() {}
-   
-   public MockHttpSession(ServletContext servletContext) 
+
+   public MockHttpSession(ServletContext servletContext)
    {
       this.servletContext = servletContext;
    }
-   
+
    public boolean isInvalid()
    {
       return isInvalid;
@@ -55,7 +53,7 @@ public class MockHttpSession implements HttpSession
    {
       return 0;
    }
-   
+
    private int maxInactiveInterval;
 
    public void setMaxInactiveInterval(int max)
@@ -66,11 +64,6 @@ public class MockHttpSession implements HttpSession
    public int getMaxInactiveInterval()
    {
       return maxInactiveInterval;
-   }
-   
-   public HttpSessionContext getSessionContext()
-   {
-      throw new UnsupportedOperationException();
    }
 
    public Object getAttribute(String att)

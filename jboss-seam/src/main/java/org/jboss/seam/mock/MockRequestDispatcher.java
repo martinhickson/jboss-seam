@@ -16,16 +16,16 @@
 
 package org.jboss.seam.mock;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 /**
- * Mock implementation of the {@link javax.servlet.RequestDispatcher} interface.
+ * Mock implementation of the {@link jakarta.servlet.RequestDispatcher} interface.
  * <p/>
  * <p>Used for testing the web framework; typically not necessary for
  * testing application controllers.
@@ -77,7 +77,7 @@ public class MockRequestDispatcher implements RequestDispatcher
 
    /**
     * Obtain the underlying EnhancedMockHttpServletResponse,
-    * unwrapping {@link javax.servlet.http.HttpServletResponseWrapper} decorators if necessary.
+    * unwrapping {@link jakarta.servlet.http.HttpServletResponseWrapper} decorators if necessary.
     */
    protected EnhancedMockHttpServletResponse getMockHttpServletResponse(ServletResponse response)
    {

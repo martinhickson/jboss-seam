@@ -27,7 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.ConverterException;
 import javax.faces.model.DataModel;
 import javax.faces.validator.ValidatorException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.dom4j.DocumentException;
 import org.dom4j.Element;

@@ -56,7 +56,7 @@ import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyObject;
 
 import javax.naming.NamingException;
-import javax.servlet.http.HttpSessionActivationListener;
+import jakarta.servlet.http.HttpSessionActivationListener;
 
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.Create;

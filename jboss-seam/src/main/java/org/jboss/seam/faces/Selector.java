@@ -3,8 +3,8 @@ package org.jboss.seam.faces;
 import java.io.Serializable;
 
 import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.core.AbstractMutable;
 

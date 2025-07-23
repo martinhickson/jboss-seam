@@ -4,7 +4,7 @@
 	<groupId>org.jboss.seam</groupId>
 	<artifactId>bom</artifactId>
 	<name>Seam 2 Bill Of Materials </name>
-	<version>2.3.1.Final.jdk17.3</version>
+	<version>2.3.1.Final.jdk17.bravura.3</version>
 	<packaging>pom</packaging>
 
 	<licenses>
@@ -31,7 +31,7 @@
 
 	<properties>
 		<!-- Version string properties for integrations-->
-        <version.seam>2.3.1.Final.jdk17.3</version.seam>
+        <version.seam>2.3.1.Final.jdk17.bravura.3</version.seam>
 		<version.wicket>1.4.14</version.wicket>
 		<version.drools>5.3.3.Final</version.drools>
 		<version.resteasy>2.0.1.GA</version.resteasy>
@@ -48,8 +48,8 @@
 		<!-- ***************** -->
 		<!-- Repository Deployment URLs -->
 		<!-- ***************** -->
-		<jboss.releases.repo.url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</jboss.releases.repo.url>
-		<jboss.snapshots.repo.url>https://repository.jboss.org/nexus/content/repositories/snapshots/</jboss.snapshots.repo.url>
+<!--		<jboss.releases.repo.url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</jboss.releases.repo.url>-->
+<!--		<jboss.snapshots.repo.url>https://repository.jboss.org/nexus/content/repositories/snapshots/</jboss.snapshots.repo.url>-->
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 	</properties>
 
@@ -1033,15 +1033,16 @@
 
 	<distributionManagement>
 		<repository>
-			<id>jboss-releases-repository</id>
-			<name>JBoss Releases Repository</name>
-			<url>${jboss.releases.repo.url}</url>
+        <id>central</id>
+        <name>Artifactory Releases</name>
+        <url>https://repo.bravurasolutions.net:443/artifactory/ext-release-local</url>
 		</repository>
 		<snapshotRepository>
-			<id>jboss-snapshots-repository</id>
-			<name>JBoss Snapshots Repository</name>
-			<url>${jboss.snapshots.repo.url}</url>
+        <id>snapshots</id>
+        <name>Artifactory Snapshots</name>
+        <url>https://repo.bravurasolutions.net:443/artifactory/ext-snapshot-local</url>
 		</snapshotRepository>
+
 	</distributionManagement>
 
 </project>

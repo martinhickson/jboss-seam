@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpSession;
 
 import org.jboss.seam.mock.MockHttpServletRequest;
 import org.jboss.seam.mock.MockHttpServletResponse;
@@ -28,24 +29,24 @@ import org.testng.annotations.Test;
  */
 public class MultipartRequestTest
 {
-    
+
     @Test
     public void testMultipartRequest() throws IOException, ServletException
     {
         MultipartFilter filter = new MultipartFilter();
         ServletContext context = new MockServletContext();
         HttpSession session = new MockHttpSession(context);
-        MockHttpServletRequest request = new MockHttpServletRequest(session, "Pete", new HashSet<String>(), new Cookie[0], "post") 
+        MockHttpServletRequest request = new MockHttpServletRequest(session, "Pete", new HashSet<String>(), new Cookie[0], "post")
         {
-            
+
             private final InputStream is = Resources.getResourceAsStream("/META-INF/seam.properties", null);
-            
+
             @Override
             public String getContentType()
             {
                 return "multipart/test; boundary=foo";
             }
-            
+
             @Override
             public ServletInputStream getInputStream() throws IOException
             {
@@ -56,22 +57,35 @@ public class MultipartRequestTest
                     {
                         return is.read();
                     }
-                    
+
                     @Override
                     public int read(byte[] b) throws IOException
                     {
                         return is.read(b);
                     }
-                    
+
+                    @Override
+                    public boolean isFinished() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isReady() {
+                        return false;
+                    }
+
+                    @Override
+                    public void setReadListener(ReadListener readListener) {
+                    }
                 };
             }
-            
+
         };
         // Add some parameters to test passthrough
-        String [] fooParams = {"bar"}; 
+        String [] fooParams = {"bar"};
         request.getParameterMap().put("foo", fooParams);
         ServletResponse response = new MockHttpServletResponse();
-        FilterChain chain = new FilterChain() 
+        FilterChain chain = new FilterChain()
         {
 
             public void doFilter(ServletRequest request, ServletResponse response)
@@ -83,10 +97,10 @@ public class MultipartRequestTest
 				// Test passthrough parameters
                 assert multipartRequest.getParameterValues("foo").length == 1;
                 assert "bar".equals(multipartRequest.getParameterValues("foo")[0]);
-                
+
                 // TODO Test a multipart request
             }
-            
+
         };
         filter.doFilter(request, response, chain);
     }

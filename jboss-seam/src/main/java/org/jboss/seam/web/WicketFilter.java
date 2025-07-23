@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -141,7 +141,7 @@ public class WicketFilter extends AbstractFilter
        * of the delegate component implies the presence of the wicket classes themselves.
        */
       if (delegate == null) {
-         delegate = (javax.servlet.Filter) Component.getInstance("org.jboss.seam.wicket.web.wicketFilterInstantiator", ScopeType.STATELESS);
+         delegate = (jakarta.servlet.Filter) Component.getInstance("org.jboss.seam.wicket.web.wicketFilterInstantiator", ScopeType.STATELESS);
          savedConfig = filterConfig;
       }
    }

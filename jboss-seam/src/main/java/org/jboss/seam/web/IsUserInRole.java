@@ -6,8 +6,8 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;

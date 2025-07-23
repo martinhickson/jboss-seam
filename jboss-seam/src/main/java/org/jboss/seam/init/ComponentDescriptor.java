@@ -193,7 +193,7 @@ public class ComponentDescriptor implements Comparable<ComponentDescriptor>
 
     public boolean isFilter()
     {
-        if (javax.servlet.Filter.class.isAssignableFrom(componentClass))
+        if (jakarta.servlet.Filter.class.isAssignableFrom(componentClass))
         {
            for (Class clazz = componentClass; !Object.class.equals(clazz); clazz = clazz.getSuperclass())
            {

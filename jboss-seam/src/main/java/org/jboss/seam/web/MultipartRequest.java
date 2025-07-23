@@ -2,7 +2,7 @@ package org.jboss.seam.web;
 
 import java.io.InputStream;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Interface that declares multipart-specific API methods, to enable easier mocking of multipart

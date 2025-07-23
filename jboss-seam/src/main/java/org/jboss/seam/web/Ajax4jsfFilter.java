@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -39,7 +39,7 @@ import org.jboss.seam.annotations.web.Filter;
 public class Ajax4jsfFilter extends AbstractFilter
 {
    
-   private javax.servlet.Filter delegate;
+   private jakarta.servlet.Filter delegate;
    
    private String forceParser;
    private String enableCache;
@@ -62,7 +62,7 @@ public class Ajax4jsfFilter extends AbstractFilter
    {  
       super.init(filterConfig);
       
-      delegate = (javax.servlet.Filter) Component.getInstance("org.jboss.seam.web.ajax4jsfFilterInstantiator", ScopeType.STATELESS);
+      delegate = (jakarta.servlet.Filter) Component.getInstance("org.jboss.seam.web.ajax4jsfFilterInstantiator", ScopeType.STATELESS);
       if (delegate!=null)
       {
          Map<String, String> parameters = new HashMap<String, String>();

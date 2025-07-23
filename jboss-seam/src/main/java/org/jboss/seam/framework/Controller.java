@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Logger;

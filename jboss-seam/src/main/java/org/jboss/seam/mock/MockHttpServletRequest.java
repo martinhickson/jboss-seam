@@ -22,19 +22,21 @@ import java.util.Set;
 
 import javax.faces.context.ExternalContext;
 import javax.portlet.PortletRequest;
-import javax.servlet.AsyncContext;
-import javax.servlet.DispatcherType;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.Part;
 
 import org.jboss.seam.util.IteratorEnumeration;
 
@@ -44,7 +46,7 @@ import org.jboss.seam.util.IteratorEnumeration;
  */
 public class MockHttpServletRequest implements HttpServletRequest
 {
-   
+
    private Map<String, String[]> parameters = new HashMap<String, String[]>();
    private Map<String, Object> attributes = new HashMap<String, Object>();
    private HttpSession session;
@@ -83,18 +85,18 @@ public class MockHttpServletRequest implements HttpServletRequest
    private String localAddr;
    private int localPort;
 
-   
-   
+
+
    public MockHttpServletRequest(HttpSession session)
    {
       this(session, null, new HashSet<String>());
    }
-   
-   public MockHttpServletRequest(HttpSession session, ExternalContext externalContext) 
+
+   public MockHttpServletRequest(HttpSession session, ExternalContext externalContext)
    {
       this(session, null, new HashSet<String>());
       Object request = externalContext.getRequest();
-      if(externalContext != null && (request instanceof HttpServletRequest)) 
+      if(externalContext != null && (request instanceof HttpServletRequest))
       {
          httpServletRequest = (HttpServletRequest)request;
          authType = httpServletRequest.getAuthType();
@@ -122,8 +124,8 @@ public class MockHttpServletRequest implements HttpServletRequest
          localName = httpServletRequest.getLocalName();
          localAddr = httpServletRequest.getLocalAddr();
          localPort = httpServletRequest.getLocalPort();
-         
-      } else if(externalContext != null && (request instanceof PortletRequest)) 
+
+      } else if(externalContext != null && (request instanceof PortletRequest))
       {
          portletRequest = (PortletRequest)request;
          authType = portletRequest.getAuthType();
@@ -150,7 +152,7 @@ public class MockHttpServletRequest implements HttpServletRequest
       this.principalRoles = principalRoles;
       this.cookies = cookies;
       this.method = method;
-      // The 1.2 RI NPEs if this header isn't present 
+      // The 1.2 RI NPEs if this header isn't present
       headers.put("Accept", new String[0]);
       locales = new IteratorEnumeration(new ArrayList().iterator());
    }
@@ -164,7 +166,7 @@ public class MockHttpServletRequest implements HttpServletRequest
    {
       return attributes;
    }
-   
+
    public String getAuthType()
    {
       return authType;
@@ -238,8 +240,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 
    public Principal getUserPrincipal()
    {
-      return principalName==null ? null : 
-         new Principal() 
+      return principalName==null ? null :
+         new Principal()
          {
             public String getName()
             {
@@ -260,7 +262,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
    public StringBuffer getRequestURL()
    {
-      return (requestURL != null ? requestURL : new StringBuffer(getRequestURI())); 
+      return (requestURL != null ? requestURL : new StringBuffer(getRequestURI()));
    }
 
    public String getServletPath()
@@ -425,18 +427,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 
    public RequestDispatcher getRequestDispatcher(String path)
    {
-      if(httpServletRequest != null) 
+      if(httpServletRequest != null)
       {
          return httpServletRequest.getRequestDispatcher(path);
-      }
-      return null;
-   }
-
-   public String getRealPath(String path)
-   {
-      if(httpServletRequest != null) 
-      {
-         return httpServletRequest.getRealPath(path);
       }
       return null;
    }
@@ -526,14 +519,14 @@ public class MockHttpServletRequest implements HttpServletRequest
    public void login(String username, String password) throws ServletException
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
    public void logout() throws ServletException
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
@@ -549,4 +542,40 @@ public class MockHttpServletRequest implements HttpServletRequest
       // TODO Auto-generated method stub
       return null;
    }
+
+    @Override
+    public long getContentLengthLong() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public String getRequestId() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getProtocolRequestId() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ServletConnection getServletConnection() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String changeSessionId() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

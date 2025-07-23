@@ -8,7 +8,7 @@ package org.jboss.seam.contexts;
 
 import java.util.Map;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.log.LogProvider;

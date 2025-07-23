@@ -1,6 +1,6 @@
 package org.jboss.seam.deployment;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * A no-op version of the URLScanner that merely returns whether the deployment

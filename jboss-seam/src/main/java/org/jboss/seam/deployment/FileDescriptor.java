@@ -2,7 +2,7 @@ package org.jboss.seam.deployment;
 
 import java.net.URL;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.util.Resources;

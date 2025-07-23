@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.el.ELContext;
 import javax.faces.context.ExternalContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.Namespace;

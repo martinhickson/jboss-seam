@@ -8,7 +8,7 @@ package org.jboss.seam.web;
 
 import static org.jboss.seam.annotations.Install.BUILT_IN;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;

@@ -2,7 +2,7 @@ package org.jboss.seam.exception;
 
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Conversation;

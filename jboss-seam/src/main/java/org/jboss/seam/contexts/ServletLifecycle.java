@@ -8,9 +8,9 @@ package org.jboss.seam.contexts;
 
 import java.lang.ref.WeakReference;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.core.Events;

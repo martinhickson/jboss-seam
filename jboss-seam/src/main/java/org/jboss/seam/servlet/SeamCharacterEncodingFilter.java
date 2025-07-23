@@ -1,7 +1,7 @@
 package org.jboss.seam.servlet;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
 
 import org.jboss.seam.web.CharacterEncodingFilter;
 

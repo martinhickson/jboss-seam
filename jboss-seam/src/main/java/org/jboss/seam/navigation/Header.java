@@ -1,6 +1,6 @@
 package org.jboss.seam.navigation;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.core.Expressions.ValueExpression;
 

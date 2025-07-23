@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.log.LogProvider;

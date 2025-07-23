@@ -16,9 +16,9 @@
 
 package org.jboss.seam.mock;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +37,7 @@ import java.util.Set;
 
 
 /**
- * Mock implementation of the {@link javax.servlet.http.HttpServletResponse}
+ * Mock implementation of the {@link jakarta.servlet.http.HttpServletResponse}
  * interface. Supports the Servlet 2.4 API level.
  *
  * <p>Used for testing the web framework; also useful for testing
@@ -511,5 +511,16 @@ public class EnhancedMockHttpServletResponse implements HttpServletResponse {
 			setCommitted(true);
 		}
 	}
+
+
+    @Override
+    public void setContentLengthLong(long len) {
+        this.setContentLength((int) len);
+    }
+
+    @Override
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+       this.sendRedirect(location, sc);
+    }
 
 }
