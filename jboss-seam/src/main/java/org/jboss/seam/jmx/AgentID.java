@@ -11,8 +11,6 @@ import javax.management.ObjectName;
 
 import EDU.oswego.cs.dl.util.concurrent.SynchronizedLong;
 
-import org.jboss.mx.server.ServerConstants;
-
 /**
  * Utility class for creating JMX agent identifiers. Also contains the
  * helper method for retrieving the <tt>AgentID</tt> of an existing MBean server
@@ -22,15 +20,17 @@ import org.jboss.mx.server.ServerConstants;
  *
  * @author  <a href="mailto:juha@jboss.org">Juha Lindfors</a>.
  * @version $Revision: 81019 $
- *   
+ *
  */
-public class AgentID 
-   implements ServerConstants
-{
+public class AgentID {
+
    // Static ----------------------------------------------------
    private static SynchronizedLong id = new SynchronizedLong(0);
 
    private static final Random rand = new Random(System.currentTimeMillis());
+
+   private static final String MBEAN_SERVER_DELEGATE =
+           "JMImplementation:type=MBeanServerDelegate";
 
    /**
     * Creates a new agent ID string. The identifier is of the form
@@ -84,11 +84,11 @@ public class AgentID
     */
    public static String get(MBeanServer server)
    {
-      try 
+      try
       {
          ObjectName name = new ObjectName(MBEAN_SERVER_DELEGATE);
-         String agentID = (String)server.getAttribute(name, "MBeanServerId");   
-      
+         String agentID = (String)server.getAttribute(name, "MBeanServerId");
+
          return agentID;
       }
       catch (Throwable t)
@@ -97,7 +97,7 @@ public class AgentID
       }
    }
 }
-      
+
 
 
 
