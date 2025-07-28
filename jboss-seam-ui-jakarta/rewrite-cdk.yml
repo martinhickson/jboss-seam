@@ -1,0 +1,26 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: jakarta.transform.cdk
+displayName: Transform CDK generated files to Jakarta
+description: Transform RichFaces CDK generated files from javax to jakarta namespace
+recipeList:
+  - org.openrewrite.java.migrate.jakarta.JakartaEE10
+  - org.openrewrite.xml.ChangeTagAttribute:
+      elementName: faces-config
+      attributeName: xmlns
+      newValue: https://jakarta.ee/xml/ns/jakartaee
+  - org.openrewrite.xml.ChangeTagAttribute:
+      elementName: faces-config
+      attributeName: xsi:schemaLocation
+      newValue: https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd
+  - org.openrewrite.xml.ChangeTagAttribute:
+      elementName: faces-config
+      attributeName: version
+      newValue: "4.0"
+
+
+
+
+
+
+
+

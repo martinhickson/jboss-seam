@@ -452,11 +452,11 @@ public class AbstractSeamTest
       protected boolean validateValue(String valueExpression, Object value)
       {
          ValueExpression ve = application.getExpressionFactory().createValueExpression(facesContext.getELContext(), valueExpression, Object.class);
-         Set<ConstraintViolation<Object>> ivs = Validators.instance().validate(ve, facesContext.getELContext(), value);
+         Set<?> ivs = Validators.instance().validate(ve, facesContext.getELContext(), value);
          if (ivs.size() > 0)
          {
             validationFailed = true;
-            String message = ivs.iterator().next().getMessage();
+            String message = ((ConstraintViolation) ivs.iterator().next()).getMessage();
             facesContext.addMessage(null, FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, message));
             return false;
          }

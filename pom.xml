@@ -45,7 +45,7 @@
 		<pdf.name>${project.artifactId}.pdf</pdf.name>
 
 		<!-- Version string properties -->
-		<version.seam>2.3.1.jakarta.bravura-1-SNAPSHOT</version.seam>
+		<version.seam>2.3.1.jakarta.bravura.1-SNAPSHOT</version.seam>
 		<version.arquillian_core>1.0.1.Final</version.arquillian_core>
 		<version.wicket>1.4.14</version.wicket>
 		<version.testng>5.14.10</version.testng>
@@ -71,8 +71,7 @@
 			for all modules should be listed out here -->
 		<dependencies>
 
-			<!-- Temporarily commented out until BOM is built with new version -->
-			<!--
+
 			<dependency>
 				<groupId>org.jboss.seam</groupId>
 				<artifactId>bom</artifactId>
@@ -80,7 +79,6 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			-->
 
             <!-- thirdparty dependencies -->
 			<dependency>
@@ -428,8 +426,9 @@
       <module>bom</module>
       <module>seam-cdk-helper</module>
       <module>jboss-seam</module>
-      <module>jboss-seam-jakarta</module>
+      <!--module>jboss-seam-jakarta</module-->
       <module>jboss-seam-ui</module>
+      <module>jboss-seam-ui-jakarta</module>
       <module>jboss-seam-debug</module>
       <module>jboss-seam-gen</module>
       <module>jboss-seam-excel</module>

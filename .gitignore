@@ -7,6 +7,13 @@
 *.iws
 *.iml
 
+# Current openrewrite target:
+jboss-seam-jakarta/src/main/java.backup.*
+jboss-seam-jakarta/src/main/resources
+
+# Ignore everything in src/main/java
+jboss-seam-jakarta/src/main/java/**
+
 # maven build results
 target
 test-output
@@ -17,3 +24,16 @@ bin
 
 #others
 /build/build.properties
+/1java - Copy
+/1java.backup.20250723_111934
+/1java.backup.20250723_105610
+/jboss-seam-ui-jakarta/src/generated
+/jboss-seam-ui-jakarta/${project.directory}
+/jboss-seam-jakarta/pom-exclusions-alt.xml
+/jboss-seam-jakarta/pom-exclusions.xml
+context
+/jboss-seam-pdf-jakarta/src/generated
+/jboss-seam-jakarta/src/main/jakarta-files.list
+pom-exclusions-alt.xml
+pom-exclusions.xml
+/jboss-seam-ui-jakarta/richfaces-cdk
