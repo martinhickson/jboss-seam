@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema-set>
+    <schema>
+        <uri>http://jboss.org/schema/richfaces/cdk/xhtml-el</uri>
+        <file>classpath:META-INF/cdk/schema/xhtml-el.xsd</file>
+    </schema>
+</schema-set>

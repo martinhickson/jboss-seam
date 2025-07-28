@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<faces-config version="4.0"
+              xmlns="https://jakarta.ee/xml/ns/jakartaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd">
+
+    <component>
+        <component-type>org.jboss.seam.rss.ui.UIFeed</component-type>
+        <component-class>org.jboss.seam.rss.ui.UIFeed</component-class>
+    </component>
+    <component>
+        <component-type>org.jboss.seam.rss.ui.UIEntry</component-type>
+        <component-class>org.jboss.seam.rss.ui.UIEntry</component-class>
+    </component>
+    
+</faces-config>

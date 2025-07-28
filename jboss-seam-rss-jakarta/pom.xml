@@ -1,0 +1,296 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>seam-parent</artifactId>
+		<groupId>org.jboss.seam</groupId>
+		<version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>jboss-seam-rss-jakarta</artifactId>
+	<name>Seam RSS Jakarta</name>
+
+	<properties>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.sourceforge.yarfraw</groupId>
+			<artifactId>yarfraw</artifactId>
+			<exclusions>
+			 <exclusion>
+			         <groupId>apache-httpclient</groupId>
+			         <artifactId>commons-httpclient</artifactId>
+			 </exclusion>
+			</exclusions>
+		</dependency>
+		
+		<!-- Legacy seam dependency replaced by jboss-seam-jakarta below -->
+		<!-- <dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>seam</artifactId>
+			<type>ejb</type>
+		</dependency> -->
+
+		<!-- Jakarta EE Dependencies -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.el</groupId>
+			<artifactId>jakarta.el-api</artifactId>
+			<version>6.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.faces</groupId>
+			<artifactId>jakarta.faces-api</artifactId>
+			<version>4.1.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+        <!-- JBoss Seam Jakarta Dependencies -->
+        <dependency>
+            <groupId>org.jboss.seam</groupId>
+            <artifactId>jboss-seam-jakarta</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jboss.seam</groupId>
+            <artifactId>jboss-seam-ui-jakarta</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+	</dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-java-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/generated/jakarta</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../jboss-seam-rss/src/main/java</directory>
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[17,)</version>
+                                    <message>Java 17 or higher is required for this project.</message>
+                                </requireJavaVersion>
+                                <requireMavenVersion>
+                                    <version>[3.6.0,)</version>
+                                    <message>Maven 3.6.0 or higher is required for this project.</message>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Phase 2: OpenRewrite transformation for Jakarta migration -->
+            <plugin>
+                <groupId>org.openrewrite.maven</groupId>
+                <artifactId>rewrite-maven-plugin</artifactId>
+                <version>6.13.0</version>
+                <executions>
+                    <execution>
+                        <id>jakarta-migration</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>runNoFork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <logLevel>DEBUG</logLevel>
+                    <activeRecipes>
+                        <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
+                    </activeRecipes>
+                    <sourceDirectory>${project.basedir}/src/generated/jakarta</sourceDirectory>
+                    <exclusions>
+                        <!-- Exclude main source directory from transformation -->
+                        <exclusion>**/src/main/java/**</exclusion>
+                    </exclusions>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.openrewrite.recipe</groupId>
+                        <artifactId>rewrite-migrate-java</artifactId>
+                        <version>3.13.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            
+            <!-- Phase 3: Add generated sources to compilation -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>add-generated-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/generated/jakarta</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        
+        <pluginManagement>
+            <plugins>
+                <!-- Eclipse m2e settings -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.openrewrite.maven</groupId>
+                                        <artifactId>rewrite-maven-plugin</artifactId>
+                                        <versionRange>[6.13.0,)</versionRange>
+                                        <goals>
+                                            <goal>runNoFork</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>code-coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-antrun-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+         <profile>
+            <id>distribution</id>
+            <build>
+            <plugins>
+                 <plugin>
+                     <artifactId>maven-dependency-plugin</artifactId>
+                     <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <excludeGroupIds>org.jboss.seam</excludeGroupIds>
+                                    <excludeClassifiers>sources, project, distribution</excludeClassifiers>
+                                    <outputDirectory>../jar-dependencies</outputDirectory>
+                                    <stripVersion>true</stripVersion>
+                                    <type>jar</type>
+                                    <transitive>true</transitive>
+                                </configuration>
+                            </execution>
+                     </executions>
+                </plugin>
+            </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>validate</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>xml-maven-plugin</artifactId>
+                        <configuration>
+                           <catalogs>
+                                <catalog>src/main/resources/org/jboss/seam/catalog.xml</catalog>
+                            </catalogs>
+                            <validationSets>
+                                <validationSet>
+                                    <dir>src/main/resources/META-INF/</dir>
+                                    <includes>
+                                        <include>components.xml</include>
+                                        <include>faces-config.xml</include>
+                                    </includes>
+                                    <validating>true</validating>
+                                </validationSet>
+                            </validationSets>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>        
+    </profiles>
+
+</project>

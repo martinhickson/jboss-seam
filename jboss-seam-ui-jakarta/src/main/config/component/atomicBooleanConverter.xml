@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="4.0"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd" xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:cdk="http://jboss.org/schema/richfaces/cdk/extensions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+    <converter>
+        <description>
+            <![CDATA[Converter for java.util.concurrent.atomic.AtomicBoolean]]>
+        </description>
+        <converter-id>org.jboss.seam.ui.AtomicBooleanConverter</converter-id>
+        <converter-class>org.jboss.seam.ui.converter.AtomicBooleanConverter</converter-class>
+    </converter>    
+</faces-config>

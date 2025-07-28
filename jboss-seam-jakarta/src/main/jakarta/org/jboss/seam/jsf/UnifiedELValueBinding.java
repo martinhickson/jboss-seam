@@ -10,9 +10,9 @@ import jakarta.faces.context.FacesContext;
 // import jakarta.faces.el.ValueBinding;
 
 /**
- * Nobody should be using ValueBinding anymore, but if they 
+ * Nobody should be using ValueBinding anymore, but if they
  * are, we need this.
- * 
+ *
  * @author Gavin King
  *
  */
@@ -20,8 +20,10 @@ import jakarta.faces.context.FacesContext;
 @Deprecated
 public class UnifiedELValueBinding implements Serializable
 {
+   private static final long serialVersionUID = 1L;
+
    private transient ValueExpression valueExpression;
-   
+
    private String expressionString;
 
    public UnifiedELValueBinding(String expressionString)
@@ -30,7 +32,7 @@ public class UnifiedELValueBinding implements Serializable
    }
 
    public UnifiedELValueBinding() {}
-   
+
    public String getExpressionString()
    {
       return expressionString;
@@ -51,7 +53,7 @@ public class UnifiedELValueBinding implements Serializable
    public void setValue(FacesContext ctx, Object value) throws jakarta.el.ELException {
       getValueExpression(ctx).setValue( ctx.getELContext(), value);
    }
-   
+
    @Override
    public String toString()
    {

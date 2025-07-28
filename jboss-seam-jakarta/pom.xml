@@ -19,7 +19,26 @@
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
-            <!-- Copy source files from original jboss-seam module -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>add-jakarta-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/src/main/jakarta</source>
+                                <source>${project.basedir}/target/generated-sources/antlr</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -37,10 +56,75 @@
                                 <resource>
                                     <directory>../jboss-seam/src/main/java</directory>
                                     <filtering>false</filtering>
+                                     <excludes>
+	                                    <exclude>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclude>
+	                                    <exclude>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclude>
+	                                    <exclude>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclude>
+	                                    <exclude>**/org/jboss/seam/core/Validators.java</exclude>
+	                                    <exclude>**/org/jboss/seam/framework/HibernateEntityController.java</exclude>
+	                                    <exclude>**/org/jboss/seam/framework/HibernateEntityHome.java</exclude>
+	                                    <exclude>**/org/jboss/seam/framework/HibernateEntityQuery.java</exclude>
+	                                    <exclude>**/org/jboss/seam/jsf/DelegatingFacesContext.java</exclude>
+	                                    <exclude>**/org/jboss/seam/jsf/SeamApplication.java</exclude>
+	                                    <exclude>**/org/jboss/seam/jsf/SeamStateManagementStrategy.java</exclude>
+	                                    <exclude>**/org/jboss/seam/jsf/SeamStateManager.java</exclude>
+	                                    <exclude>**/org/jboss/seam/jsf/UnifiedELMethodBinding.java</exclude>
+	                                    <exclude>**/org/jboss/seam/jsf/UnifiedELValueBinding.java</exclude>
+	                                    <exclude>**/org/jboss/seam/mock/AbstractSeamTest.java</exclude>
+	                                    <exclude>**/org/jboss/seam/mock/MockApplication.java</exclude>
+	                                    <exclude>**/org/jboss/seam/mock/MockExternalContext.java</exclude>
+	                                    <exclude>**/org/jboss/seam/mock/MockFacesContext.java</exclude>
+	                                    <exclude>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclude>
+	                                    <exclude>**/org/jboss/seam/mock/MockStateManager.java</exclude>
+	                                    <exclude>**/org/jboss/seam/navigation/Param.java</exclude>
+	                                    <exclude>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclude>
+	                                    <exclude>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclude>
+	                                    <exclude>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclude>
+	                                    <exclude>**/org/jboss/seam/persistence/HibernateSessionFactory.java</exclude>
+	                                    <exclude>**/org/jboss/seam/persistence/HibernateSessionInvocationHandler.java</exclude>
+	                                    <exclude>**/org/jboss/seam/persistence/ManagedHibernateSession.java</exclude>
+                                    </excludes>
                                 </resource>
                             </resources>
                             <overwrite>false</overwrite>
                         </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-antlr-files</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/main/jakarta-antlr</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../jboss-seam/src/main/antlr</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ANTLR Maven Plugin for generating parser from grammar -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>antlr-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/jakarta-antlr</sourceDirectory>
+                    <grammars>org/jboss/seam/text/seam-text.g</grammars>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>antlr-generation</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -61,16 +145,46 @@
                 </executions>
                 <configuration>
                     <activeRecipes>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta</recipe>
+                        <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
+                        <!--recipe>org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta</recipe>
                         <recipe>org.openrewrite.java.migrate.jakarta.Faces2xMigrationToJakartaFaces3x</recipe>
                         <recipe>org.openrewrite.java.migrate.jakarta.JavaxInterceptorToJakartaInterceptor</recipe>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxElToJakartaEl</recipe>
+                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxElToJakartaEl</recipe-->
                     </activeRecipes>
+                    <arguments>
+                        <argument>--errors</argument>
+                    </arguments>
+                    <inclusions>
+						<inclusion>src/main/java/**/*.java</inclusion>
+					</inclusions>
                     <exclusions>
-					     <exclusion>**/ProcessInstanceFinder.java</exclusion>
-            			 <exclusion>**/ManagedHibernateSession.java</exclusion>
-                         <exclusion>**/TaskInstancePriorityListr.java</exclusion>
-    				</exclusions>
+	                    <exclusion>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/core/Validators.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/framework/HibernateEntityController.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/framework/HibernateEntityHome.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/framework/HibernateEntityQuery.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/jsf/DelegatingFacesContext.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/jsf/SeamApplication.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/jsf/SeamStateManagementStrategy.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/jsf/SeamStateManager.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/jsf/UnifiedELMethodBinding.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/jsf/UnifiedELValueBinding.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/mock/AbstractSeamTest.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/mock/MockApplication.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/mock/MockExternalContext.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/mock/MockFacesContext.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/mock/MockStateManager.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/navigation/Param.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/persistence/HibernateSessionFactory.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/persistence/HibernateSessionInvocationHandler.java</exclusion>
+	                    <exclusion>**/org/jboss/seam/persistence/ManagedHibernateSession.java</exclusion>
+                    </exclusions>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -81,48 +195,56 @@
                 </dependencies>
             </plugin>
             <plugin>
-			  <artifactId>maven-resources-plugin</artifactId>
-			  <version>3.3.1</version>
-			  <executions>
-			    <execution>
-			      <id>copy-jakarta-to-java2</id>
-			      <phase>generate-sources</phase>
-			      <goals>
-			        <goal>copy-resources</goal>
-			      </goals>
-			      <configuration>
-			        <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
-			        <resources>
-			          <resource>
-			            <directory>${project.basedir}/src/main/jakarta/</directory>
-			            <filtering>false</filtering>
-			          </resource>
-			        </resources>
-			        <overwrite>true</overwrite>
-			      </configuration>
-			    </execution>
-			  </executions>
-			</plugin>
-			<plugin>
-  <artifactId>maven-antrun-plugin</artifactId>
-  <version>3.1.0</version>
-  <executions>
-    <execution>
-      <id>copy-jakarta-override</id>
-      <phase>generate-sources</phase>
-      <configuration>
-        <target>
-          <copy todir="${project.basedir}/src/main/java" overwrite="true">
-            <fileset dir="${project.basedir}/src/main/jakarta" />
-          </copy>
-        </target>
-      </configuration>
-      <goals>
-        <goal>run</goal>
-      </goals>
-    </execution>
-  </executions>
-</plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0</version> <!-- use latest stable version -->
+                <executions>
+                  <execution>
+                    <id>enforce-java</id>
+                    <goals>
+                      <goal>enforce</goal>
+                    </goals>
+                    <configuration>
+                      <rules>
+                        <requireJavaVersion>
+                          <version>[17,18)</version> <!-- allows Java 17 but less than 18 -->
+                          <message>You must use JDK 17 to build this project.</message>
+                        </requireJavaVersion>
+                      </rules>
+                      <fail>true</fail>
+                    </configuration>
+                  </execution>
+                </executions>
+            </plugin>
+<!-- 
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-jakarta-override</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.basedir}/src/main/java" overwrite="true">
+                                    <fileset dir="${project.basedir}/src/main/jakarta">
+                                        <exclude name="**/AbstractSeamTest.java" />
+                                        <exclude name="**/ProcessInstanceFinder.java" />
+                                        <exclude name="**/ManagedHibernateSession.java" />
+                                        <exclude name="**/MockApplication.java" />
+                                        <exclude name="**/MockExternalContext.java" />
+                                        <exclude name="**/MockStateManager.java" />
+                                        <exclude name="**/TaskInstancePriorityListr.java" />
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> -->
 
             <!-- Java 8 Compiler Configuration - runs after OpenRewrite -->
             <plugin>
@@ -136,39 +258,39 @@
             </plugin>
         </plugins>
         <pluginManagement>
-        	<plugins>
-        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        		<plugin>
-        			<groupId>org.eclipse.m2e</groupId>
-        			<artifactId>lifecycle-mapping</artifactId>
-        			<version>1.0.0</version>
-        			<configuration>
-        				<lifecycleMappingMetadata>
-        					<pluginExecutions>
-        						<pluginExecution>
-        							<pluginExecutionFilter>
-        								<groupId>
-        									org.openrewrite.maven
-        								</groupId>
-        								<artifactId>
-        									rewrite-maven-plugin
-        								</artifactId>
-        								<versionRange>
-        									[6.13.0,)
-        								</versionRange>
-        								<goals>
-        									<goal>runNoFork</goal>
-        								</goals>
-        							</pluginExecutionFilter>
-        							<action>
-        								<ignore></ignore>
-        							</action>
-        						</pluginExecution>
-        					</pluginExecutions>
-        				</lifecycleMappingMetadata>
-        			</configuration>
-        		</plugin>
-        	</plugins>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.openrewrite.maven
+                                        </groupId>
+                                        <artifactId>
+                                            rewrite-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [6.13.0,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>runNoFork</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
         </pluginManagement>
     </build>
     
@@ -280,11 +402,11 @@
       <artifactId>javassist</artifactId>
       <version>3.28.0-GA</version>
     </dependency>
-	<dependency>
-	    <groupId>org.hibernate.orm</groupId>
-	    <artifactId>hibernate-core</artifactId>
-	    <version>6.6.22.Final</version>
-	</dependency>
+    <dependency>
+        <groupId>org.hibernate.orm</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>6.6.22.Final</version>
+    </dependency>
     <dependency>
       <groupId>org.dom4j</groupId>
       <artifactId>dom4j</artifactId>
@@ -661,11 +783,11 @@
             <version>2.25.0</version>
             <scope>provided</scope>
             <exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>xml-apis</artifactId>
-				</exclusion>
-			</exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <dependency>
@@ -822,27 +944,27 @@
         </dependency-->
         
        <dependency>
-		    <groupId>org.hibernate.search</groupId>
-		    <artifactId>hibernate-search-engine</artifactId>
-		    <version>6.2.4.Final</version>
-		</dependency>
-				
-		<dependency>
-		    <groupId>jakarta.persistence</groupId>
-		    <artifactId>jakarta.persistence-api</artifactId>
-		    <version>3.2.0</version>
-		</dependency>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-engine</artifactId>
+            <version>6.2.4.Final</version>
+        </dependency>
+                
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.2.0</version>
+        </dependency>
         
         <dependency>
-				<groupId>org.jbpm.jbpm3</groupId>
-				<artifactId>jbpm-jpdl</artifactId>
-				<version>3.2.10.SP3_seam2</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.hibernate</groupId>
-						<artifactId>hibernate-core</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
+                <groupId>org.jbpm.jbpm3</groupId>
+                <artifactId>jbpm-jpdl</artifactId>
+                <version>3.2.10.SP3_seam2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
     </dependencies>
 </project> 
