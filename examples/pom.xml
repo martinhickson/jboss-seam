@@ -49,6 +49,7 @@
         <guava.version>12.0</guava.version>
         <slf4j.version>1.6.1</slf4j.version>
         <version.jbossas7>7.1.1.Final</version.jbossas7>
+        <version.wildfly36>36.0.0.Final</version.wildfly36>
         <version.jacoco>0.5.8.201207111220</version.jacoco>
 
         <!-- dependencies for functional tests -->
