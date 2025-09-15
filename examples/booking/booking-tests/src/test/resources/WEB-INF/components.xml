@@ -2,27 +2,25 @@
 <components xmlns="http://jboss.org/schema/seam/components"
             xmlns:core="http://jboss.org/schema/seam/core"
             xmlns:persistence="http://jboss.org/schema/seam/persistence"
-            xmlns:security="http://jboss.org/schema/seam/security"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://jboss.org/schema/seam/core http://jboss.org/schema/seam/core-2.3.xsd
                                 http://jboss.org/schema/seam/persistence http://jboss.org/schema/seam/persistence-2.3.xsd
-                                http://jboss.org/schema/seam/security http://jboss.org/schema/seam/security-2.3.xsd
                                 http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">
 
+    <!-- Core Seam components -->
     <core:init debug="true" jndi-pattern="#{ejbName}/local"/>
+    <core:manager conversation-timeout="120000" concurrent-request-timeout="500" conversation-id-parameter="cid"/>
     
-    <core:manager concurrent-request-timeout="500"
-                  conversation-timeout="120000"
-                  conversation-id-parameter="cid"
-                  parent-conversation-id-parameter="pid"/>
-
     <persistence:managed-persistence-context name="entityManager"
                                            auto-create="true"
                                            persistence-unit-jndi-name="java:/testPU"/>
 
-    <security:identity authenticate-method="#{authenticator.authenticate}" remember-me="true"/>
-    
     <!-- Simple authenticator for testing -->
     <component name="authenticator" class="org.jboss.seam.example.booking.test.SimpleAuthenticator"/>
+    
+    <!-- Explicit component declarations for our booking components -->
+    <component name="hotelSearch" class="org.jboss.seam.example.booking.HotelSearching" scope="session"/>
+    <component name="hotelBooking" class="org.jboss.seam.example.booking.HotelBooking" scope="conversation"/>
+    <component name="bookingList" class="org.jboss.seam.example.booking.BookingList" scope="session"/>
 
 </components>
