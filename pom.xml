@@ -46,7 +46,9 @@
 
 		<!-- Version string properties -->
 		<version.seam>2.3.1.jakarta.bravura.1-SNAPSHOT</version.seam>
-		<version.arquillian_core>1.0.1.Final</version.arquillian_core>
+		<version.arquillian_core>1.8.0.Final</version.arquillian_core>
+		<version.wildfly.arquillian>5.0.1.Final</version.wildfly.arquillian>
+		<version.wildfly36>36.0.0.Final</version.wildfly36>
 		<version.wicket>1.4.14</version.wicket>
 		<version.testng>5.14.10</version.testng>
 		<version.resteasy>2.0.1.GA</version.resteasy>
@@ -297,6 +299,19 @@
 				<groupId>org.jboss.as</groupId>
 				<artifactId>jboss-as-arquillian-container-remote</artifactId>
 				<version>${version.jbossas7}</version>
+			</dependency>
+
+			<!-- WildFly 36 Arquillian Container Adapters -->
+			<dependency>
+				<groupId>org.wildfly.arquillian</groupId>
+				<artifactId>wildfly-arquillian-container-managed</artifactId>
+				<version>${version.wildfly.arquillian}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.wildfly.arquillian</groupId>
+				<artifactId>wildfly-arquillian-container-remote</artifactId>
+				<version>${version.wildfly.arquillian}</version>
 			</dependency>
 
 		</dependencies>
@@ -613,6 +628,70 @@
 				</plugins>
 			</pluginManagement>
 		</build>
+      </profile>
+      
+      <!-- WildFly 36 Arquillian Testing Profiles -->
+      <profile>
+        <id>arq-wildfly-36-managed</id>
+        <activation>
+          <property>
+            <name>arquillian</name>
+            <value>wildfly-managed-36</value>
+          </property>
+        </activation>
+        <dependencies>
+          <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-managed</artifactId>
+            <scope>test</scope>
+          </dependency>
+        </dependencies>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>unpack-wildfly</id>
+                  <phase>process-test-classes</phase>
+                  <goals>
+                    <goal>unpack</goal>
+                  </goals>
+                  <configuration>
+                    <artifactItems>
+                      <artifactItem>
+                        <groupId>org.wildfly</groupId>
+                        <artifactId>wildfly-dist</artifactId>
+                        <version>${version.wildfly36}</version>
+                        <type>zip</type>
+                        <overWrite>false</overWrite>
+                        <outputDirectory>target</outputDirectory>
+                      </artifactItem>
+                    </artifactItems>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+      
+      <profile>
+        <id>arq-wildfly-36-remote</id>
+        <activation>
+          <property>
+            <name>arquillian</name>
+            <value>wildfly-remote-36</value>
+          </property>
+        </activation>
+        <dependencies>
+          <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-remote</artifactId>
+            <scope>test</scope>
+          </dependency>
+        </dependencies>
       </profile>
 	</profiles>
 	
