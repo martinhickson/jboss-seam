@@ -149,12 +149,67 @@ public class Events
    
    public static boolean exists()
    {
-      return Contexts.isEventContextActive() && instance()!=null;
+      log.info("Events.exists() called - checking if event context is active");
+      boolean eventContextActive = Contexts.isEventContextActive();
+      log.info("Events.exists() - event context active: " + eventContextActive);
+      
+      if (!eventContextActive) {
+         log.warn("Events.exists() - event context is NOT active, returning false");
+         return false;
+      }
+      
+      Events eventsInstance = instance();
+      boolean instanceNotNull = eventsInstance != null;
+      log.info("Events.exists() - instance is not null: " + instanceNotNull);
+      
+      return eventContextActive && instanceNotNull;
    }
 
    public static Events instance()
    {
-      return (Events) Component.getInstance(Events.class, ScopeType.EVENT);
+      log.info("Events.instance() called - attempting to get Events component");
+      
+      // Check if event context is active first
+      boolean eventContextActive = Contexts.isEventContextActive();
+      log.info("Events.instance() - event context active: " + eventContextActive);
+      
+      if (!eventContextActive) {
+         log.warn("Events.instance() - event context is NOT active, this may cause Component.getInstance to return null");
+      }
+      
+      try {
+         log.info("Events.instance() - calling Component.getInstance(Events.class, ScopeType.EVENT)");
+         Events result = (Events) Component.getInstance(Events.class, ScopeType.EVENT);
+         
+         if (result == null) {
+            log.error("Events.instance() - Component.getInstance returned NULL!");
+            log.error("Events.instance() - Event context active: " + eventContextActive);
+            log.error("Events.instance() - Current contexts: " + Contexts.toString());
+            
+            // Try to get more information about why it's null
+            try {
+               Component eventsComponent = Component.forClass(Events.class);
+               log.error("Events.instance() - Events component definition: " + (eventsComponent != null ? eventsComponent.toString() : "NULL"));
+               if (eventsComponent != null) {
+                  log.error("Events.instance() - Events component scope: " + eventsComponent.getScope());
+                  log.error("Events.instance() - Events component name: " + eventsComponent.getName());
+                  log.error("Events.instance() - Events component installed: " + eventsComponent.isInstalled());
+               }
+            } catch (Exception e) {
+               log.error("Events.instance() - Error getting component info: " + e.getMessage(), e);
+            }
+         } else {
+            log.info("Events.instance() - Successfully retrieved Events instance: " + result.getClass().getName());
+         }
+         
+         return result;
+         
+      } catch (Exception e) {
+         log.error("Events.instance() - Exception occurred while getting Events instance: " + e.getMessage(), e);
+         log.error("Events.instance() - Exception stack trace follows:");
+         e.printStackTrace();
+         throw e;
+      }
    }
    
 }

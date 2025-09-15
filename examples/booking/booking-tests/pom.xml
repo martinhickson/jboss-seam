@@ -89,11 +89,11 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- JBoss Seam dependencies -->
+        <!-- JBoss Seam dependencies (Jakarta EE variants) -->
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam</artifactId>
-            <version>2.3.1.Final</version>
+            <artifactId>jboss-seam-jakarta</artifactId>
+            <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -109,8 +109,8 @@
         
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-ui</artifactId>
-            <version>2.3.1.Final</version>
+            <artifactId>jboss-seam-ui-jakarta</artifactId>
+            <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
@@ -134,6 +134,14 @@
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
             <version>3.1.4</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Javassist - required by Seam for bytecode manipulation -->
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.29.2-GA</version>
             <scope>test</scope>
         </dependency>
 

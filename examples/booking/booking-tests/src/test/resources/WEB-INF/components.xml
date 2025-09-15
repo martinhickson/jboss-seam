@@ -11,9 +11,7 @@
     <core:init debug="true" jndi-pattern="#{ejbName}/local"/>
     <core:manager conversation-timeout="120000" concurrent-request-timeout="500" conversation-id-parameter="cid"/>
     
-    <persistence:managed-persistence-context name="entityManager"
-                                           auto-create="true"
-                                           persistence-unit-jndi-name="java:/testPU"/>
+    <!-- Using standard JPA @PersistenceContext injection instead of Seam managed persistence context -->
 
     <!-- Simple authenticator for testing -->
     <component name="authenticator" class="org.jboss.seam.example.booking.test.SimpleAuthenticator"/>

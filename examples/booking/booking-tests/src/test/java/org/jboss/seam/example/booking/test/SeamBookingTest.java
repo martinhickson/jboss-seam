@@ -129,8 +129,7 @@ public class SeamBookingTest {
 
         System.out.println("✓ User authentication successful");
 
-        // Initialize test data
-        hotelSearch.initializeTestData();
+        // Use pre-loaded test data from import.sql
         
         // Test hotel search
         hotelSearch.setSearchString("Union Square");
@@ -247,7 +246,7 @@ public class SeamBookingTest {
         System.out.println("✓ Seam contexts working properly");
     }
 
-    @Test 
+    @Test
     public void testSeamComponents() {
         System.out.println("=== Testing Seam Component Injection ===");
         
@@ -261,6 +260,233 @@ public class SeamBookingTest {
         BookingList bookingList = (BookingList) Component.getInstance("bookingList");
         assertNotNull("BookingList component should be injectable", bookingList);
         
-        System.out.println("✓ Seam component injection working");
+        // Test component scoping
+        HotelSearching hotelSearch2 = (HotelSearching) Component.getInstance("hotelSearch");
+        assertSame("Session scoped components should be the same instance", hotelSearch, hotelSearch2);
+        
+        System.out.println("✓ Seam component injection and scoping working");
+    }
+
+    @Test
+    public void testEnhancedHotelSearch() throws Exception {
+        System.out.println("=== Testing Enhanced Hotel Search ===");
+        
+        HotelSearching hotelSearch = (HotelSearching) Component.getInstance("hotelSearch");
+        assertNotNull("HotelSearch component should be available", hotelSearch);
+        
+        // Test basic search functionality (using pre-loaded data from import.sql)
+        hotelSearch.setSearchString("Union Square");
+        hotelSearch.find();
+        
+        List<Hotel> hotels = hotelSearch.getHotels();
+        assertNotNull("Hotels list should be available", hotels);
+        assertTrue("Should find Union Square hotel", hotels.size() >= 1);
+        
+        Hotel foundHotel = hotels.get(0);
+        assertTrue("Hotel name should contain Union Square", 
+                  foundHotel.getName().contains("Union Square"));
+        assertEquals("Hotel should be in NY", "NY", foundHotel.getCity());
+        
+        // Test case insensitive search
+        hotelSearch.setSearchString("union square");
+        hotelSearch.find();
+        
+        hotels = hotelSearch.getHotels();
+        assertTrue("Case insensitive search should work", hotels.size() >= 1);
+        
+        // Test different search term
+        hotelSearch.setSearchString("W New York");
+        hotelSearch.find();
+        
+        hotels = hotelSearch.getHotels();
+        assertTrue("Should find W New York hotel", hotels.size() >= 1);
+        
+        // Test no results search
+        hotelSearch.setSearchString("NonexistentHotel");
+        hotelSearch.find();
+        
+        hotels = hotelSearch.getHotels();
+        assertEquals("Should find no results for nonexistent hotel", 0, hotels.size());
+        
+        // Test empty search returns all
+        hotelSearch.setSearchString("");
+        hotelSearch.find();
+        
+        hotels = hotelSearch.getHotels();
+        assertTrue("Empty search should return all hotels", hotels.size() >= 3);
+        
+        System.out.println("✓ Enhanced hotel search functionality working");
+    }
+
+    @Test
+    public void testBookingValidation() throws Exception {
+        System.out.println("=== Testing Booking Validation ===");
+        
+        // Set up components and user
+        HotelSearching hotelSearch = (HotelSearching) Component.getInstance("hotelSearch");
+        HotelBooking hotelBooking = (HotelBooking) Component.getInstance("hotelBooking");
+        Identity identity = Identity.instance();
+        
+        User testUser = new User("Test User", "password", "testuser");
+        Contexts.getSessionContext().set("user", testUser);
+        
+        identity.setUsername("testuser");
+        identity.setPassword("password");
+        identity.login();
+        
+        // Find a hotel using pre-loaded test data
+        hotelSearch.setSearchString("Union Square");
+        hotelSearch.find();
+        
+        DataModel hotels = (DataModel) Contexts.getSessionContext().get("hotels");
+        hotels.setRowIndex(0);
+        Hotel hotel = (Hotel) hotels.getRowData();
+        
+        // Select hotel and create booking
+        hotelBooking.selectHotel(hotel);
+        hotelBooking.bookHotel();
+        
+        Booking booking = (Booking) Contexts.getConversationContext().get("booking");
+        assertNotNull("Booking should be created", booking);
+        
+        // Test validation scenarios
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        Date tomorrow = cal.getTime();
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        Date dayAfterTomorrow = cal.getTime();
+        
+        // Test 1: Same day check-in and check-out (invalid)
+        booking.setCheckinDate(today);
+        booking.setCheckoutDate(today);
+        booking.setCreditCard("1234567890123456");
+        booking.setCreditCardName("TEST USER");
+        booking.setBeds(1);
+        
+        hotelBooking.setBookingDetails();
+        assertFalse("Same day check-in/check-out should be invalid", hotelBooking.isBookingValid());
+        
+        // Test 2: Check-out before check-in (invalid)
+        booking.setCheckinDate(tomorrow);
+        booking.setCheckoutDate(today);
+        
+        hotelBooking.setBookingDetails();
+        assertFalse("Check-out before check-in should be invalid", hotelBooking.isBookingValid());
+        
+        // Test 3: Valid booking
+        booking.setCheckinDate(today);
+        booking.setCheckoutDate(tomorrow);
+        
+        hotelBooking.setBookingDetails();
+        assertTrue("Valid dates should pass validation", hotelBooking.isBookingValid());
+        
+        // Test 4: Missing credit card info
+        booking.setCreditCard("");
+        hotelBooking.setBookingDetails();
+        assertFalse("Missing credit card should be invalid", hotelBooking.isBookingValid());
+        
+        // Test 5: Invalid bed count
+        booking.setCreditCard("1234567890123456");
+        booking.setBeds(0);
+        hotelBooking.setBookingDetails();
+        assertFalse("Zero beds should be invalid", hotelBooking.isBookingValid());
+        
+        // Test 6: All valid data
+        booking.setBeds(2);
+        hotelBooking.setBookingDetails();
+        assertTrue("Complete valid booking should pass", hotelBooking.isBookingValid());
+        
+        System.out.println("✓ Booking validation scenarios working correctly");
+    }
+
+    @Test
+    public void testMultipleBookingsWorkflow() throws Exception {
+        System.out.println("=== Testing Multiple Bookings Workflow ===");
+        
+        // Set up components and user
+        HotelSearching hotelSearch = (HotelSearching) Component.getInstance("hotelSearch");
+        HotelBooking hotelBooking = (HotelBooking) Component.getInstance("hotelBooking");
+        BookingList bookingList = (BookingList) Component.getInstance("bookingList");
+        Identity identity = Identity.instance();
+        
+        User testUser = new User("Multi Booker", "password", "multibooker");
+        Contexts.getSessionContext().set("user", testUser);
+        
+        identity.setUsername("multibooker");
+        identity.setPassword("password");
+        identity.login();
+        
+        // Use pre-loaded test data from import.sql
+        
+        // Create first booking
+        hotelSearch.setSearchString("Union Square");
+        hotelSearch.find();
+        
+        DataModel hotels = (DataModel) Contexts.getSessionContext().get("hotels");
+        hotels.setRowIndex(0);
+        Hotel hotel1 = (Hotel) hotels.getRowData();
+        
+        hotelBooking.selectHotel(hotel1);
+        hotelBooking.bookHotel();
+        
+        Booking booking1 = (Booking) Contexts.getConversationContext().get("booking");
+        Calendar cal = Calendar.getInstance();
+        booking1.setCheckinDate(cal.getTime());
+        cal.add(Calendar.DAY_OF_MONTH, 2);
+        booking1.setCheckoutDate(cal.getTime());
+        booking1.setCreditCard("1111222233334444");
+        booking1.setCreditCardName("MULTI BOOKER");
+        booking1.setBeds(1);
+        
+        hotelBooking.setBookingDetails();
+        assertTrue("First booking should be valid", hotelBooking.isBookingValid());
+        hotelBooking.confirm();
+        
+        // Create second booking
+        hotelSearch.setSearchString("W New York");
+        hotelSearch.find();
+        
+        hotels = (DataModel) Contexts.getSessionContext().get("hotels");
+        hotels.setRowIndex(0);
+        Hotel hotel2 = (Hotel) hotels.getRowData();
+        
+        hotelBooking.selectHotel(hotel2);
+        hotelBooking.bookHotel();
+        
+        Booking booking2 = (Booking) Contexts.getConversationContext().get("booking");
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, 5);
+        booking2.setCheckinDate(cal.getTime());
+        cal.add(Calendar.DAY_OF_MONTH, 3);
+        booking2.setCheckoutDate(cal.getTime());
+        booking2.setCreditCard("5555666677778888");
+        booking2.setCreditCardName("MULTI BOOKER");
+        booking2.setBeds(2);
+        
+        hotelBooking.setBookingDetails();
+        assertTrue("Second booking should be valid", hotelBooking.isBookingValid());
+        hotelBooking.confirm();
+        
+        // Verify both bookings exist
+        ListDataModel bookings = (ListDataModel) Component.getInstance("bookings");
+        assertNotNull("Bookings list should be available", bookings);
+        assertEquals("Should have two bookings", 2, bookings.getRowCount());
+        
+        // Test selective cancellation
+        bookings.setRowIndex(0);
+        Booking firstBooking = (Booking) bookings.getRowData();
+        String firstHotelName = firstBooking.getHotel().getName();
+        
+        bookingList.cancel();
+        
+        bookings = (ListDataModel) Component.getInstance("bookings");
+        assertEquals("Should have one booking after cancellation", 1, bookings.getRowCount());
+        
+        bookings.setRowIndex(0);
+        Booking remainingBooking = (Booking) bookings.getRowData();
+        assertNotEquals("Remaining booking should be different", firstHotelName, remainingBooking.getHotel().getName());
+        
+        System.out.println("✓ Multiple bookings workflow working correctly");
     }
 }
