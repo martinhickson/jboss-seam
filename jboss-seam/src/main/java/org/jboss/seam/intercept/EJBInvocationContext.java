@@ -1,12 +1,13 @@
 package org.jboss.seam.intercept;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
  * Wraps the invocation context coming from EJB3, and
  * adapts it to the Seam version of the API.
- * 
+ *
  * @author Gavin King
  *
  */
@@ -53,5 +54,10 @@ class EJBInvocationContext implements InvocationContext, javax.interceptor.Invoc
    public Object getTimer()
    {
       return context.getTimer();
+   }
+
+   public Constructor<?> getConstructor()
+   {
+       return context.getConstructor();
    }
 }

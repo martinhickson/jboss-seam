@@ -20,24 +20,35 @@
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.2.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0</version> <!-- use latest stable version -->
                 <executions>
-                    <execution>
-                        <id>add-jakarta-sources</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.basedir}/src/main/jakarta</source>
-                                <source>${project.basedir}/target/generated-sources/antlr</source>
-                            </sources>
-                        </configuration>
-                    </execution>
+                  <execution>
+                    <id>enforce-java</id>
+                    <goals>
+                      <goal>enforce</goal>
+                    </goals>
+                    <configuration>
+                      <rules>
+                        <requireJavaVersion>
+                          <version>[17,18)</version> <!-- allows Java 17 but less than 18 -->
+                          <message>You must use JDK 17 to build this project.</message>
+                        </requireJavaVersion>
+                      </rules>
+                      <fail>true</fail>
+                    </configuration>
+                  </execution>
                 </executions>
+            </plugin>                       
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -51,7 +62,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
+                            <outputDirectory>${project.basedir}/src/generated/jakarta</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>../jboss-seam/src/main/java</directory>
@@ -59,6 +70,7 @@
                                      <excludes>
 	                                    <exclude>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclude>
 	                                    <exclude>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclude>
+	                                    <exclude>**/org/jboss/seam/cache/JbossCacheProvider.java</exclude>
 	                                    <exclude>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclude>
 	                                    <exclude>**/org/jboss/seam/core/Validators.java</exclude>
 	                                    <exclude>**/org/jboss/seam/framework/HibernateEntityController.java</exclude>
@@ -106,9 +118,25 @@
                             <overwrite>true</overwrite>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-resource-files</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/target/generated/resources</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../jboss-seam/src/main/resources</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
-
             <!-- ANTLR Maven Plugin for generating parser from grammar -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -128,7 +156,55 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+    <groupId>io.github.floverfelt</groupId>
+    <artifactId>find-and-replace-maven-plugin</artifactId>
+    <version>1.2.0</version>
+    <executions>
+        <execution>
+            <id>replace</id>
+            <phase>generate-sources</phase>
+            <goals>
+                <goal>find-and-replace</goal>
+            </goals>
+            <configuration>
+                <replacementType>file-contents</replacementType>
+                <baseDir>src/generated/jakarta</baseDir>
+                <findRegex>javax.interceptor</findRegex>
+                <replaceValue>jakarta.interceptor</replaceValue>
+                <recursive>true</recursive>
+            </configuration>
+        </execution>
+        <execution>
+            <id>replace2</id>
+            <phase>generate-sources</phase>
+            <goals>
+                <goal>find-and-replace</goal>
+            </goals>
+            <configuration>
+                <replacementType>file-contents</replacementType>
+                <baseDir>src/generated/jakarta</baseDir>javax.transaction
+                <findRegex>javax.faces</findRegex>
+                <replaceValue>jakarta.faces</replaceValue>
+                <recursive>true</recursive>
+            </configuration>
+        </execution>
+        <execution>
+            <id>replace3</id>
+            <phase>generate-sources</phase>
+            <goals>
+                <goal>find-and-replace</goal>
+            </goals>
+            <configuration>
+                <replacementType>file-contents</replacementType>
+                <baseDir>src/generated/jakarta</baseDir>
+                <findRegex>javax.transaction</findRegex>
+                <replaceValue>jakarta.transaction</replaceValue>
+                <recursive>true</recursive>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
             <!-- OpenRewrite Maven Plugin for Jakarta EE 10 migration -->
             <plugin>
                 <groupId>org.openrewrite.maven</groupId>
@@ -146,20 +222,22 @@
                 <configuration>
                     <activeRecipes>
                         <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
-                        <!--recipe>org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta</recipe>
+                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta</recipe>
                         <recipe>org.openrewrite.java.migrate.jakarta.Faces2xMigrationToJakartaFaces3x</recipe>
                         <recipe>org.openrewrite.java.migrate.jakarta.JavaxInterceptorToJakartaInterceptor</recipe>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxElToJakartaEl</recipe-->
+                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxElToJakartaEl</recipe>
                     </activeRecipes>
                     <arguments>
-                        <argument>--errors</argument>
+                        <argument>- -errors</argument>
                     </arguments>
                     <inclusions>
-						<inclusion>src/main/java/**/*.java</inclusion>
+						<inclusion>**/src/generated/jakarta/**/*.java</inclusion>
 					</inclusions>
                     <exclusions>
+						<exclusion>**/src/main/**/*.java</exclusion>
 	                    <exclusion>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclusion>
 	                    <exclusion>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclusion>
+                        <exclusion>**/org/jboss/seam/cache/JbossCacheProvider.java</exclusion>
 	                    <exclusion>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclusion>
 	                    <exclusion>**/org/jboss/seam/core/Validators.java</exclusion>
 	                    <exclusion>**/org/jboss/seam/framework/HibernateEntityController.java</exclusion>
@@ -195,66 +273,26 @@
                 </dependencies>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version> <!-- use latest stable version -->
-                <executions>
-                  <execution>
-                    <id>enforce-java</id>
-                    <goals>
-                      <goal>enforce</goal>
-                    </goals>
-                    <configuration>
-                      <rules>
-                        <requireJavaVersion>
-                          <version>[17,18)</version> <!-- allows Java 17 but less than 18 -->
-                          <message>You must use JDK 17 to build this project.</message>
-                        </requireJavaVersion>
-                      </rules>
-                      <fail>true</fail>
-                    </configuration>
-                  </execution>
-                </executions>
-            </plugin>
-<!-- 
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.1.0</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
-                        <id>copy-jakarta-override</id>
+                        <id>add-jakarta-sources</id>
                         <phase>generate-sources</phase>
-                        <configuration>
-                            <target>
-                                <copy todir="${project.basedir}/src/main/java" overwrite="true">
-                                    <fileset dir="${project.basedir}/src/main/jakarta">
-                                        <exclude name="**/AbstractSeamTest.java" />
-                                        <exclude name="**/ProcessInstanceFinder.java" />
-                                        <exclude name="**/ManagedHibernateSession.java" />
-                                        <exclude name="**/MockApplication.java" />
-                                        <exclude name="**/MockExternalContext.java" />
-                                        <exclude name="**/MockStateManager.java" />
-                                        <exclude name="**/TaskInstancePriorityListr.java" />
-                                    </fileset>
-                                </copy>
-                            </target>
-                        </configuration>
                         <goals>
-                            <goal>run</goal>
+                            <goal>add-source</goal>
                         </goals>
+                        <configuration>
+                            <sources>
+                                <!-- src/generated since OpenRewrite unconditionally skips target/generated -->
+                                <source>${project.basedir}/src/generated/jakarta</source>
+                                <source>${project.basedir}/target/generated-sources/antlr</source>
+                                <source>${project.basedir}/target/generated/resources</source>
+                            </sources>
+                        </configuration>
                     </execution>
                 </executions>
-            </plugin> -->
-
-            <!-- Java 8 Compiler Configuration - runs after OpenRewrite -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>17</source>
-                    <target>17</target>
-                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -283,8 +321,27 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <execute></execute>
                                     </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                	<pluginExecutionFilter>
+                                		<groupId>
+                                			org.codehaus.mojo
+                                		</groupId>
+                                		<artifactId>
+                                			antlr-maven-plugin
+                                		</artifactId>
+                                		<versionRange>
+                                			[2.2,)
+                                		</versionRange>
+                                		<goals>
+                                			<goal>generate</goal>
+                                		</goals>
+                                	</pluginExecutionFilter>
+                                	<action>
+                                		<ignore></ignore>
+                                	</action>
                                 </pluginExecution>
                             </pluginExecutions>
                         </lifecycleMappingMetadata>

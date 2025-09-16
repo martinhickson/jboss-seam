@@ -19,7 +19,7 @@ import org.jboss.seam.core.Init;
  * allows the use of #{dataModel.size}, #{dataModel.empty},
  * #{collection.size}, #{map.size}, #{map.values}, #{map.keySet},
  * and #{map.entrySet}. Also allows #{sessionContext['name']}.
- * 
+ *
  * @author Gavin King
  *
  */
@@ -32,7 +32,6 @@ public class SeamELResolver extends ELResolver
       return null;
    }
 
-   @Override
    public Iterator getFeatureDescriptors(ELContext context, Object base)
    {
       return null;
@@ -45,26 +44,26 @@ public class SeamELResolver extends ELResolver
    }
 
    @Override
-   public Object getValue(ELContext context, Object base, Object property) 
+   public Object getValue(ELContext context, Object base, Object property)
    {
         if (base == null) {
             return resolveBase(context, property);
-            
+
         } else if (base instanceof Namespace) {
             return resolveInNamespace(context, (Namespace) base, property);
-            
+
         } else if (JSF.DATA_MODEL.isInstance(base)) {
             return resolveInDataModel(context,  base, property);
-            
+
         } else if (base instanceof Collection) {
             return resolveInCollection(context, (Collection) base, property);
-            
+
         } else if (base instanceof Map) {
             return resolveInMap(context, (Map) base, property);
-            
+
         } else if (base instanceof Context) {
             return resolveInContextObject(context, (Context) base, property);
-            
+
         } else {
             return null;
         }
@@ -82,30 +81,30 @@ public class SeamELResolver extends ELResolver
 
    private boolean containsKey(Map map, String key) {
       try {
-         return map.containsKey(key);   
+         return map.containsKey(key);
       } catch (UnsupportedOperationException e) {
          // eat it
          return false;
       }
    }
-   
-   private Object resolveInMap(ELContext context, Map map, Object property) {         
+
+   private Object resolveInMap(ELContext context, Map map, Object property) {
         if ("size".equals(property) && !containsKey(map,"size")) {
             context.setPropertyResolved(true);
             return map.size();
-            
+
         } else if ("values".equals(property) && !containsKey(map,"values")) {
             context.setPropertyResolved(true);
             return map.values();
-        
+
         } else if ("keySet".equals(property) && !containsKey(map,"keySet")) {
             context.setPropertyResolved(true);
             return map.keySet();
-        
+
         } else if ("entrySet".equals(property) && !containsKey(map,"entrySet")) {
             context.setPropertyResolved(true);
             return map.entrySet();
-        
+
         } else {
             return null;
         }
@@ -176,14 +175,14 @@ public class SeamELResolver extends ELResolver
     }
 
     @Override
-    public boolean isReadOnly(ELContext context, Object base, Object property) 
+    public boolean isReadOnly(ELContext context, Object base, Object property)
     {
         return base != null
                 && (JSF.DATA_MODEL.isInstance(base) || (base instanceof Collection) || (base instanceof Map));
     }
 
     @Override
-    public void setValue(ELContext context, Object base, Object property, Object value) 
+    public void setValue(ELContext context, Object base, Object property, Object value)
     {
     }
 

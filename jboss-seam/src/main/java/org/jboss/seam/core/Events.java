@@ -184,16 +184,16 @@ public class Events
          if (result == null) {
             log.error("Events.instance() - Component.getInstance returned NULL!");
             log.error("Events.instance() - Event context active: " + eventContextActive);
-            log.error("Events.instance() - Current contexts: " + Contexts.toString());
+            log.error("Events.instance() - Current contexts available");
             
             // Try to get more information about why it's null
             try {
-               Component eventsComponent = Component.forClass(Events.class);
+               Component eventsComponent = Component.forName("org.jboss.seam.core.events");
                log.error("Events.instance() - Events component definition: " + (eventsComponent != null ? eventsComponent.toString() : "NULL"));
                if (eventsComponent != null) {
                   log.error("Events.instance() - Events component scope: " + eventsComponent.getScope());
                   log.error("Events.instance() - Events component name: " + eventsComponent.getName());
-                  log.error("Events.instance() - Events component installed: " + eventsComponent.isInstalled());
+                  log.error("Events.instance() - Events component type: " + eventsComponent.getType());
                }
             } catch (Exception e) {
                log.error("Events.instance() - Error getting component info: " + e.getMessage(), e);

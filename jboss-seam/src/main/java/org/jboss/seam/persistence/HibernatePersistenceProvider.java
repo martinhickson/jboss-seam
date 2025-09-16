@@ -33,7 +33,7 @@ import org.jboss.seam.log.Logging;
 /**
  * Support for non-standardized features of Hibernate, when
  * used as the JPA persistence provider.
- * 
+ *
  * @author Gavin King
  * @author Pete Muir
  *
@@ -44,7 +44,7 @@ import org.jboss.seam.log.Logging;
 @Install(precedence=FRAMEWORK, classDependencies={"org.hibernate.Session", "javax.persistence.EntityManager"})
 public class HibernatePersistenceProvider extends PersistenceProvider
 {
-   
+
    private static Log log = Logging.getLog(HibernatePersistenceProvider.class);
    private static Class FULL_TEXT_SESSION_PROXY_CLASS;
    private static Method FULL_TEXT_SESSION_CONSTRUCTOR;
@@ -53,7 +53,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
    static
    {
       boolean hibernateSearchPresent = false;
-      try 
+      try
       {
          Class.forName("org.hibernate.search.Version");
          hibernateSearchPresent = true;
@@ -62,27 +62,27 @@ public class HibernatePersistenceProvider extends PersistenceProvider
       {
          log.debug("Hibernate Search not present", e);
       }
-      if (hibernateSearchPresent) 
+      if (hibernateSearchPresent)
       {
-         try 
+         try
          {
             Class searchClass = Class.forName("org.hibernate.search.Search");
-            try 
+            try
             {
                FULL_TEXT_SESSION_CONSTRUCTOR = searchClass.getDeclaredMethod("getFullTextSession", Session.class);
             }
-            catch (NoSuchMethodException noSuchMethod) 
+            catch (NoSuchMethodException noSuchMethod)
             {
                log.debug("org.hibernate.search.Search.getFullTextSession(Session) not found, trying deprecated method name createFullTextSession");
                FULL_TEXT_SESSION_CONSTRUCTOR = searchClass.getDeclaredMethod("createFullTextSession", Session.class);
             }
             FULL_TEXT_SESSION_PROXY_CLASS = Class.forName("org.jboss.seam.persistence.FullTextHibernateSessionProxy");
             Class jpaSearchClass = Class.forName("org.hibernate.search.jpa.Search");
-            try 
+            try
             {
-               FULL_TEXT_ENTITYMANAGER_CONSTRUCTOR = jpaSearchClass.getDeclaredMethod("getFullTextEntityManager", EntityManager.class);   
+               FULL_TEXT_ENTITYMANAGER_CONSTRUCTOR = jpaSearchClass.getDeclaredMethod("getFullTextEntityManager", EntityManager.class);
             }
-            catch (NoSuchMethodException noSuchMethod) 
+            catch (NoSuchMethodException noSuchMethod)
             {
                log.debug("org.hibernate.search.jpa.getFullTextSession(EntityManager) not found, trying deprecated method name createFullTextEntityManager");
                FULL_TEXT_ENTITYMANAGER_CONSTRUCTOR = jpaSearchClass.getDeclaredMethod("createFullTextEntityManager", EntityManager.class);
@@ -94,15 +94,15 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          {
             log.debug("Unable to load Hibernate Search for ORM", e);
          }
-      }    
+      }
    }
 
    public HibernatePersistenceProvider()
    {
       super.init();
       featureSet.add(Feature.WILDCARD_AS_COUNT_QUERY_SUBJECT);
-   } 
-   
+   }
+
    /**
     * Wrap the Hibernate Session in a proxy that supports HQL
     * EL interpolation and implements FullTextSession if Hibernate
@@ -116,8 +116,8 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          {
             return session;
          }
-         else 
-         {  
+         else
+         {
             return (Session) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                   new Class[] { HibernateSessionProxy.class },
                   new HibernateSessionInvocationHandler(session));//, (FullTextSession) session) );
@@ -125,7 +125,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
       }
       else
       {
-         try 
+         try
          {
             if ( FULL_TEXT_SESSION_PROXY_CLASS.isAssignableFrom( session.getClass() ) )
             {
@@ -139,7 +139,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          }
          catch(Exception e) {
             log.warn("Unable to wrap into a FullTextSessionProxy, regular SessionProxy returned", e);
-            if ( session instanceof HibernateSessionProxy ) 
+            if ( session instanceof HibernateSessionProxy )
             {
                return session;
             }
@@ -151,7 +151,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          }
       }
    }
-   
+
    /**
     * Wrap the delegate Hibernate Session in a proxy that supports HQL
     * EL interpolation and implements FullTextSession if Hibernate
@@ -173,7 +173,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          throw new RuntimeException("could not proxy delegate", e);
       }
    }
-   
+
    @Override
    public void setFlushModeManual(EntityManager entityManager)
    {
@@ -186,7 +186,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
           super.setFlushModeManual(entityManager);
        }
    }
-   
+
    @Override
    public void setRenderFlushMode()
    {
@@ -205,9 +205,9 @@ public class HibernatePersistenceProvider extends PersistenceProvider
           return super.isDirty(entityManager);
        }
    }
-   
+
    @Override
-   public Object getId(Object bean, EntityManager entityManager) 
+   public Object getId(Object bean, EntityManager entityManager)
    {
        try
        {
@@ -217,7 +217,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
        {
           return super.getId(bean, entityManager);
        }
-       catch (TransientObjectException e) 
+       catch (TransientObjectException e)
        {
           if (bean instanceof HibernateProxy)
           {
@@ -229,9 +229,8 @@ public class HibernatePersistenceProvider extends PersistenceProvider
           }
        }
    }
-   
-   @Override
-   public Object getVersion(Object bean, EntityManager entityManager) 
+
+   public Object getVersion(Object bean, EntityManager entityManager)
    {
        try
        {
@@ -242,8 +241,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
           return super.getVersion(bean, entityManager);
        }
    }
-   
-   @Override
+
    public void checkVersion(Object bean, EntityManager entityManager, Object oldVersion, Object version)
    {
        try
@@ -255,7 +253,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
           super.checkVersion(bean, entityManager, oldVersion, version);
        }
    }
-   
+
    @Override
    public void enableFilter(Filter f, EntityManager entityManager)
    {
@@ -265,11 +263,11 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          for ( Map.Entry<String, ValueExpression> me: f.getParameters().entrySet() )
          {
             Object filterValue = me.getValue().getValue();
-            if ( filterValue instanceof Collection ) 
+            if ( filterValue instanceof Collection )
             {
                filter.setParameterList(me.getKey(), (Collection) filterValue);
-            } 
-            else 
+            }
+            else
             {
                filter.setParameter(me.getKey(), filterValue);
             }
@@ -282,7 +280,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
       }
 
    }
-   
+
    @Override
    public boolean registerSynchronization(Synchronization sync, EntityManager entityManager)
    {
@@ -303,20 +301,20 @@ public class HibernatePersistenceProvider extends PersistenceProvider
    @Override
    public String getName(Object bean, EntityManager entityManager) throws IllegalArgumentException
    {
-      try 
+      try
       {
          return getSession(entityManager).getEntityName(bean);
-      } 
+      }
       catch (NotHibernateException nhe)
       {
          return super.getName(bean, entityManager);
       }
-      catch (TransientObjectException e) 
+      catch (TransientObjectException e)
       {
          return super.getName(bean, entityManager);
       }
    }
-   
+
    @Override
    public EntityManager proxyEntityManager(EntityManager entityManager)
    {
@@ -341,7 +339,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          }
       }
    }
-   
+
    public static void checkVersion(Object value, Session session, Object oldVersion, Object version)
    {
       ClassMetadata classMetadata = getClassMetadata(value, session);
@@ -351,14 +349,14 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          throw new StaleStateException("current database version number does not match passivated version number");
       }
    }
-   
+
    public static Object getVersion(Object value, Session session)
    {
       ClassMetadata classMetadata = getClassMetadata(value, session);
-      return classMetadata!=null && classMetadata.isVersioned() ? 
+      return classMetadata!=null && classMetadata.isVersioned() ?
                classMetadata.getVersion(value) : null;
    }
-   
+
    private static ClassMetadata getClassMetadata(Object value, Session session)
    {
       Class entityClass = getEntityClass(value);
@@ -368,15 +366,15 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          classMetadata = session.getSessionFactory().getClassMetadata(entityClass);
          if (classMetadata==null)
          {
-            throw new IllegalArgumentException( 
-                     "Could not find ClassMetadata object for entity class: " + 
-                     entityClass.getName() 
+            throw new IllegalArgumentException(
+                     "Could not find ClassMetadata object for entity class: " +
+                     entityClass.getName()
                   );
          }
       }
       return classMetadata;
    }
-   
+
    /**
     * Returns the class of the specified Hibernate entity
     */
@@ -385,7 +383,7 @@ public class HibernatePersistenceProvider extends PersistenceProvider
    {
       return getEntityClass(bean);
    }
-   
+
    public static Class getEntityClass(Object bean)
    {
       Class clazz = null;
@@ -396,15 +394,15 @@ public class HibernatePersistenceProvider extends PersistenceProvider
       catch (NotEntityException e) {
          // It's ok, try some other methods
       }
-      
+
       if (clazz == null)
       {
          clazz = Hibernate.getClass(bean);
       }
-      
+
       return clazz;
    }
-   
+
    private Session getSession(EntityManager entityManager)
    {
       Object delegate = entityManager.getDelegate();
@@ -417,18 +415,29 @@ public class HibernatePersistenceProvider extends PersistenceProvider
          throw new NotHibernateException();
       }
    }
-   
+
    /**
     * Occurs when Hibernate is in the classpath, but this particular
     * EntityManager is not from Hibernate
-    * 
+    *
     * @author Gavin King
     *
     */
    static class NotHibernateException extends IllegalArgumentException {}
-   
+
    public static HibernatePersistenceProvider instance()
    {
        return (HibernatePersistenceProvider) Component.getInstance(HibernatePersistenceProvider.class, ScopeType.STATELESS);
    }
+
+   public static void checkVersion(Object value, Session session, Object oldVersion, Object version)
+   {
+       throw new UnsupportedOperationException();
+   }
+
+   public static Object getVersion(Object value, Session session)
+   {
+      throw new UnsupportedOperationException();
+   }
+}
 }

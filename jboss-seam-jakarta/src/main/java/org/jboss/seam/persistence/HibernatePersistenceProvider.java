@@ -7,21 +7,16 @@ import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.Map;
 
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Synchronization;
-import jakarta.persistence.metamodel.IdentifiableType;
-import jakarta.persistence.metamodel.Metamodel;
-
-import org.hibernate.Session;
 import org.hibernate.Hibernate;
-import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.Session;
 import org.hibernate.StaleStateException;
 import org.hibernate.TransientObjectException;
+import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.Component;
 import org.jboss.seam.Entity;
 import org.jboss.seam.Entity.NotEntityException;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.FlushModeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -29,6 +24,11 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.IdentifiableType;
+import jakarta.persistence.metamodel.Metamodel;
+import jakarta.transaction.Synchronization;
 
 /**
  * Updated for Hibernate 6: uses JPA Metamodel API instead of deprecated ClassMetadata.
@@ -284,5 +284,15 @@ public class HibernatePersistenceProvider extends PersistenceProvider {
 
     public static HibernatePersistenceProvider instance() {
         return (HibernatePersistenceProvider) Component.getInstance(HibernatePersistenceProvider.class, ScopeType.STATELESS);
+    }
+
+    public static void checkVersion(Object value, Session session, Object oldVersion, Object version)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public static Object getVersion(Object value, Session session)
+    {
+       throw new UnsupportedOperationException();
     }
 }

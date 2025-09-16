@@ -15,7 +15,7 @@ import org.jboss.seam.util.Strings;
 public class MockViewHandler extends ViewHandler {
 
 	private static final LogProvider logger = Logging.getLogProvider(MockViewHandler.class);
-	
+
 	@Override
 	public Locale calculateLocale(FacesContext ctx) {
 		return Locale.getDefault();
@@ -39,8 +39,8 @@ public class MockViewHandler extends ViewHandler {
    {
       String contextPath = ctx.getExternalContext().getRequestContextPath();
       String pathInfo = ctx.getExternalContext().getRequestPathInfo();
-      String servletPath = ctx.getExternalContext().getRequestServletPath(); 
-      
+      String servletPath = ctx.getExternalContext().getRequestServletPath();
+
       if (Strings.isEmpty(pathInfo))
       {
          int sploc = servletPath.lastIndexOf('.');
@@ -48,7 +48,7 @@ public class MockViewHandler extends ViewHandler {
          {
         	logger.warn("You should catch the exception before Seam", new IllegalArgumentException("no file extension in servlet path: " + servletPath));
         	// in case of Servlet exception which is not mapped and handled by Seam
-        	return contextPath + viewId;            
+        	return contextPath + viewId;
          }
          return contextPath + getViewIdSansSuffix(viewId) + servletPath.substring(sploc);
 
@@ -70,7 +70,7 @@ public class MockViewHandler extends ViewHandler {
 	}
 
 	@Override
-	public String getResourceURL(FacesContext ctx, String url) 
+	public String getResourceURL(FacesContext ctx, String url)
    {
 		return url;
 	}
@@ -80,7 +80,7 @@ public class MockViewHandler extends ViewHandler {
 			throws IOException, FacesException {}
 
 	@Override
-	public UIViewRoot restoreView(FacesContext ctx, String id) 
+	public UIViewRoot restoreView(FacesContext ctx, String id)
    {
 		return null;
 	}
@@ -88,4 +88,7 @@ public class MockViewHandler extends ViewHandler {
 	@Override
 	public void writeState(FacesContext ctx) throws IOException {}
 
+    public String getWebsocketURL(FacesContext context, String channel) {
+        return null;
+    }
 }

@@ -1,7 +1,7 @@
 # PowerShell script to generate exclusion list from jakarta directory
-# Run this when you add/remove files in src/main/jakarta
+# Run this when you add/remove files in src/main/java
 
-$jakartaDir = "src/main/jakarta"
+$jakartaDir = "src/main/java"
 $exclusionFile1 = "pom-exclusions.xml"
 $exclusionFile2 = "pom-exclusions-alt.xml"
 
