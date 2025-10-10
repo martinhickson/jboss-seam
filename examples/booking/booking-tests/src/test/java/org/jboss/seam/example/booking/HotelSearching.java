@@ -6,10 +6,9 @@ import java.util.List;
 import jakarta.ejb.Stateful;
 import jakarta.persistence.EntityManager;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.datamodel.DataModel;
-import org.jboss.seam.annotations.datamodel.DataModelSelection;
 
 /**
  * Seam component for hotel searching functionality
@@ -23,28 +22,31 @@ public class HotelSearching implements Serializable {
     
     private EntityManager entityManager;
     
-    // Get EntityManager from JNDI-bound EntityManagerFactory (now properly configured in persistence.xml)
+    public HotelSearching() {
+    }
+    
+    @Create
+    public void create() {
+        // Component initialization
+    }
+    
+    // Get EntityManager from JNDI - WildFly 36 provides both direct EM and EMF bindings
     private EntityManager getEntityManager() {
         if (entityManager == null) {
             try {
-                System.out.println("[HOTEL-SEARCH-DEBUG] Getting EntityManager from JNDI-bound EMF...");
                 javax.naming.InitialContext ctx = new javax.naming.InitialContext();
                 
-                // First try the direct EntityManager binding
+                // Try direct EntityManager first (WildFly 36 provides this)
                 try {
-                    entityManager = (jakarta.persistence.EntityManager) 
-                        ctx.lookup("java:/EntityManager/testPU");
-                    System.out.println("[HOTEL-SEARCH-DEBUG] Got EntityManager directly from JNDI");
+                    entityManager = (jakarta.persistence.EntityManager) ctx.lookup("java:/EntityManager/testPU");
                 } catch (javax.naming.NameNotFoundException e) {
-                    System.out.println("[HOTEL-SEARCH-DEBUG] Direct EM not in JNDI, trying EMF...");
-                    // Fallback to EntityManagerFactory
+                    // Fallback to EntityManagerFactory approach
                     jakarta.persistence.EntityManagerFactory emf = (jakarta.persistence.EntityManagerFactory) 
                         ctx.lookup("java:jboss/EntityManagerFactory/testPU");
                     entityManager = emf.createEntityManager();
-                    System.out.println("[HOTEL-SEARCH-DEBUG] Got EntityManager from JNDI-bound EMF");
                 }
+                
             } catch (Exception e) {
-                System.out.println("[HOTEL-SEARCH-ERROR] Failed to get EntityManager from JNDI: " + e.getMessage());
                 throw new RuntimeException("Failed to get EntityManager from JNDI", e);
             }
         }
@@ -55,17 +57,13 @@ public class HotelSearching implements Serializable {
     private int pageSize = 10;
     private int page;
     
-    private List<Hotel> hotels;
+        private List<Hotel> hotels;
 
     private Hotel selectedHotel;
     
     public void find() {
-        System.out.println("[HOTEL-SEARCH-DEBUG] find() method called");
-        System.out.println("[HOTEL-SEARCH-DEBUG] Setting page to 0");
         page = 0;
-        System.out.println("[HOTEL-SEARCH-DEBUG] About to call queryHotels()");
         queryHotels();
-        System.out.println("[HOTEL-SEARCH-DEBUG] find() method completed");
     }
     
     public void nextPage() {
@@ -74,60 +72,25 @@ public class HotelSearching implements Serializable {
     }
     
     private void queryHotels() {
-        System.out.println("[HOTEL-SEARCH-DEBUG] queryHotels() method called");
-        System.out.println("[HOTEL-SEARCH-DEBUG] searchString = " + searchString);
-        System.out.println("[HOTEL-SEARCH-DEBUG] page = " + page);
-        System.out.println("[HOTEL-SEARCH-DEBUG] pageSize = " + pageSize);
-        
         EntityManager em = getEntityManager();
-        System.out.println("[HOTEL-SEARCH-DEBUG] EntityManager em = " + em);
-        
-        if (em == null) {
-            System.out.println("[HOTEL-SEARCH-ERROR] EntityManager is NULL!");
-            throw new RuntimeException("EntityManager is null in queryHotels()");
-        }
-        
         String searchPattern = searchString == null ? "%" : '%' + searchString.toLowerCase().replace('*', '%') + '%';
-        System.out.println("[HOTEL-SEARCH-DEBUG] searchPattern = " + searchPattern);
         
         try {
-            System.out.println("[HOTEL-SEARCH-DEBUG] About to create query...");
-            
             jakarta.persistence.TypedQuery<Hotel> query = em.createQuery(
                 "select h from Hotel h where lower(h.name) like :pattern " +
                 "or lower(h.city) like :pattern " +
                 "or lower(h.zip) like :pattern " +
                 "or lower(h.address) like :pattern", Hotel.class);
             
-            System.out.println("[HOTEL-SEARCH-DEBUG] Query created successfully: " + query);
-            
-            System.out.println("[HOTEL-SEARCH-DEBUG] Setting parameter 'pattern' to: " + searchPattern);
             query.setParameter("pattern", searchPattern);
-            
-            System.out.println("[HOTEL-SEARCH-DEBUG] Setting maxResults to: " + pageSize);
             query.setMaxResults(pageSize);
-            
-            System.out.println("[HOTEL-SEARCH-DEBUG] Setting firstResult to: " + (page * pageSize));
             query.setFirstResult(page * pageSize);
             
-            System.out.println("[HOTEL-SEARCH-DEBUG] About to execute query...");
             hotels = query.getResultList();
             
-            System.out.println("[HOTEL-SEARCH-DEBUG] Query executed successfully!");
-            System.out.println("[HOTEL-SEARCH-DEBUG] hotels = " + hotels);
-            System.out.println("[HOTEL-SEARCH-DEBUG] hotels.size() = " + (hotels != null ? hotels.size() : "NULL"));
-            
-            if (hotels != null && hotels.size() > 0) {
-                System.out.println("[HOTEL-SEARCH-DEBUG] First hotel: " + hotels.get(0).getName());
-            }
-            
         } catch (Exception e) {
-            System.out.println("[HOTEL-SEARCH-ERROR] Exception in queryHotels(): " + e.getClass().getSimpleName() + ": " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+            throw new RuntimeException("Exception in queryHotels()", e);
         }
-        
-        System.out.println("[HOTEL-SEARCH-DEBUG] queryHotels() method completed");
     }
     
     public boolean isNextPageAvailable() {

@@ -7,12 +7,8 @@
 *.iws
 *.iml
 
-# Current openrewrite target:
 jboss-seam-jakarta/src/main/java.backup.*
-jboss-seam-jakarta/src/main/resources
-
-# Ignore everything in src/main/java
-jboss-seam-jakarta/src/main/java/**
+jboss-seam-jakarta/src/generated/jakarta/**
 
 # maven build results
 target

@@ -14,13 +14,21 @@ public class PatchedServletLifecycle extends ServletLifecycle {
     private static final LogProvider log = Logging.getLogProvider(PatchedServletLifecycle.class);
     
     public static void endInitialization() {
-        Contexts.startup(ScopeType.APPLICATION);
+        log.info("Starting patched Seam endInitialization...");
+        
+        try {
+            Contexts.startup(ScopeType.APPLICATION);
+            log.info("Application context startup successful");
+        } catch (Exception e) {
+            log.warn("Failed to start application context: " + e.getMessage() + " - continuing with initialization");
+        }
         
         try {
             // Try to raise the postInitialization event, but handle the case where Events is not initialized
             Events events = Events.instance();
             if (events != null) {
                 events.raiseEvent("org.jboss.seam.postInitialization");
+                log.info("postInitialization event raised successfully");
             } else {
                 log.warn("Events component not initialized during ServletLifecycle.endInitialization() - skipping postInitialization event");
             }
@@ -29,14 +37,24 @@ public class PatchedServletLifecycle extends ServletLifecycle {
         }
         
         // Clean up contexts used during initialization
-        Contexts.destroy(Contexts.getConversationContext());
-        Contexts.conversationContext.set(null);
-        Contexts.destroy(Contexts.getEventContext());
-        Contexts.eventContext.set(null);
-        Contexts.sessionContext.set(null);
-        Contexts.applicationContext.set(null);
+        try {
+            if (Contexts.getConversationContext() != null) {
+                Contexts.destroy(Contexts.getConversationContext());
+            }
+            Contexts.conversationContext.set(null);
+            
+            if (Contexts.getEventContext() != null) {
+                Contexts.destroy(Contexts.getEventContext());
+            }
+            Contexts.eventContext.set(null);
+            Contexts.sessionContext.set(null);
+            Contexts.applicationContext.set(null);
+            log.info("Context cleanup completed");
+        } catch (Exception e) {
+            log.warn("Exception during context cleanup: " + e.getMessage() + " - continuing");
+        }
         
-        log.debug("<<< End initialization (patched)");
+        log.info("Patched Seam initialization completed successfully");
     }
     
     public static void endReinitialization() {

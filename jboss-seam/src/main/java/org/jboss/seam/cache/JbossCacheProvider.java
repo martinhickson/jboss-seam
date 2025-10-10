@@ -19,7 +19,7 @@ import org.jboss.seam.log.Logging;
 
 /**
  * Implementation of CacheProvider backed by JBoss Cache 1.x
- * 
+ *
  * @author Sebastian Hennebrueder
  * @author Pete Muir
  */
@@ -121,7 +121,7 @@ public class JbossCacheProvider extends AbstractJBossCacheProvider<TreeCache>
    }
 
    @Override
-   public TreeCache getDelegate()
+   public t getDelegate()
    {
       return cache;
    }

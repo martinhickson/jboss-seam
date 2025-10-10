@@ -1000,11 +1000,24 @@
 		         <artifactId>infinispan-core</artifactId>
 		         <version>${version.infinispan}</version>
 		      </dependency>
-		    <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-tree</artifactId>
-                <version>${version.infinispan}</version>
-            </dependency>
+			<dependency>
+				<groupId>org.infinispan</groupId>
+				<artifactId>infinispan-tree</artifactId>
+				<version>${version.infinispan}</version>
+			</dependency>
+
+			<!-- WildFly Arquillian Container Adapters -->
+			<dependency>
+				<groupId>org.wildfly.arquillian</groupId>
+				<artifactId>wildfly-arquillian-container-managed</artifactId>
+				<version>5.0.1.Final</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.wildfly.arquillian</groupId>
+				<artifactId>wildfly-arquillian-container-remote</artifactId>
+				<version>5.0.1.Final</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

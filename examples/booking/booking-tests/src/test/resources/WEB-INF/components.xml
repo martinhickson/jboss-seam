@@ -11,7 +11,7 @@
     <core:init debug="true" jndi-pattern="#{ejbName}/local"/>
     <core:manager conversation-timeout="120000" concurrent-request-timeout="500" conversation-id-parameter="cid"/>
     
-    <!-- Using standard JPA @PersistenceContext injection instead of Seam managed persistence context -->
+    <!-- Using programmatic EntityManager lookup from JNDI-bound EntityManagerFactory -->
 
     <!-- Simple authenticator for testing -->
     <component name="authenticator" class="org.jboss.seam.example.booking.test.SimpleAuthenticator"/>

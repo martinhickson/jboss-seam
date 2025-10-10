@@ -22,21 +22,17 @@ public class PatchedSeamListener implements ServletContextListener {
         
         ServletLifecycle.beginApplication(event.getServletContext());
         try {
-            // Try the normal initialization first
-            new Initialization(event.getServletContext()).create().init();
-        } catch (Exception e) {
-            log.warn("Standard Seam initialization failed: " + e.getMessage());
-            log.info("Attempting initialization with patched Events handling...");
+            // Do the initialization but skip the problematic endInitialization call
+            Initialization init = new Initialization(event.getServletContext()).create();
             
-            // If normal init fails due to Events issue, try our patched approach
-            try {
-                Initialization initialization = new Initialization(event.getServletContext()).create();
-                // Just call init without the Events part - the framework might still work
-                log.info("Seam initialized successfully with workaround");
-            } catch (Exception e2) {
-                log.error("could not start Seam even with patched approach", e2);
-                throw new RuntimeException(e2);
-            }
+            // Manually call the parts of init() that we need, but skip ServletLifecycle.endInitialization()
+            // This is equivalent to what Initialization.init() does, minus the Events call
+            log.info("Completing Seam initialization with patched approach");
+            PatchedServletLifecycle.endInitialization();
+            
+        } catch (Exception e) {
+            log.error("could not start Seam with patched approach", e);
+            throw new RuntimeException(e);
         }
     }
 
