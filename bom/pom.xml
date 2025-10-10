@@ -613,7 +613,7 @@
 			<dependency>
 				<groupId>org.jboss.el</groupId>
 				<artifactId>jboss-el</artifactId>
-				<version>1.0_02.CR6</version>
+				<version>1.0_02.jakarta.bravura.2-SNAPSHOT</version>
 			</dependency>
 
 			<dependency>
@@ -1057,5 +1057,17 @@
 		</snapshotRepository>
 
 	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>github-packages</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/martinhickson/jboss-el</url>
+			<authentication>
+				<username>martinhickson</username>
+				<password>${env.GITHUB_TOKEN}</password>
+			</authentication>
+		</repository>
+	</repositories>
 
 </project>
