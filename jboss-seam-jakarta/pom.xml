@@ -68,6 +68,7 @@
                                     <directory>../jboss-seam/src/main/java</directory>
                                     <filtering>false</filtering>
                                      <excludes>
+                                     	<exclude>**/org/jboss/seam/Model.java</exclude>
 	                                    <exclude>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclude>
 	                                    <exclude>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclude>
 	                                    <exclude>**/org/jboss/seam/cache/JbossCacheProvider.java</exclude>
@@ -203,8 +204,22 @@
                 <recursive>true</recursive>
             </configuration>
         </execution>
-    </executions>
-</plugin>
+        <execution>
+            <id>replace-persistence</id>
+            <phase>generate-sources</phase>
+            <goals>
+               <goal>find-and-replace</goal>
+            </goals>
+            <configuration>
+              <replacementType>file-contents</replacementType>
+              <baseDir>src/generated/jakarta</baseDir>
+              <findRegex>javax.persistence</findRegex>
+               <replaceValue>jakarta.persistence</replaceValue>
+               <recursive>true</recursive>
+            </configuration>
+        </execution>
+        </executions>
+            </plugin>
             <!-- OpenRewrite Maven Plugin for Jakarta EE 10 migration -->
             <plugin>
                 <groupId>org.openrewrite.maven</groupId>
@@ -235,6 +250,7 @@
 					</inclusions>
                     <exclusions>
 						<exclusion>**/src/main/**/*.java</exclusion>
+                        <exclusion>**/org/jboss/seam/Model.java</exclusion>
 	                    <exclusion>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclusion>
 	                    <exclusion>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclusion>
                         <exclusion>**/org/jboss/seam/cache/JbossCacheProvider.java</exclusion>
@@ -530,7 +546,7 @@
         <dependency>
             <groupId>org.jboss.el</groupId>
             <artifactId>jboss-el</artifactId>
-            <version>1.0_02.jakarta.bravura.2-SNAPSHOT</version>
+            <version>1.0_02.jakarta.bravura.2</version>
             <scope>provided</scope>
         </dependency>
         

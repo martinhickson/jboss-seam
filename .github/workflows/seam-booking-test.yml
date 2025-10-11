@@ -1,0 +1,88 @@
+name: Seam Booking Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_class:
+        description: 'Test class to run'
+        required: false
+        default: 'JSFPrerequisitesTest'
+        type: string
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+        
+    - name: Configure Maven for GitHub Packages
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.m2/settings.xml << EOF
+        <settings>
+          <servers>
+            <server>
+              <id>github-packages</id>
+              <username>${{ github.actor }}</username>
+              <password>${{ secrets.GITHUB_TOKEN }}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
+        
+    - name: Build parent POM
+      run: mvn clean install -ntp -N -DskipTests
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Build BOM
+      run: mvn clean install -ntp -pl bom -DskipTests
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Build Seam Jakarta
+      run: |
+        cd jboss-seam-jakarta
+        mvn clean install -ntp -DskipTests
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Build Seam UI Jakarta
+      run: |
+        cd jboss-seam-ui-jakarta
+        mvn clean install -ntp -DskipTests
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Run Booking Test
+      run: |
+        cd examples/booking/booking-tests
+        mvn test -Dtest=${{ github.event.inputs.test_class || 'JSFPrerequisitesTest' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: examples/booking/booking-tests/target/surefire-reports/

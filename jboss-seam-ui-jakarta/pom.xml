@@ -39,6 +39,7 @@
                                     <filtering>false</filtering>
                                     <excludes>
 	                                    <exclude>**/org/jboss/seam/ui/validator/ModelValidator.java</exclude>
+	                                    <exclude>**/org/jboss/seam/ui/facelet/RendererRequest.java</exclude>
                                         <!-- Exclude complex files that need manual override -->
                                         <!--
                                         <exclude>**/org/jboss/seam/ui/component/**</exclude>
@@ -83,6 +84,7 @@
                         <!-- Exclude complex UI components from automated transformation -->
                         <exclusion>**/richfaces-cdk/**</exclusion>
                         <exclusion>**/src/main/java/**</exclusion>
+                        <exclusion>**/org/jboss/seam/ui/facelet/RendererRequest.java</exclusion>
                         <exclusion>**/org/jboss/seam/ui/validator/ModelValidator.java</exclusion>
                         <!--exclusion>**/component/**</!-exclusion>
                         <exclusion>**/facelet/**</exclusion>
