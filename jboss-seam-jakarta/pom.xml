@@ -170,7 +170,7 @@
             </goals>
             <configuration>
                 <replacementType>file-contents</replacementType>
-                <baseDir>${project.basedir}/src/generated/jakarta</baseDir>
+                <baseDir>src/generated/jakarta</baseDir>
                 <findRegex>javax.interceptor</findRegex>
                 <replaceValue>jakarta.interceptor</replaceValue>
                 <recursive>true</recursive>
@@ -184,7 +184,7 @@
             </goals>
             <configuration>
                 <replacementType>file-contents</replacementType>
-                <baseDir>${project.basedir}/src/generated/jakarta</baseDir>
+                <baseDir>src/generated/jakarta</baseDir>
                 <findRegex>javax.faces</findRegex>
                 <replaceValue>jakarta.faces</replaceValue>
                 <recursive>true</recursive>
@@ -198,7 +198,7 @@
             </goals>
             <configuration>
                 <replacementType>file-contents</replacementType>
-                <baseDir>${project.basedir}/src/generated/jakarta</baseDir>
+                <baseDir>src/generated/jakarta</baseDir>
                 <findRegex>javax.transaction</findRegex>
                 <replaceValue>jakarta.transaction</replaceValue>
                 <recursive>true</recursive>
@@ -212,7 +212,7 @@
             </goals>
             <configuration>
               <replacementType>file-contents</replacementType>
-              <baseDir>${project.basedir}/src/generated/jakarta</baseDir>
+              <baseDir>src/generated/jakarta</baseDir>
               <findRegex>javax.persistence</findRegex>
                <replaceValue>jakarta.persistence</replaceValue>
                <recursive>true</recursive>
