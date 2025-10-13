@@ -35,7 +35,7 @@
                             <outputDirectory>src/generated/jakarta</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../jboss-seam-ui/src/main/java</directory>
+                                    <directory>${project.parent.basedir}/jboss-seam-ui/src/main/java</directory>
                                     <filtering>false</filtering>
                                     <excludes>
 	                                    <exclude>**/org/jboss/seam/ui/validator/ModelValidator.java</exclude>

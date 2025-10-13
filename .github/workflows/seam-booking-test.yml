@@ -49,27 +49,8 @@ jobs:
         </settings>
         EOF
         
-    - name: Build parent POM
-      run: mvn clean install -ntp -N -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Build BOM
-      run: mvn clean install -ntp -pl bom -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Build Seam Jakarta
-      run: |
-        cd jboss-seam-jakarta
-        mvn clean install -ntp -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Build Seam UI Jakarta
-      run: |
-        cd jboss-seam-ui-jakarta
-        mvn clean install -ntp -DskipTests
+    - name: Build all modules
+      run: mvn clean install -ntp -DskipTests
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         

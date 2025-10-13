@@ -65,7 +65,7 @@
                             <outputDirectory>${project.basedir}/src/generated/jakarta</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../jboss-seam/src/main/java</directory>
+                                    <directory>${project.parent.basedir}/jboss-seam/src/main/java</directory>
                                     <filtering>false</filtering>
                                      <excludes>
                                      	<exclude>**/org/jboss/seam/Model.java</exclude>
@@ -112,7 +112,7 @@
                             <outputDirectory>${project.basedir}/src/main/jakarta-antlr</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../jboss-seam/src/main/antlr</directory>
+                                    <directory>${project.parent.basedir}/jboss-seam/src/main/antlr</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
@@ -129,7 +129,7 @@
                             <outputDirectory>${project.basedir}/target/generated/resources</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../jboss-seam/src/main/resources</directory>
+                                    <directory>${project.parent.basedir}/jboss-seam/src/main/resources</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
@@ -170,7 +170,7 @@
             </goals>
             <configuration>
                 <replacementType>file-contents</replacementType>
-                <baseDir>src/generated/jakarta</baseDir>
+                <baseDir>${project.basedir}/src/generated/jakarta</baseDir>
                 <findRegex>javax.interceptor</findRegex>
                 <replaceValue>jakarta.interceptor</replaceValue>
                 <recursive>true</recursive>
@@ -184,7 +184,7 @@
             </goals>
             <configuration>
                 <replacementType>file-contents</replacementType>
-                <baseDir>src/generated/jakarta</baseDir>javax.transaction
+                <baseDir>${project.basedir}/src/generated/jakarta</baseDir>
                 <findRegex>javax.faces</findRegex>
                 <replaceValue>jakarta.faces</replaceValue>
                 <recursive>true</recursive>
@@ -198,7 +198,7 @@
             </goals>
             <configuration>
                 <replacementType>file-contents</replacementType>
-                <baseDir>src/generated/jakarta</baseDir>
+                <baseDir>${project.basedir}/src/generated/jakarta</baseDir>
                 <findRegex>javax.transaction</findRegex>
                 <replaceValue>jakarta.transaction</replaceValue>
                 <recursive>true</recursive>
@@ -212,7 +212,7 @@
             </goals>
             <configuration>
               <replacementType>file-contents</replacementType>
-              <baseDir>src/generated/jakarta</baseDir>
+              <baseDir>${project.basedir}/src/generated/jakarta</baseDir>
               <findRegex>javax.persistence</findRegex>
                <replaceValue>jakarta.persistence</replaceValue>
                <recursive>true</recursive>

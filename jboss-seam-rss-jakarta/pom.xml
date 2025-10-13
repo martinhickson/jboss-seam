@@ -90,7 +90,7 @@
                             <outputDirectory>${project.basedir}/src/generated/jakarta</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../jboss-seam-rss/src/main/java</directory>
+                                    <directory>${project.parent.basedir}/jboss-seam-rss/src/main/java</directory>
                                     <includes>
                                         <include>**/*.java</include>
                                     </includes>

@@ -3,6 +3,11 @@ name: Build and Release
 on:
   workflow_dispatch:
     inputs:
+      run_tests:
+        description: 'Run booking tests'
+        required: false
+        default: false
+        type: boolean
       create_release:
         description: 'Create draft release with artifacts'
         required: false
@@ -59,48 +64,16 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
-    - name: Build BOM
-      run: mvn clean install -ntp -pl bom -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
-
-    - name: Build parent POM
-      run: mvn clean install -ntp -N -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build Seam Jakarta
-      run: |
-        cd jboss-seam-jakarta
-        mvn clean install -ntp -DskipTests
+    - name: Build all modules
+      run: mvn clean install -ntp -DskipTests
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: Build Seam UI Jakarta
-      run: |
-        cd jboss-seam-ui-jakarta
-        mvn clean install -ntp -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Build Seam PDF Jakarta
-      run: |
-        cd jboss-seam-pdf-jakarta
-        mvn clean install -ntp -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Build Seam RSS Jakarta
-      run: |
-        cd jboss-seam-rss-jakarta
-        mvn clean install -ntp -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Build examples
+    - name: Build and test examples
+      if: ${{ github.event.inputs.run_tests == 'true' }}
       run: |
         cd examples/booking/booking-tests
-        mvn clean package -ntp -DskipTests
+        mvn clean test -ntp
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         

@@ -440,4 +440,3 @@ public class HibernatePersistenceProvider extends PersistenceProvider
       throw new UnsupportedOperationException();
    }
 }
-}
