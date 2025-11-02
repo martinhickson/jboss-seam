@@ -1,47 +1,198 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    
-    <parent>
-        <groupId>org.jboss.seam</groupId>
-        <artifactId>seam-parent</artifactId>
-        <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-    
-    <artifactId>jboss-seam-ui-jakarta</artifactId>
-    <packaging>jar</packaging>
-    
-    <name>Seam UI Jakarta - JSF2 support</name>
-    <description>Jakarta EE version of Seam UI JSF2 support</description>
-    
-    <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <plugins>
-            <!-- Phase 1: Copy original source to generated directory -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
-                <executions>
-                    <execution>
-                        <id>copy-source-files</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/generated/jakarta</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/jboss-seam-ui/src/main/java</directory>
-                                    <filtering>false</filtering>
-                                    <excludes>
-	                                    <exclude>**/org/jboss/seam/ui/validator/ModelValidator.java</exclude>
-	                                    <exclude>**/org/jboss/seam/ui/facelet/RendererRequest.java</exclude>
-                                        <!-- Exclude complex files that need manual override -->
-                                        <!--
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jboss.seam</groupId>
+    <artifactId>seam-parent</artifactId>
+    <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>jboss-seam-ui-jakarta</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Seam UI Jakarta - JSF2 support</name>
+  <description>Jakarta EE version of Seam UI JSF2 support</description>
+
+  <dependencies>
+    <!-- Jakarta EE Dependencies -->
+    <dependency>
+      <groupId>jakarta.faces</groupId>
+      <artifactId>jakarta.faces-api</artifactId>
+      <version>4.1.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.el</groupId>
+      <artifactId>jakarta.el-api</artifactId>
+      <version>6.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JBoss Seam Jakarta Core -->
+    <dependency>
+      <groupId>org.jboss.seam</groupId>
+      <artifactId>jboss-seam-jakarta</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- RichFaces Dependencies -->
+    <dependency>
+      <groupId>org.richfaces.core</groupId>
+      <artifactId>richfaces-core-api</artifactId>
+      <version>4.2.2.Final</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.richfaces.core</groupId>
+      <artifactId>richfaces-core-impl</artifactId>
+      <version>4.2.2.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Third-party Dependencies -->
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.28.0-GA</version>
+    </dependency>
+    <dependency>
+      <groupId>org.dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>2.1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <version>3.0.2</version>
+      <!-- or the latest version -->
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet.jsp</groupId>
+      <artifactId>jakarta.servlet.jsp-api</artifactId>
+      <version>3.0.0</version>
+      <!-- or latest version -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.faces</artifactId>
+      <version>3.0.2</version>
+      <!-- or latest -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>antlr</groupId>
+      <artifactId>antlr</artifactId>
+      <version>2.7.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.richfaces.cdk</groupId>
+      <artifactId>annotations</artifactId>
+      <version>4.2.2.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>5.14.10</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Eclipse m2e settings -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.openrewrite.maven</groupId>
+                    <artifactId>rewrite-maven-plugin</artifactId>
+                    <versionRange>[6.13.0,)</versionRange>
+                    <goals>
+                      <goal>runNoFork</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.richfaces.cdk</groupId>
+                    <artifactId>maven-cdk-plugin</artifactId>
+                    <versionRange>[4.2.2.Final,)</versionRange>
+                    <goals>
+                      <goal>generate</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>com.github.ekryd.sortpom</groupId>
+        <artifactId>sortpom-maven-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <createBackupFile>true</createBackupFile>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>sort</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>copy-source-files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <outputDirectory>src/generated/jakarta</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.parent.basedir}/jboss-seam-ui/src/main/java</directory>
+                  <filtering>false</filtering>
+                  <excludes>
+                    <exclude>**/org/jboss/seam/ui/validator/ModelValidator.java</exclude>
+                    <exclude>**/org/jboss/seam/ui/facelet/RendererRequest.java</exclude>
+                    <!-- Exclude complex files that need manual override -->
+                    <!--
                                         <exclude>**/org/jboss/seam/ui/component/**</exclude>
                                         <exclude>**/org/jboss/seam/ui/facelet/**</exclude>
                                         <exclude>**/org/jboss/seam/ui/renderkit/**</exclude>
@@ -51,42 +202,34 @@
                                         <exclude>**/org/jboss/seam/ui/graphicImage/**</exclude>
                                         <exclude>**/org/jboss/seam/ui/resource/**</exclude>
                                         <exclude>**/org/jboss/seam/ui/util/**</exclude> -->
-                                    </excludes>
-                                </resource>
-                            </resources>
-                            <overwrite>false</overwrite>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+                  </excludes>
+                </resource>
+              </resources>
+              <overwrite>false</overwrite>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-            <!-- Phase 2: OpenRewrite transformation -->
-            <plugin>
-                <groupId>org.openrewrite.maven</groupId>
-                <artifactId>rewrite-maven-plugin</artifactId>
-                <version>6.13.0</version>
-                <executions>
-                    <execution>
-                        <id>jakarta-migration</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>runNoFork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <logLevel>DEBUG</logLevel>
-                    <activeRecipes>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
-                    </activeRecipes>
-                    <sourceDirectory>${project.build.directory}/generated/jakarta</sourceDirectory>
-                    <exclusions>
-                        <!-- Exclude complex UI components from automated transformation -->
-                        <exclusion>**/richfaces-cdk/**</exclusion>
-                        <exclusion>**/src/main/java/**</exclusion>
-                        <exclusion>**/org/jboss/seam/ui/facelet/RendererRequest.java</exclusion>
-                        <exclusion>**/org/jboss/seam/ui/validator/ModelValidator.java</exclusion>
-                        <!--exclusion>**/component/**</!-exclusion>
+      <!-- Phase 2: OpenRewrite transformation -->
+      <plugin>
+        <groupId>org.openrewrite.maven</groupId>
+        <artifactId>rewrite-maven-plugin</artifactId>
+        <version>6.13.0</version>
+        <configuration>
+          <logLevel>DEBUG</logLevel>
+          <runPerSubmodule>true</runPerSubmodule>
+          <activeRecipes>
+            <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
+          </activeRecipes>
+          <sourceDirectory>${project.build.directory}/generated/jakarta</sourceDirectory>
+          <exclusions>
+            <!-- Exclude complex UI components from automated transformation -->
+            <exclusion>**/richfaces-cdk/**</exclusion>
+            <exclusion>**/src/main/java/**</exclusion>
+            <exclusion>**/org/jboss/seam/ui/facelet/RendererRequest.java</exclusion>
+            <exclusion>**/org/jboss/seam/ui/validator/ModelValidator.java</exclusion>
+            <!--exclusion>**/component/**</!-exclusion>
                         <exclusion>**/facelet/**</exclusion>
                         <exclusion>**/renderkit/**</exclusion>
                         <exclusion>**/handler/**</exclusion>
@@ -95,40 +238,49 @@
                         <exclusion>**/graphicImage/**</exclusion>
                         <exclusion>**/resource/**</exclusion>
                         <exclusion>**/util/**</exclusion-->
-                    </exclusions>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.openrewrite.recipe</groupId>
-                        <artifactId>rewrite-migrate-java</artifactId>
-                        <version>3.13.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+          </exclusions>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-migrate-java</artifactId>
+            <version>3.13.0</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>jakarta-migration</id>
+            <goals>
+              <goal>runNoFork</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
 
-            <!-- Phase 3: Add generated sources to compilation -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>add-generated-sources</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/generated/jakarta</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+      <!-- Phase 3: Add generated sources to compilation -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>add-generated-sources</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <sources>
+                <source>src/generated/jakarta</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-            <!-- RichFaces CDK Plugin for UI component generation -->
-            <!-- <plugin>
+      <!-- RichFaces CDK Plugin for UI component generation -->
+      <!-- <plugin>
                 <groupId>org.richfaces.cdk</groupId>
                 <artifactId>maven-cdk-plugin</artifactId>
                 <version>${version.richfaces.cdk}</version>
@@ -165,215 +317,76 @@
                 </executions>
             </plugin> -->
 
+      <!-- Java 17 Compiler Configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+        </configuration>
+      </plugin>
 
-            <!-- Java 17 Compiler Configuration -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>17</source>
-                    <target>17</target>
-                </configuration>
-            </plugin>
-
-            <!-- Maven Enforcer Plugin - Enforce JDK 17 minimum -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.4.1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-java-version</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>[17,)</version>
-                                    <message>
-                                        ❌ JDK 17 or higher is required for Jakarta EE 10 compatibility.
+      <!-- Maven Enforcer Plugin - Enforce JDK 17 minimum -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.4.1</version>
+        <executions>
+          <execution>
+            <id>enforce-java-version</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[17,)</version>
+                  <message>❌ JDK 17 or higher is required for Jakarta EE 10 compatibility.
                                         Current JDK: ${java.version}
                                         
                                         Jakarta EE 10 dependencies are compiled with JDK 17 bytecode (version 61.0).
                                         Please upgrade to JDK 17 or higher to build this module.
                                         
-                                        See context/jdk17-migration-justification.md for detailed analysis.
-                                    </message>
-                                </requireJavaVersion>
-                                <requireMavenVersion>
-                                    <version>[3.6.0,)</version>
-                                    <message>Maven 3.6.0 or higher is required</message>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+                                        See context/jdk17-migration-justification.md for detailed analysis.</message>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[3.6.0,)</version>
+                  <message>Maven 3.6.0 or higher is required</message>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-            <!-- Javadoc Plugin -->
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                    <links>
-                        <link>http://docs.oracle.com/javase/17/docs/api/</link>
-                    </links>
-                    <keywords>true</keywords>
-                    <author>true</author>
-                    <stylesheetfile>jdstyle.css</stylesheetfile>
-                    <doctitle>JBoss Seam Jakarta ${project.name} API ${project.version}</doctitle>
-                    <detectOfflineLinks>false</detectOfflineLinks>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <pluginManagement>
-            <plugins>
-                <!-- Eclipse m2e settings -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.openrewrite.maven</groupId>
-                                        <artifactId>rewrite-maven-plugin</artifactId>
-                                        <versionRange>[6.13.0,)</versionRange>
-                                        <goals>
-                                            <goal>runNoFork</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.richfaces.cdk</groupId>
-                                        <artifactId>maven-cdk-plugin</artifactId>
-                                        <versionRange>[4.2.2.Final,)</versionRange>
-                                        <goals>
-                                            <goal>generate</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
-    <dependencies>
-        <!-- Jakarta EE Dependencies -->
-        <dependency>
-            <groupId>jakarta.faces</groupId>
-            <artifactId>jakarta.faces-api</artifactId>
-            <version>4.1.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.el</groupId>
-            <artifactId>jakarta.el-api</artifactId>
-            <version>6.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- JBoss Seam Jakarta Core -->
-        <dependency>
-            <groupId>org.jboss.seam</groupId>
-            <artifactId>jboss-seam-jakarta</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- RichFaces Dependencies -->
-        <dependency>
-            <groupId>org.richfaces.core</groupId>
-            <artifactId>richfaces-core-api</artifactId>
-            <version>4.2.2.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.richfaces.core</groupId>
-            <artifactId>richfaces-core-impl</artifactId>
-            <version>4.2.2.Final</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Third-party Dependencies -->
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.28.0-GA</version>
-        </dependency>
-        <dependency>
-            <groupId>org.dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>2.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.2</version> <!-- or the latest version -->
-        </dependency>
-        <dependency>
-            <groupId>jakarta.servlet.jsp</groupId>
-            <artifactId>jakarta.servlet.jsp-api</artifactId>
-            <version>3.0.0</version> <!-- or latest version -->
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.faces</artifactId>
-            <version>3.0.2</version> <!-- or latest -->
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>antlr</groupId>
-            <artifactId>antlr</artifactId>
-            <version>2.7.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.richfaces.cdk</groupId>
-            <artifactId>annotations</artifactId>
-            <version>4.2.2.Final</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-
-        <!-- Test Dependencies -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>5.14.10</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-</project> 
+      <!-- Javadoc Plugin -->
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+          <links>
+            <link>http://docs.oracle.com/javase/17/docs/api/</link>
+          </links>
+          <keywords>true</keywords>
+          <author>true</author>
+          <stylesheetfile>jdstyle.css</stylesheetfile>
+          <doctitle>JBoss Seam Jakarta ${project.name} API ${project.version}</doctitle>
+          <detectOfflineLinks>false</detectOfflineLinks>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <sourceDirectory>src/main/java</sourceDirectory>
+  </build>
+</project>

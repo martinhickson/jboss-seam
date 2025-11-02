@@ -230,29 +230,29 @@ public class HibernatePersistenceProvider extends PersistenceProvider
        }
    }
 
-   public Object getVersion(Object bean, EntityManager entityManager)
-   {
-       try
-       {
-          return getVersion( bean, getSession(entityManager) );
-       }
-       catch (NotHibernateException nhe)
-       {
-          return super.getVersion(bean, entityManager);
-       }
-   }
+//   public Object getVersion(Object bean, EntityManager entityManager)
+//   {
+//       try
+//       {
+//          return getVersion( bean, getSession(entityManager) );
+//       }
+//       catch (NotHibernateException nhe)
+//       {
+//          return super.getVersion(bean, entityManager);
+//       }
+//   }
 
-   public void checkVersion(Object bean, EntityManager entityManager, Object oldVersion, Object version)
-   {
-       try
-       {
-          checkVersion(bean, getSession(entityManager), oldVersion, version);
-       }
-       catch (NotHibernateException nhe)
-       {
-          super.checkVersion(bean, entityManager, oldVersion, version);
-       }
-   }
+//   public void checkVersion(Object bean, EntityManager entityManager, Object oldVersion, Object version)
+//   {
+//       try
+//       {
+//          checkVersion(bean, getSession(entityManager), oldVersion, version);
+//       }
+//       catch (NotHibernateException nhe)
+//       {
+//          super.checkVersion(bean, entityManager, oldVersion, version);
+//       }
+//   }
 
    @Override
    public void enableFilter(Filter f, EntityManager entityManager)
@@ -340,22 +340,22 @@ public class HibernatePersistenceProvider extends PersistenceProvider
       }
    }
 
-   public static void checkVersion(Object value, Session session, Object oldVersion, Object version)
-   {
-      ClassMetadata classMetadata = getClassMetadata(value, session);
-      VersionType versionType = (VersionType) classMetadata.getPropertyTypes()[ classMetadata.getVersionProperty() ];
-      if ( !versionType.isEqual(oldVersion, version) )
-      {
-         throw new StaleStateException("current database version number does not match passivated version number");
-      }
-   }
+//   public static void checkVersion(Object value, Session session, Object oldVersion, Object version)
+//   {
+//      ClassMetadata classMetadata = getClassMetadata(value, session);
+//      VersionType versionType = (VersionType) classMetadata.getPropertyTypes()[ classMetadata.getVersionProperty() ];
+//      if ( !versionType.isEqual(oldVersion, version) )
+//      {
+//         throw new StaleStateException("current database version number does not match passivated version number");
+//      }
+//   }
 
-   public static Object getVersion(Object value, Session session)
-   {
-      ClassMetadata classMetadata = getClassMetadata(value, session);
-      return classMetadata!=null && classMetadata.isVersioned() ?
-               classMetadata.getVersion(value) : null;
-   }
+//   public static Object getVersion(Object value, Session session)
+//   {
+//      ClassMetadata classMetadata = getClassMetadata(value, session);
+//      return classMetadata!=null && classMetadata.isVersioned() ?
+//               classMetadata.getVersion(value) : null;
+//   }
 
    private static ClassMetadata getClassMetadata(Object value, Session session)
    {

@@ -5,8 +5,6 @@ import static org.jboss.seam.annotations.Install.BUILT_IN;
 
 import org.jboss.cache.CacheException;
 import org.jboss.cache.Node;
-import org.jboss.cache.PropertyConfigurator;
-import org.jboss.cache.TreeCache;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Destroy;
@@ -29,114 +27,27 @@ import org.jboss.seam.log.Logging;
 @BypassInterceptors
 @Install(precedence = BUILT_IN, classDependencies={"org.jboss.cache.TreeCache", "org.jgroups.MembershipListener"})
 @AutoCreate
-public class JbossCacheProvider extends AbstractJBossCacheProvider<TreeCache>
+public class JbossCacheProvider extends AbstractJBossCacheProvider<Object>
 {
-
-   private TreeCache cache;
-
-   private static final LogProvider log = Logging.getLogProvider(JbossCacheProvider.class);
-
-   @Create
-   public void create()
-   {
-      log.debug("Starting JBoss Treecache 1.x");
-
-      try
-      {
-         cache = new TreeCache();
-         new PropertyConfigurator().configure(cache, getConfigurationAsStream());
-         cache.createService();
-         cache.startService();
-
-      }
-      catch (Exception e)
-      {
-         throw new IllegalStateException("Error starting JBoss Treecache 1.x", e);
-      }
-   }
-
-   @Destroy
-   public void destroy()
-   {
-      log.debug("Stopping JBoss Treecache 1.x");
-
-      try
-      {
-         cache.stopService();
-         cache.destroyService();
-      }
-      catch (RuntimeException e)
-      {
-         throw new IllegalStateException("Error stopping JBoss Treecache 1.x", e);
-      }
-      cache = null;
+   @Override
+   public Object get(String region, String key) {
+       return null;
    }
 
    @Override
-   public Object get(String region, String key)
-   {
-      try
-      {
-         Node node = cache.get(getFqn(region));
-         if (node != null)
-         {
-            return node.get(key);
-         }
-         else
-         {
-            return null;
-         }
-      }
-      catch (CacheException e)
-      {
-         throw new IllegalStateException(String.format("Cache throw exception when trying to get %s from region %s.", key, region), e);
-      }
+   public void put(String region, String key, Object object) {
    }
 
    @Override
-   public void put(String region, String key, Object object)
-   {
-      try
-      {
-         cache.put(getFqn(region), key, object);
-      }
-      catch (CacheException e)
-      {
-         throw new IllegalStateException(String.format("JBoss Cache throw exception when adding object for key %s to region %s", key, region), e);
-      }
+   public void remove(String region, String key) {
    }
 
    @Override
-   public void remove(String region, String key)
-   {
-      try
-      {
-         cache.remove(getFqn(region), key);
-      }
-      catch (CacheException e)
-      {
-         throw new IllegalStateException(String.format("JBoss Cache throw exception when removing object for key %s in region %s", key, region), e);
-      }
-
+   public Object getDelegate() {
+      return null;
    }
 
    @Override
-   public t getDelegate()
-   {
-      return cache;
+   public void clear() {
    }
-
-   @Override
-   public void clear()
-   {
-      try
-      {
-         cache.remove(getFqn(null));
-      }
-      catch (CacheException e)
-      {
-         throw new IllegalStateException(String.format("JBoss Cache throw exception when clearing default cache."), e);
-      }
-   }
-
 }

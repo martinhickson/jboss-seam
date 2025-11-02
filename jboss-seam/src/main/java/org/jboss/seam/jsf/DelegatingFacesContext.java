@@ -15,7 +15,7 @@ import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 
-import jakarta.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.Lifecycle;
 
 /**
  * Implementation of FacesContext that delegates all calls.

@@ -1,372 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    
-    <parent>
-        <groupId>org.jboss.seam</groupId>
-        <artifactId>seam-parent</artifactId>
-        <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-    
-    <artifactId>jboss-seam-jakarta</artifactId>
-    <packaging>jar</packaging>
-    
-    <name>JBoss Seam - Jakarta EE Version</name>
-    <description>Jakarta EE version of jboss-seam</description>
-    
-    <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version> <!-- use latest stable version -->
-                <executions>
-                  <execution>
-                    <id>enforce-java</id>
-                    <goals>
-                      <goal>enforce</goal>
-                    </goals>
-                    <configuration>
-                      <rules>
-                        <requireJavaVersion>
-                          <version>[17,18)</version> <!-- allows Java 17 but less than 18 -->
-                          <message>You must use JDK 17 to build this project.</message>
-                        </requireJavaVersion>
-                      </rules>
-                      <fail>true</fail>
-                    </configuration>
-                  </execution>
-                </executions>
-            </plugin>                       
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>17</source>
-                    <target>17</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
-                <executions>
-                    <execution>
-                        <id>copy-source-files</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/src/generated/jakarta</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/jboss-seam/src/main/java</directory>
-                                    <filtering>false</filtering>
-                                     <excludes>
-                                     	<exclude>**/org/jboss/seam/Model.java</exclude>
-	                                    <exclude>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclude>
-	                                    <exclude>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclude>
-	                                    <exclude>**/org/jboss/seam/cache/JbossCacheProvider.java</exclude>
-	                                    <exclude>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclude>
-	                                    <exclude>**/org/jboss/seam/core/Validators.java</exclude>
-	                                    <exclude>**/org/jboss/seam/framework/HibernateEntityController.java</exclude>
-	                                    <exclude>**/org/jboss/seam/framework/HibernateEntityHome.java</exclude>
-	                                    <exclude>**/org/jboss/seam/framework/HibernateEntityQuery.java</exclude>
-	                                    <exclude>**/org/jboss/seam/jsf/DelegatingFacesContext.java</exclude>
-	                                    <exclude>**/org/jboss/seam/jsf/SeamApplication.java</exclude>
-	                                    <exclude>**/org/jboss/seam/jsf/SeamStateManagementStrategy.java</exclude>
-	                                    <exclude>**/org/jboss/seam/jsf/SeamStateManager.java</exclude>
-	                                    <exclude>**/org/jboss/seam/jsf/UnifiedELMethodBinding.java</exclude>
-	                                    <exclude>**/org/jboss/seam/jsf/UnifiedELValueBinding.java</exclude>
-	                                    <exclude>**/org/jboss/seam/mock/AbstractSeamTest.java</exclude>
-	                                    <exclude>**/org/jboss/seam/mock/MockApplication.java</exclude>
-	                                    <exclude>**/org/jboss/seam/mock/MockExternalContext.java</exclude>
-	                                    <exclude>**/org/jboss/seam/mock/MockFacesContext.java</exclude>
-	                                    <exclude>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclude>
-	                                    <exclude>**/org/jboss/seam/mock/MockStateManager.java</exclude>
-	                                    <exclude>**/org/jboss/seam/navigation/Param.java</exclude>
-	                                    <exclude>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclude>
-	                                    <exclude>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclude>
-	                                    <exclude>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclude>
-	                                    <exclude>**/org/jboss/seam/persistence/HibernateSessionFactory.java</exclude>
-	                                    <exclude>**/org/jboss/seam/persistence/HibernateSessionInvocationHandler.java</exclude>
-	                                    <exclude>**/org/jboss/seam/persistence/ManagedHibernateSession.java</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                            <overwrite>false</overwrite>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-antlr-files</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/src/main/jakarta-antlr</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/jboss-seam/src/main/antlr</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                            <overwrite>true</overwrite>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-resource-files</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/target/generated/resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/jboss-seam/src/main/resources</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                            <overwrite>true</overwrite>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- ANTLR Maven Plugin for generating parser from grammar -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>antlr-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/jakarta-antlr</sourceDirectory>
-                    <grammars>org/jboss/seam/text/seam-text.g</grammars>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>antlr-generation</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-    <groupId>io.github.floverfelt</groupId>
-    <artifactId>find-and-replace-maven-plugin</artifactId>
-    <version>1.2.0</version>
-    <executions>
-        <execution>
-            <id>replace</id>
-            <phase>generate-sources</phase>
-            <goals>
-                <goal>find-and-replace</goal>
-            </goals>
-            <configuration>
-                <replacementType>file-contents</replacementType>
-                <baseDir>src/generated/jakarta</baseDir>
-                <findRegex>javax.interceptor</findRegex>
-                <replaceValue>jakarta.interceptor</replaceValue>
-                <recursive>true</recursive>
-            </configuration>
-        </execution>
-        <execution>
-            <id>replace2</id>
-            <phase>generate-sources</phase>
-            <goals>
-                <goal>find-and-replace</goal>
-            </goals>
-            <configuration>
-                <replacementType>file-contents</replacementType>
-                <baseDir>src/generated/jakarta</baseDir>
-                <findRegex>javax.faces</findRegex>
-                <replaceValue>jakarta.faces</replaceValue>
-                <recursive>true</recursive>
-            </configuration>
-        </execution>
-        <execution>
-            <id>replace3</id>
-            <phase>generate-sources</phase>
-            <goals>
-                <goal>find-and-replace</goal>
-            </goals>
-            <configuration>
-                <replacementType>file-contents</replacementType>
-                <baseDir>src/generated/jakarta</baseDir>
-                <findRegex>javax.transaction</findRegex>
-                <replaceValue>jakarta.transaction</replaceValue>
-                <recursive>true</recursive>
-            </configuration>
-        </execution>
-        <execution>
-            <id>replace-persistence</id>
-            <phase>generate-sources</phase>
-            <goals>
-               <goal>find-and-replace</goal>
-            </goals>
-            <configuration>
-              <replacementType>file-contents</replacementType>
-              <baseDir>src/generated/jakarta</baseDir>
-              <findRegex>javax.persistence</findRegex>
-               <replaceValue>jakarta.persistence</replaceValue>
-               <recursive>true</recursive>
-            </configuration>
-        </execution>
-        </executions>
-            </plugin>
-            <!-- OpenRewrite Maven Plugin for Jakarta EE 10 migration -->
-            <plugin>
-                <groupId>org.openrewrite.maven</groupId>
-                <artifactId>rewrite-maven-plugin</artifactId>
-                <version>6.13.0</version>
-                <executions>
-                    <execution>
-                        <id>jakarta-migration</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>runNoFork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <activeRecipes>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta</recipe>
-                        <recipe>org.openrewrite.java.migrate.jakarta.Faces2xMigrationToJakartaFaces3x</recipe>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxInterceptorToJakartaInterceptor</recipe>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JavaxElToJakartaEl</recipe>
-                    </activeRecipes>
-                    <arguments>
-                        <argument>- -errors</argument>
-                    </arguments>
-                    <inclusions>
-						<inclusion>**/src/generated/jakarta/**/*.java</inclusion>
-					</inclusions>
-                    <exclusions>
-						<exclusion>**/src/main/**/*.java</exclusion>
-                        <exclusion>**/org/jboss/seam/Model.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclusion>
-                        <exclusion>**/org/jboss/seam/cache/JbossCacheProvider.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/core/Validators.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/framework/HibernateEntityController.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/framework/HibernateEntityHome.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/framework/HibernateEntityQuery.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/jsf/DelegatingFacesContext.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/jsf/SeamApplication.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/jsf/SeamStateManagementStrategy.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/jsf/SeamStateManager.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/jsf/UnifiedELMethodBinding.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/jsf/UnifiedELValueBinding.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/mock/AbstractSeamTest.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/mock/MockApplication.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/mock/MockExternalContext.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/mock/MockFacesContext.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/mock/MockStateManager.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/navigation/Param.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/persistence/HibernateSessionFactory.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/persistence/HibernateSessionInvocationHandler.java</exclusion>
-	                    <exclusion>**/org/jboss/seam/persistence/ManagedHibernateSession.java</exclusion>
-                    </exclusions>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.openrewrite.recipe</groupId>
-                        <artifactId>rewrite-migrate-java</artifactId>
-                        <version>3.13.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>add-jakarta-sources</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <!-- src/generated since OpenRewrite unconditionally skips target/generated -->
-                                <source>${project.basedir}/src/generated/jakarta</source>
-                                <source>${project.basedir}/target/generated-sources/antlr</source>
-                                <source>${project.basedir}/target/generated/resources</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.openrewrite.maven
-                                        </groupId>
-                                        <artifactId>
-                                            rewrite-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [6.13.0,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>runNoFork</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <execute></execute>
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                	<pluginExecutionFilter>
-                                		<groupId>
-                                			org.codehaus.mojo
-                                		</groupId>
-                                		<artifactId>
-                                			antlr-maven-plugin
-                                		</artifactId>
-                                		<versionRange>
-                                			[2.2,)
-                                		</versionRange>
-                                		<goals>
-                                			<goal>generate</goal>
-                                		</goals>
-                                	</pluginExecutionFilter>
-                                	<action>
-                                		<ignore></ignore>
-                                	</action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-    
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jboss.seam</groupId>
+    <artifactId>seam-parent</artifactId>
+    <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>jboss-seam-jakarta</artifactId>
+  <packaging>jar</packaging>
+
+  <name>JBoss Seam - Jakarta EE Version</name>
+  <description>Jakarta EE version of jboss-seam</description>
+
   <dependencies>
     <!-- Jakarta EE 10 API Dependencies -->
     <dependency>
@@ -434,7 +82,7 @@
       <version>3.0.2</version>
       <scope>provided</scope>
     </dependency>
-        
+
     <!-- Additional Jakarta EE dependencies -->
     <dependency>
       <groupId>jakarta.jms</groupId>
@@ -454,21 +102,21 @@
       <version>5.14.10</version>
       <scope>compile</scope>
     </dependency>
-        
+
     <!-- Jakarta Mail dependencies -->
     <dependency>
-        <groupId>jakarta.mail</groupId>
-        <artifactId>jakarta.mail-api</artifactId>
-        <version>2.1.3</version>
-        <scope>provided</scope>
+      <groupId>jakarta.mail</groupId>
+      <artifactId>jakarta.mail-api</artifactId>
+      <version>2.1.3</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>org.eclipse.angus</groupId>
-        <artifactId>jakarta.mail</artifactId>
-        <version>2.0.1</version>
-        <scope>provided</scope>
+      <groupId>org.eclipse.angus</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <version>2.0.1</version>
+      <scope>provided</scope>
     </dependency>
-        
+
     <!-- Third-party dependencies -->
     <dependency>
       <groupId>org.javassist</groupId>
@@ -476,9 +124,9 @@
       <version>3.28.0-GA</version>
     </dependency>
     <dependency>
-        <groupId>org.hibernate.orm</groupId>
-        <artifactId>hibernate-core</artifactId>
-        <version>6.6.22.Final</version>
+      <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>6.6.22.Final</version>
     </dependency>
     <dependency>
       <groupId>org.dom4j</groupId>
@@ -507,537 +155,892 @@
       <artifactId>jakarta.el-api</artifactId>
       <version>6.0.1</version>
     </dependency>
-        <!-- Third-party dependencies from BOM -->
-        <dependency>
-            <groupId>org.jbpm.jbpm3</groupId>
-            <artifactId>jbpm-jpdl</artifactId>
-            <version>3.2.10.SP3_seam2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-cache</artifactId>
-            <version>1.4.1.SP9</version>
-            <scope>compile</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.drools</groupId>
-            <artifactId>drools-core</artifactId>
-            <version>5.3.3.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.drools</groupId>
-            <artifactId>drools-compiler</artifactId>
-            <version>5.3.3.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.drools</groupId>
-            <artifactId>knowledge-api</artifactId>
-            <version>5.3.3.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.el</groupId>
-            <artifactId>jboss-el</artifactId>
-            <version>1.0_02.jakarta.bravura.2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>1.5.4</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-core</artifactId>
-            <version>5.2.4.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-tree</artifactId>
-            <version>5.2.4.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.15.0-GA</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Removed: javax.mail:mail:1.4 - duplicate with jakarta.mail -->
-        
-        <!-- Removed: javax.xml.ws:jaxws-api:2.1 - duplicate with jakarta.xml.ws -->
-        
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.7.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.3.1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1-jbossorg-1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jbossxb</artifactId>
-            <version>1.0.0.CR8</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1-brew</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.beanshell</groupId>
-            <artifactId>bsh</artifactId>
-            <version>2.0b4</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket</artifactId>
-            <version>1.4.14</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-ioc</artifactId>
-            <version>1.4.14</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-extensions</artifactId>
-            <version>1.4.14</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-datetime</artifactId>
-            <version>1.4.14</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jms</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.google.code.guice</groupId>
-            <artifactId>guice</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.adobe.blazeds</groupId>
-            <artifactId>blazeds-common</artifactId>
-            <version>3.2.0.3978</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.adobe.blazeds</groupId>
-            <artifactId>blazeds-proxy</artifactId>
-            <version>3.2.0.3978</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.adobe.blazeds</groupId>
-            <artifactId>blazeds-core</artifactId>
-            <version>3.2.0.3978</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.adobe.blazeds</groupId>
-            <artifactId>blazeds-remoting</artifactId>
-            <version>3.2.0.3978</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext</artifactId>
-            <version>2.1.2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext-rtf</artifactId>
-            <version>2.1.2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>1.0.13</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Removed: org.openid4java:openid4java-consumer:0.9.6 - not available in repository -->
-        
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>1.5.2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>1.5.2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.tuckey</groupId>
-            <artifactId>urlrewritefilter</artifactId>
-            <version>3.0.4</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.dbunit</groupId>
-            <artifactId>dbunit</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-server</artifactId>
-            <version>2.25.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>2.25.0</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.eclipse.jdt</groupId>
-            <artifactId>core</artifactId>
-            <version>3.4.2.v_883_R34x</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.codehaus.jettison</groupId>
-            <artifactId>jettison</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- JSF 4.0 Dependencies for WildFly 28 -->
-        <dependency>
-            <groupId>jakarta.faces</groupId>
-            <artifactId>jakarta.faces-api</artifactId>
-            <version>4.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.faces</artifactId>
-            <version>4.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
-            <version>2.0.1.GA</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxb-provider</artifactId>
-            <version>2.0.1.GA</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jettison-provider</artifactId>
-            <version>2.0.1.GA</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-atom-provider</artifactId>
-            <version>2.0.1.GA</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>1.2.3</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>net.sourceforge.jexcelapi</groupId>
-            <artifactId>jxl</artifactId>
-            <version>2.6.10</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>antlr</groupId>
-            <artifactId>antlr</artifactId>
-            <version>2.7.6</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.richfaces</groupId>
-            <artifactId>richfaces-bom</artifactId>
-            <version>4.3.3.Final</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.bom</groupId>
-            <artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
-            <version>1.0.7.CR8</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jboss.bom</groupId>
-            <artifactId>jboss-javaee-6.0-with-tools</artifactId>
-            <version>1.0.7.CR8</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Additional Jakarta EE dependencies -->
-        <dependency>
-            <groupId>jakarta.jms</groupId>
-            <artifactId>jakarta.jms-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.interceptor</groupId>
-            <artifactId>jakarta.interceptor-api</artifactId>
-            <version>2.2.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Drools Decision Table dependency -->
-        <dependency>
-            <groupId>org.drools</groupId>
-            <artifactId>drools-decisiontables</artifactId>
-            <version>5.3.3.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- OpenID4Java dependency from BOM -->
-        <dependency>
-            <groupId>org.openid4java</groupId>
-            <artifactId>openid4java-nodeps</artifactId>
-            <version>0.9.6</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Hibernate Search dependency compatible with Hibernate 3.2.10.SP3_seam2
+    <!-- Third-party dependencies from BOM -->
+    <dependency>
+      <groupId>org.jbpm.jbpm3</groupId>
+      <artifactId>jbpm-jpdl</artifactId>
+      <version>3.2.10.SP3_seam2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jboss</groupId>
+      <artifactId>jboss-cache</artifactId>
+      <version>1.4.1.SP9</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-core</artifactId>
+      <version>5.3.3.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-compiler</artifactId>
+      <version>5.3.3.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>knowledge-api</artifactId>
+      <version>5.3.3.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.el</groupId>
+      <artifactId>jboss-el</artifactId>
+      <version>1.0_02.jakarta.bravura.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+      <version>1.5.4</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-core</artifactId>
+      <version>5.2.4.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-tree</artifactId>
+      <version>5.2.4.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.15.0-GA</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Removed: javax.mail:mail:1.4 - duplicate with jakarta.mail -->
+
+    <!-- Removed: javax.xml.ws:jaxws-api:2.1 - duplicate with jakarta.xml.ws -->
+
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.7.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.3.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1-jbossorg-1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jboss</groupId>
+      <artifactId>jbossxb</artifactId>
+      <version>1.0.0.CR8</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>2.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>1.6.1-brew</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.beanshell</groupId>
+      <artifactId>bsh</artifactId>
+      <version>2.0b4</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket</artifactId>
+      <version>1.4.14</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-ioc</artifactId>
+      <version>1.4.14</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-extensions</artifactId>
+      <version>1.4.14</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-datetime</artifactId>
+      <version>1.4.14</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jms</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>3.1.1.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.guice</groupId>
+      <artifactId>guice</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.adobe.blazeds</groupId>
+      <artifactId>blazeds-common</artifactId>
+      <version>3.2.0.3978</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.adobe.blazeds</groupId>
+      <artifactId>blazeds-proxy</artifactId>
+      <version>3.2.0.3978</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.adobe.blazeds</groupId>
+      <artifactId>blazeds-core</artifactId>
+      <version>3.2.0.3978</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.adobe.blazeds</groupId>
+      <artifactId>blazeds-remoting</artifactId>
+      <version>3.2.0.3978</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.lowagie</groupId>
+      <artifactId>itext</artifactId>
+      <version>2.1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.lowagie</groupId>
+      <artifactId>itext-rtf</artifactId>
+      <version>2.1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jfree</groupId>
+      <artifactId>jfreechart</artifactId>
+      <version>1.0.13</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Removed: org.openid4java:openid4java-consumer:0.9.6 - not available in repository -->
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>1.5.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>1.5.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.tuckey</groupId>
+      <artifactId>urlrewritefilter</artifactId>
+      <version>3.0.4</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.dbunit</groupId>
+      <artifactId>dbunit</artifactId>
+      <version>2.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-server</artifactId>
+      <version>2.25.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>2.25.0</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-digester</groupId>
+      <artifactId>commons-digester</artifactId>
+      <version>2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>core</artifactId>
+      <version>3.4.2.v_883_R34x</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.jettison</groupId>
+      <artifactId>jettison</artifactId>
+      <version>1.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSF 4.0 Dependencies for WildFly 28 -->
+    <dependency>
+      <groupId>jakarta.faces</groupId>
+      <artifactId>jakarta.faces-api</artifactId>
+      <version>4.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.faces</artifactId>
+      <version>4.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+      <version>2.0.1.GA</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxb-provider</artifactId>
+      <version>2.0.1.GA</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jettison-provider</artifactId>
+      <version>2.0.1.GA</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-atom-provider</artifactId>
+      <version>2.0.1.GA</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <version>1.2.3</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sourceforge.jexcelapi</groupId>
+      <artifactId>jxl</artifactId>
+      <version>2.6.10</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>antlr</groupId>
+      <artifactId>antlr</artifactId>
+      <version>2.7.6</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.richfaces</groupId>
+      <artifactId>richfaces-bom</artifactId>
+      <version>4.3.3.Final</version>
+      <type>pom</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.bom</groupId>
+      <artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+      <version>1.0.7.CR8</version>
+      <type>pom</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.bom</groupId>
+      <artifactId>jboss-javaee-6.0-with-tools</artifactId>
+      <version>1.0.7.CR8</version>
+      <type>pom</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Additional Jakarta EE dependencies -->
+    <dependency>
+      <groupId>jakarta.jms</groupId>
+      <artifactId>jakarta.jms-api</artifactId>
+      <version>3.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.interceptor</groupId>
+      <artifactId>jakarta.interceptor-api</artifactId>
+      <version>2.2.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Drools Decision Table dependency -->
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-decisiontables</artifactId>
+      <version>5.3.3.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- OpenID4Java dependency from BOM -->
+    <dependency>
+      <groupId>org.openid4java</groupId>
+      <artifactId>openid4java-nodeps</artifactId>
+      <version>0.9.6</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Hibernate Search dependency compatible with Hibernate 3.2.10.SP3_seam2
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search</artifactId>
             <version>3.0.1.GA</version>
             <scope>provided</scope>
         </dependency-->
-        
-       <dependency>
-            <groupId>org.hibernate.search</groupId>
-            <artifactId>hibernate-search-engine</artifactId>
-            <version>6.2.4.Final</version>
-        </dependency>
-                
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-        
-        <dependency>
-                <groupId>org.jbpm.jbpm3</groupId>
-                <artifactId>jbpm-jpdl</artifactId>
-                <version>3.2.10.SP3_seam2</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-core</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-    </dependencies>
-</project> 
+
+    <dependency>
+      <groupId>org.hibernate.search</groupId>
+      <artifactId>hibernate-search-engine</artifactId>
+      <version>6.2.4.Final</version>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jbpm.jbpm3</groupId>
+      <artifactId>jbpm-jpdl</artifactId>
+      <version>3.2.10.SP3_seam2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.openrewrite.maven</groupId>
+                    <artifactId>rewrite-maven-plugin</artifactId>
+                    <versionRange>[6.13.0,)</versionRange>
+                    <goals>
+                      <goal>runNoFork</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute></execute>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>antlr-maven-plugin</artifactId>
+                    <versionRange>[2.2,)</versionRange>
+                    <goals>
+                      <goal>generate</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <!-- Run using: mvn -N sortpom:sort -->
+      <plugin>
+        <groupId>com.github.ekryd.sortpom</groupId>
+        <artifactId>sortpom-maven-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <createBackupFile>true</createBackupFile>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>sort</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0</version>
+        <!-- use latest stable version -->
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[17,18)</version>
+                  <!-- allows Java 17 but less than 18 -->
+                  <message>You must use JDK 17 to build this project.</message>
+                </requireJavaVersion>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>copy-source-files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <outputDirectory>${project.basedir}/src/generated/jakarta</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.parent.basedir}/jboss-seam/src/main/java</directory>
+                  <filtering>false</filtering>
+                  <excludes>
+                    <exclude>**/org/jboss/seam/Model.java</exclude>
+                    <exclude>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclude>
+                    <exclude>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclude>
+                    <exclude>**/org/jboss/seam/cache/JbossCacheProvider.java</exclude>
+                    <exclude>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclude>
+                    <exclude>**/org/jboss/seam/core/Validators.java</exclude>
+                    <exclude>**/org/jboss/seam/framework/HibernateEntityController.java</exclude>
+                    <exclude>**/org/jboss/seam/framework/HibernateEntityHome.java</exclude>
+                    <exclude>**/org/jboss/seam/framework/HibernateEntityQuery.java</exclude>
+                    <exclude>**/org/jboss/seam/jsf/DelegatingFacesContext.java</exclude>
+                    <exclude>**/org/jboss/seam/jsf/SeamApplication.java</exclude>
+                    <exclude>**/org/jboss/seam/jsf/SeamStateManagementStrategy.java</exclude>
+                    <exclude>**/org/jboss/seam/jsf/SeamStateManager.java</exclude>
+                    <exclude>**/org/jboss/seam/jsf/UnifiedELMethodBinding.java</exclude>
+                    <exclude>**/org/jboss/seam/jsf/UnifiedELValueBinding.java</exclude>
+                    <exclude>**/org/jboss/seam/mock/AbstractSeamTest.java</exclude>
+                    <exclude>**/org/jboss/seam/mock/MockApplication.java</exclude>
+                    <exclude>**/org/jboss/seam/mock/MockExternalContext.java</exclude>
+                    <exclude>**/org/jboss/seam/mock/MockFacesContext.java</exclude>
+                    <exclude>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclude>
+                    <exclude>**/org/jboss/seam/mock/MockStateManager.java</exclude>
+                    <exclude>**/org/jboss/seam/navigation/Param.java</exclude>
+                    <exclude>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclude>
+                    <exclude>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclude>
+                    <exclude>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclude>
+                    <exclude>**/org/jboss/seam/persistence/HibernateSessionFactory.java</exclude>
+                    <exclude>**/org/jboss/seam/persistence/HibernateSessionInvocationHandler.java</exclude>
+                    <exclude>**/org/jboss/seam/persistence/ManagedHibernateSession.java</exclude>
+                  </excludes>
+                </resource>
+              </resources>
+              <overwrite>false</overwrite>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-antlr-files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <outputDirectory>${project.basedir}/src/main/jakarta-antlr</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.parent.basedir}/jboss-seam/src/main/antlr</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-resource-files</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <outputDirectory>${project.basedir}/target/generated/resources</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.parent.basedir}/jboss-seam/src/main/resources</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- ANTLR Maven Plugin for generating parser from grammar -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>antlr-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <sourceDirectory>${project.basedir}/src/main/jakarta-antlr</sourceDirectory>
+          <grammars>org/jboss/seam/text/seam-text.g</grammars>
+        </configuration>
+        <executions>
+          <execution>
+            <id>antlr-generation</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.github.floverfelt</groupId>
+        <artifactId>find-and-replace-maven-plugin</artifactId>
+        <version>1.2.0</version>
+        <executions>
+          <execution>
+            <id>replace</id>
+            <goals>
+              <goal>find-and-replace</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <replacementType>file-contents</replacementType>
+              <baseDir>src/generated/jakarta</baseDir>
+              <findRegex>javax.interceptor</findRegex>
+              <replaceValue>jakarta.interceptor</replaceValue>
+              <recursive>true</recursive>
+            </configuration>
+          </execution>
+          <execution>
+            <id>replace2</id>
+            <goals>
+              <goal>find-and-replace</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <replacementType>file-contents</replacementType>
+              <baseDir>src/generated/jakarta</baseDir>
+              <findRegex>javax.faces</findRegex>
+              <replaceValue>jakarta.faces</replaceValue>
+              <recursive>true</recursive>
+            </configuration>
+          </execution>
+          <execution>
+            <id>replace3</id>
+            <goals>
+              <goal>find-and-replace</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <replacementType>file-contents</replacementType>
+              <baseDir>src/generated/jakarta</baseDir>
+              <findRegex>javax.transaction</findRegex>
+              <replaceValue>jakarta.transaction</replaceValue>
+              <recursive>true</recursive>
+            </configuration>
+          </execution>
+          <execution>
+            <id>replace-persistence</id>
+            <goals>
+              <goal>find-and-replace</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <replacementType>file-contents</replacementType>
+              <baseDir>src/generated/jakarta</baseDir>
+              <findRegex>javax.persistence</findRegex>
+              <replaceValue>jakarta.persistence</replaceValue>
+              <recursive>true</recursive>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- OpenRewrite Maven Plugin for Jakarta EE 10 migration -->
+      <plugin>
+        <groupId>org.openrewrite.maven</groupId>
+        <artifactId>rewrite-maven-plugin</artifactId>
+        <version>6.13.0</version>
+        <configuration>
+          <runPerSubmodule>true</runPerSubmodule>
+          <activeRecipes>
+            <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
+            <recipe>org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta</recipe>
+            <recipe>org.openrewrite.java.migrate.jakarta.Faces2xMigrationToJakartaFaces3x</recipe>
+            <recipe>org.openrewrite.java.migrate.jakarta.JavaxInterceptorToJakartaInterceptor</recipe>
+            <recipe>org.openrewrite.java.migrate.jakarta.JavaxElToJakartaEl</recipe>
+          </activeRecipes>
+          <inclusions>
+            <inclusion>**/src/generated/jakarta/**/*.java</inclusion>
+          </inclusions>
+          <exclusions>
+            <exclusion>**/src/main/**/*.java</exclusion>
+            <exclusion>**/org/jboss/seam/Model.java</exclusion>
+            <exclusion>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclusion>
+            <exclusion>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclusion>
+            <exclusion>**/org/jboss/seam/cache/JbossCacheProvider.java</exclusion>
+            <exclusion>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclusion>
+            <exclusion>**/org/jboss/seam/core/Validators.java</exclusion>
+            <exclusion>**/org/jboss/seam/framework/HibernateEntityController.java</exclusion>
+            <exclusion>**/org/jboss/seam/framework/HibernateEntityHome.java</exclusion>
+            <exclusion>**/org/jboss/seam/framework/HibernateEntityQuery.java</exclusion>
+            <exclusion>**/org/jboss/seam/jsf/DelegatingFacesContext.java</exclusion>
+            <exclusion>**/org/jboss/seam/jsf/SeamApplication.java</exclusion>
+            <exclusion>**/org/jboss/seam/jsf/SeamStateManagementStrategy.java</exclusion>
+            <exclusion>**/org/jboss/seam/jsf/SeamStateManager.java</exclusion>
+            <exclusion>**/org/jboss/seam/jsf/UnifiedELMethodBinding.java</exclusion>
+            <exclusion>**/org/jboss/seam/jsf/UnifiedELValueBinding.java</exclusion>
+            <exclusion>**/org/jboss/seam/mock/AbstractSeamTest.java</exclusion>
+            <exclusion>**/org/jboss/seam/mock/MockApplication.java</exclusion>
+            <exclusion>**/org/jboss/seam/mock/MockExternalContext.java</exclusion>
+            <exclusion>**/org/jboss/seam/mock/MockFacesContext.java</exclusion>
+            <exclusion>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclusion>
+            <exclusion>**/org/jboss/seam/mock/MockStateManager.java</exclusion>
+            <exclusion>**/org/jboss/seam/navigation/Param.java</exclusion>
+            <exclusion>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclusion>
+            <exclusion>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclusion>
+            <exclusion>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclusion>
+            <exclusion>**/org/jboss/seam/persistence/HibernateSessionFactory.java</exclusion>
+            <exclusion>**/org/jboss/seam/persistence/HibernateSessionInvocationHandler.java</exclusion>
+            <exclusion>**/org/jboss/seam/persistence/ManagedHibernateSession.java</exclusion>
+          </exclusions>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-migrate-java</artifactId>
+            <version>3.13.0</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>jakarta-migration</id>
+            <goals>
+              <goal>runNoFork</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>add-jakarta-sources</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <sources>
+                <!-- src/generated since OpenRewrite unconditionally skips target/generated -->
+                <source>${project.basedir}/src/generated/jakarta</source>
+                <source>${project.basedir}/target/generated-sources/antlr</source>
+                <source>${project.basedir}/target/generated/resources</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <sourceDirectory>src/main/java</sourceDirectory>
+  </build>
+</project>
