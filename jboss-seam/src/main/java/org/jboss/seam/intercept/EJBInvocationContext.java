@@ -56,8 +56,13 @@ class EJBInvocationContext implements InvocationContext, javax.interceptor.Invoc
       return context.getTimer();
    }
 
-   public Constructor<?> getConstructor()
-   {
-       return context.getConstructor();
+   public Constructor<?> getConstructor() {
+       try {
+           Method getConstructorMethod = context.getClass().getMethod("getConstructor");
+           getConstructorMethod.setAccessible(true);
+           return (Constructor<?>) getConstructorMethod.invoke(context);
+       } catch (Throwable e) {
+           throw new IllegalStateException(e);
+       }
    }
 }

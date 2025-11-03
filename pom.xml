@@ -46,20 +46,21 @@
     <module>seam-cdk-helper</module>
     <module>jboss-seam</module>
     <module>jboss-seam-jakarta</module>
+    <!--module>jboss-seam-ui</module-->
     <module>jboss-seam-ui-jakarta</module>
     <module>jboss-seam-debug</module>
     <module>jboss-seam-gen</module>
-    <module>jboss-seam-excel</module>
-    <module>jboss-seam-flex</module>
-    <module>jboss-seam-mail</module>
+    <!--module>jboss-seam-excel</module-->
+    <!--module>jboss-seam-flex</module-->
+    <!--module>jboss-seam-mail</module-->
     <module>jboss-seam-pdf-jakarta</module>
-    <module>jboss-seam-remoting</module>
-    <module>jboss-seam-resteasy</module>
+    <!--module>jboss-seam-remoting</module-->
+    <!--module>jboss-seam-resteasy</module-->
     <module>jboss-seam-rss-jakarta</module>
-    <module>jboss-seam-wicket</module>
-    <module>jboss-seam-ioc</module>
-    <module>functional-tests</module>
-    <module>seam-integration-tests</module>
+    <!--module>jboss-seam-wicket</module-->
+    <!--module>jboss-seam-ioc</module-->
+    <!--module>functional-tests</module-->
+    <!--module>seam-integration-tests</module-->
   </modules>
 
   <scm>
@@ -387,7 +388,6 @@
 
   <build>
     <defaultGoal>package</defaultGoal>
-    <finalName>${project.artifactId}</finalName>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -403,9 +403,6 @@
           <groupId>com.github.ekryd.sortpom</groupId>
           <artifactId>sortpom-maven-plugin</artifactId>
           <version>3.4.0</version>
-          <configuration>
-            <createBackupFile>true</createBackupFile>
-          </configuration>
           <executions>
             <execution>
               <goals>
