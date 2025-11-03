@@ -1,0 +1,157 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version (e.g., 2.4.1.bravura.1)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      # Suppress Maven transfer logs
+      MAVEN_OPTS: -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+      RELEASE_VERSION: ${{ github.event.inputs.release_version }}
+      BRANCH_NAME: v${{ github.event.inputs.release_version }}
+      TAG_NAME: v${{ github.event.inputs.release_version }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    
+    - name: Create release branch
+      run: |
+        git checkout -b ${{ env.BRANCH_NAME }}
+        echo "Created branch: ${{ env.BRANCH_NAME }}"
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    - name: Update versions in all POM files
+      run: |
+        # Set the project version (updates root pom.xml and all parent references in child POMs)
+        mvn versions:set -DnewVersion=${RELEASE_VERSION} -DprocessAllModules -DgenerateBackupPoms=false
+        
+        # Update the version.seam property in root pom.xml using sed (simple and reliable)
+        sed -i "s|<version.seam>.*</version.seam>|<version.seam>${RELEASE_VERSION}</version.seam>|" pom.xml
+        
+        echo "Version update completed"
+      env:
+        RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+    
+    - name: Verify version updates
+      run: |
+        echo "Verifying version updates..."
+        echo "Root POM version:"
+        grep -A 2 "<artifactId>seam-parent</artifactId>" pom.xml | grep "<version>" || grep -A 1 "<artifactId>seam-parent</artifactId>" pom.xml
+        echo ""
+        echo "Version.seam property:"
+        grep "version.seam" pom.xml | head -1
+        echo ""
+        echo "Sample child POM parent version:"
+        grep -A 2 "seam-parent" jboss-seam-jakarta/pom.xml | grep "<version>" || grep -A 1 "seam-parent" jboss-seam-jakarta/pom.xml
+    
+    - name: Commit and push version changes
+      run: |
+        git add -A
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Release version ${RELEASE_VERSION}"
+          git push origin "${BRANCH_NAME}"
+        fi
+    
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    
+    - name: Configure Maven for GitHub Packages
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.m2/settings.xml << EOF
+        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+          <servers>
+            <server>
+              <id>github-packages</id>
+              <username>${{ github.actor }}</username>
+              <password>${{ secrets.GITHUB_TOKEN }}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
+    
+    - name: Build all modules
+      run: mvn clean install -ntp -DskipTests
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Create and push tag
+      run: |
+        git tag -a "${TAG_NAME}" -m "Release ${RELEASE_VERSION}"
+        git push origin "${TAG_NAME}"
+    
+    - name: Publish to GitHub Packages
+      run: |
+        # Deploy all modules to GitHub Packages
+        # Using altDeploymentRepository to override distributionManagement in pom.xml
+        mvn deploy -ntp -DskipTests \
+          -DaltDeploymentRepository=github-packages::default::https://maven.pkg.github.com/${{ github.repository }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-artifacts-${{ github.event.inputs.release_version }}
+        path: |
+          **/target/*.jar
+          **/target/*.war
+          **/target/*.ear
+        retention-days: 30
+        if-no-files-found: warn
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ env.TAG_NAME }}
+        name: Release ${{ env.RELEASE_VERSION }}
+        body: |
+          Release ${{ env.RELEASE_VERSION }}
+          
+          This release includes:
+          - All Maven artifacts published to GitHub Packages
+          - Release branch: ${{ env.BRANCH_NAME }}
+          - Tag: ${{ env.TAG_NAME }}
+        draft: false
+        prerelease: false
+        files: |
+          **/target/*.jar
+          **/target/*.war
+          **/target/*.ear
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
