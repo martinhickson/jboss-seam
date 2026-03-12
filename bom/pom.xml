@@ -423,9 +423,9 @@
       </dependency>
 
       <dependency>
-        <groupId>net.sourceforge.yarfraw</groupId>
+        <groupId>yarfraw</groupId>
         <artifactId>yarfraw</artifactId>
-        <version>0.92</version>
+        <version>1.2.1.bravura-1</version>
         <exclusions>
           <exclusion>
             <groupId>javax.xml</groupId>
