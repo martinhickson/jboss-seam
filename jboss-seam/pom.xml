@@ -151,6 +151,10 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>io.smallrye</groupId>
+      <artifactId>jandex</artifactId>
+    </dependency>
+    <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
       <optional>true</optional>
@@ -351,7 +355,7 @@
           </execution>
         </executions>
       </plugin>
-  </plugins>
+    </plugins>
   </build>
   <profiles>
     <profile>

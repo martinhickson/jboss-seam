@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+<h:head>
+    <title>Page One</title>
+</h:head>
+<h:body>
+    <h1 data-testid="jsf-page-one-title">
+        <h:outputText value="#{jsfPageOne.heading}"/>
+    </h1>
+    <a data-testid="jsf-next-link" href="#{request.contextPath}/pages/page2.xhtml">Next</a>
+</h:body>
+</html>
