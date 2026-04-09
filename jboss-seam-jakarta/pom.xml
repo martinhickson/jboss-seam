@@ -849,6 +849,7 @@
                     <exclude>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclude>
                     <exclude>**/org/jboss/seam/mock/MockStateManager.java</exclude>
                     <exclude>**/org/jboss/seam/navigation/Param.java</exclude>
+                    <exclude>**/org/jboss/seam/deployment/URLScanner.java</exclude>
                     <exclude>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclude>
                     <exclude>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclude>
                     <exclude>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclude>
@@ -1048,6 +1049,7 @@
             <exclusion>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclusion>
             <exclusion>**/org/jboss/seam/mock/MockStateManager.java</exclusion>
             <exclusion>**/org/jboss/seam/navigation/Param.java</exclusion>
+            <exclusion>**/org/jboss/seam/deployment/URLScanner.java</exclusion>
             <exclusion>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclusion>
             <exclusion>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclusion>
             <exclusion>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclusion>

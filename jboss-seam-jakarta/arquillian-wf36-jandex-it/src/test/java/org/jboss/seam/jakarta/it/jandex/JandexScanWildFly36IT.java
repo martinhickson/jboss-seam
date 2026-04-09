@@ -179,7 +179,7 @@ public class JandexScanWildFly36IT {
         command.add("--browser");
         command.add("electron");
         command.add("--spec");
-        command.add("cypress/e2e/jandex-probe.cy.js,cypress/e2e/jandex-negative.cy.js,cypress/e2e/seam-phase1.cy.js,cypress/e2e/seam-phase2.cy.js,cypress/e2e/seam-phase3.cy.js,cypress/e2e/seam-phase4.cy.js,cypress/e2e/jsf-pages.cy.js");
+        command.add("cypress/e2e/jandex-probe.cy.js,cypress/e2e/jandex-negative.cy.js,cypress/e2e/jandex-seam-annotations.cy.js,cypress/e2e/seam-phase1.cy.js,cypress/e2e/seam-phase2.cy.js,cypress/e2e/seam-phase3.cy.js,cypress/e2e/seam-phase4.cy.js,cypress/e2e/jsf-pages.cy.js");
         command.add("--config");
         command.add("baseUrl=" + baseUrl.toString());
 
