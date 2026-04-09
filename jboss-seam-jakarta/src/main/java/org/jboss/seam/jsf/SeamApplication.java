@@ -21,6 +21,8 @@ import jakarta.faces.application.StateManager;
 import jakarta.faces.application.ViewHandler;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.component.behavior.Behavior;
+import jakarta.faces.component.search.SearchExpressionHandler;
+import jakarta.faces.component.search.SearchKeywordResolver;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.faces.event.ActionListener;
@@ -317,6 +319,26 @@ public class SeamApplication extends Application {
     @Override
     public void setResourceHandler(ResourceHandler resourceHandler) {
         delegate.setResourceHandler(resourceHandler);
+    }
+
+    @Override
+    public SearchExpressionHandler getSearchExpressionHandler() {
+        return delegate.getSearchExpressionHandler();
+    }
+
+    @Override
+    public void setSearchExpressionHandler(SearchExpressionHandler searchExpressionHandler) {
+        delegate.setSearchExpressionHandler(searchExpressionHandler);
+    }
+
+    @Override
+    public SearchKeywordResolver getSearchKeywordResolver() {
+        return delegate.getSearchKeywordResolver();
+    }
+
+    @Override
+    public void addSearchKeywordResolver(SearchKeywordResolver resolver) {
+        delegate.addSearchKeywordResolver(resolver);
     }
 
     @Override

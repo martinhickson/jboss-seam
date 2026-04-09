@@ -17,8 +17,12 @@ public class ScannerProbeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            String classResource = "org/jboss/seam/jakarta/it/jandex/ScannedSeamComponent.class";
+            if ("missing".equals(req.getParameter("target"))) {
+                classResource = "org/jboss/seam/jakarta/it/jandex/PlainPojo.class";
+            }
             Index index = AbstractScanner.loadClassIndex(
-                    "org/jboss/seam/jakarta/it/jandex/ScannedSeamComponent.class",
+                    classResource,
                     Thread.currentThread().getContextClassLoader());
             Set<Class<? extends Annotation>> annotations = new HashSet<Class<? extends Annotation>>();
             annotations.add(Name.class);

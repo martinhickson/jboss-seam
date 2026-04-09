@@ -18,6 +18,7 @@
   <properties>
     <arquillian.stack.version>1.7.0.Final</arquillian.stack.version>
     <wildfly.arquillian.stack.version>5.0.1.Final</wildfly.arquillian.stack.version>
+    <wildfly.jandex.version>3.2.7</wildfly.jandex.version>
   </properties>
 
   <dependencyManagement>
@@ -37,16 +38,32 @@
       <groupId>org.jboss.seam</groupId>
       <artifactId>jboss-seam-jakarta</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss</groupId>
+          <artifactId>jandex</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.jboss</groupId>
+      <groupId>io.smallrye</groupId>
       <artifactId>jandex</artifactId>
-      <version>2.4.2.Final</version>
+      <version>${wildfly.jandex.version}</version>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.15.0-GA</version>
+      <version>3.28.0-GA</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-core</artifactId>
+      <version>3.5.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.el</groupId>
+      <artifactId>jboss-el</artifactId>
+      <version>1.0_02.jakarta.bravura.2</version>
     </dependency>
 
     <dependency>
