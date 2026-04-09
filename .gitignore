@@ -34,3 +34,4 @@ pom-exclusions-alt.xml
 pom-exclusions.xml
 /jboss-seam-ui-jakarta/richfaces-cdk
 /jboss-seam-rss-jakarta/src/generated
+/jboss-seam-jakarta/arquillian-wf36-jandex-it/node_modules

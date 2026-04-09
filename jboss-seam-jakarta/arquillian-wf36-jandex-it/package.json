@@ -1,0 +1,13 @@
+{
+  "name": "jboss-seam-jakarta-arquillian-wf36-jandex-it",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Cypress checks for the WF36 Arquillian Jandex test app.",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^14.5.4"
+  }
+}

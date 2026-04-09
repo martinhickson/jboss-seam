@@ -1,6 +1,5 @@
 package org.jboss.seam.deployment;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,8 +7,9 @@ import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import javassist.bytecode.AnnotationsAttribute;
-import javassist.bytecode.ClassFile;
+import org.jboss.jandex.DotName;
+import org.jboss.jandex.Index;
+import org.jboss.jandex.Indexer;
 
 import jakarta.servlet.ServletContext;
 
@@ -34,7 +34,7 @@ public abstract class AbstractScanner implements Scanner
    {
       
       // Cache descriptors for performance
-      private ClassFile classFile;
+      private Index classIndex;
       private ClassDescriptor classDescriptor;
       private FileDescriptor fileDescriptor;
       
@@ -62,7 +62,7 @@ public abstract class AbstractScanner implements Scanner
             if (name.endsWith(".class"))
             {
                ClassDeploymentHandler classDeploymentHandler = (ClassDeploymentHandler) deploymentHandler;
-               if (hasAnnotations(getClassFile(), classDeploymentHandler.getMetadata().getClassAnnotatedWith()))
+               if (hasAnnotations(getClassIndex(), classDeploymentHandler.getMetadata().getClassAnnotatedWith()))
                {
                   if (getClassDescriptor().getClazz() != null)
                   {
@@ -102,20 +102,20 @@ public abstract class AbstractScanner implements Scanner
          return handled;
       }
       
-      private ClassFile getClassFile()
+      private Index getClassIndex()
       {
-         if (classFile == null)
+         if (classIndex == null)
          {
             try
             {
-               classFile = loadClassFile(name, classLoader);
+               classIndex = loadClassIndex(name, classLoader);
             } 
             catch (IOException e)
             {
                throw new RuntimeException("Error loading class file " + name, e);
             }
          }
-         return classFile;
+         return classIndex;
       }
       
       private ClassDescriptor getClassDescriptor()
@@ -145,7 +145,7 @@ public abstract class AbstractScanner implements Scanner
    {
       this.deploymentStrategy = deploymentStrategy;
       this.servletContext=deploymentStrategy.getServletContext();
-      ClassFile.class.getPackage(); //to force loading of javassist, throwing an exception if it is missing
+      Indexer.class.getPackage(); // force-load Jandex and fail fast if missing
    }
    @Deprecated
    protected AbstractScanner()
@@ -158,19 +158,16 @@ public abstract class AbstractScanner implements Scanner
       this.servletContext=servletContext;
    }
    
-   protected static boolean hasAnnotations(ClassFile classFile, Set<Class<? extends Annotation>> annotationTypes)
+   protected static boolean hasAnnotations(Index classIndex, Set<Class<? extends Annotation>> annotationTypes)
    {
       if (annotationTypes.size() > 0)
       {
-         AnnotationsAttribute visible = (AnnotationsAttribute) classFile.getAttribute( AnnotationsAttribute.visibleTag );
-         if ( visible != null ) 
+         for (Class<? extends Annotation> annotationType : annotationTypes)
          {
-            for (Class<? extends Annotation> annotationType : annotationTypes)
+            DotName annotationName = DotName.createSimple(annotationType.getName());
+            if (!classIndex.getAnnotations(annotationName).isEmpty())
             {
-               if (visible.getAnnotation(annotationType.getName()) != null)
-               {
-                  return true;
-               }
+               return true;
             }
          }
       }
@@ -178,9 +175,9 @@ public abstract class AbstractScanner implements Scanner
    }
    
    /**
-    * Get a Javassist {@link ClassFile} for a given class name from the classLoader
+    * Build a Jandex {@link Index} for a given class resource name.
     */
-   protected static ClassFile loadClassFile(String name, ClassLoader classLoader) throws IOException 
+   protected static Index loadClassIndex(String name, ClassLoader classLoader) throws IOException 
    {
       if (name == null)
       {
@@ -191,15 +188,15 @@ public abstract class AbstractScanner implements Scanner
       {
          throw new IllegalStateException("Cannot load " + name + " from " + classLoader + " (using getResourceAsStream() returned null)");
       }
-      DataInputStream dstream = new DataInputStream(stream);
 
       try 
       { 
-         return new ClassFile(dstream); 
+         Indexer indexer = new Indexer();
+         indexer.index(stream);
+         return indexer.complete();
       } 
       finally 
       { 
-         dstream.close(); 
          stream.close(); 
       }
    }

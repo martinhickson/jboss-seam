@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+
+    <listener>
+        <listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>Seam Filter</filter-name>
+        <filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Seam Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ScannerProbeServlet</servlet-name>
+        <servlet-class>org.jboss.seam.deployment.ScannerProbeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PageFlowServlet</servlet-name>
+        <servlet-class>org.jboss.seam.deployment.PageFlowServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PhaseOneFeatureServlet</servlet-name>
+        <servlet-class>org.jboss.seam.deployment.PhaseOneFeatureServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PhaseTwoFeatureServlet</servlet-name>
+        <servlet-class>org.jboss.seam.deployment.PhaseTwoFeatureServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PhaseThreeFeatureServlet</servlet-name>
+        <servlet-class>org.jboss.seam.deployment.PhaseThreeFeatureServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PhaseFourFeatureServlet</servlet-name>
+        <servlet-class>org.jboss.seam.deployment.PhaseFourFeatureServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ScannerProbeServlet</servlet-name>
+        <url-pattern>/probe/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PageFlowServlet</servlet-name>
+        <url-pattern>/flow/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PhaseOneFeatureServlet</servlet-name>
+        <url-pattern>/phase1</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PhaseTwoFeatureServlet</servlet-name>
+        <url-pattern>/phase2/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PhaseThreeFeatureServlet</servlet-name>
+        <url-pattern>/phase3</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PhaseFourFeatureServlet</servlet-name>
+        <url-pattern>/phase4</url-pattern>
+    </servlet-mapping>
+
+</web-app>
