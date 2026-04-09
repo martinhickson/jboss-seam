@@ -796,7 +796,7 @@
       <plugin>
         <groupId>io.smallrye</groupId>
         <artifactId>jandex-maven-plugin</artifactId>
-        <version>3.5.3.redhat-00001</version>
+        <version>3.5.3</version>
         <executions>
           <execution>
             <id>generate-jandex-index</id>
