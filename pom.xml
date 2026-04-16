@@ -10,7 +10,7 @@
 
   <groupId>org.jboss.seam</groupId>
   <artifactId>seam-parent</artifactId>
-  <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+  <version>2.4.1.bravura.10</version>
   <packaging>pom</packaging>
   <name>Seam Parent</name>
   <description>Java EE 5 framework to get easy developing Java Enterprise applications</description>
@@ -105,7 +105,7 @@
     <pdf.name>${project.artifactId}.pdf</pdf.name>
 
     <!-- Version string properties -->
-    <version.seam>2.3.1.jakarta.bravura.1-SNAPSHOT</version.seam>
+    <version.seam>2.4.1.bravura.10</version.seam>
     <version.arquillian_core>1.8.0.Final</version.arquillian_core>
     <version.wildfly.arquillian>5.0.1.Final</version.wildfly.arquillian>
     <version.wildfly36>36.0.0.Final</version.wildfly36>
