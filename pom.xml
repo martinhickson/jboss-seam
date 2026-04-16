@@ -109,6 +109,8 @@
     <version.arquillian_core>1.8.0.Final</version.arquillian_core>
     <version.wildfly.arquillian>5.0.1.Final</version.wildfly.arquillian>
     <version.wildfly36>36.0.0.Final</version.wildfly36>
+    <version.jandex.maven.plugin>3.5.3</version.jandex.maven.plugin>
+    <version.jandex.index.format>10</version.jandex.index.format>
     <version.wicket>1.4.14</version.wicket>
     <version.testng>5.14.10</version.testng>
     <version.resteasy>2.0.1.GA</version.resteasy>
@@ -491,6 +493,23 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <warName>${project.build.finalName}</warName>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>io.smallrye</groupId>
+        <artifactId>jandex-maven-plugin</artifactId>
+        <version>${version.jandex.maven.plugin}</version>
+        <executions>
+          <execution>
+            <id>make-index</id>
+            <goals>
+              <goal>jandex</goal>
+            </goals>
+            <configuration>
+              <indexVersion>${version.jandex.index.format}</indexVersion>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

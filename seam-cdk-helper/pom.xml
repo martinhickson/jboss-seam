@@ -15,6 +15,8 @@
 	<properties>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
+		<version.jandex.maven.plugin>3.5.3</version.jandex.maven.plugin>
+		<version.jandex.index.format>10</version.jandex.index.format>
 	</properties>
 	
 	<dependencies>
@@ -40,6 +42,22 @@
 					<source>8</source>
 					<target>8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>io.smallrye</groupId>
+				<artifactId>jandex-maven-plugin</artifactId>
+				<version>${version.jandex.maven.plugin}</version>
+				<executions>
+					<execution>
+						<id>make-index</id>
+						<goals>
+							<goal>jandex</goal>
+						</goals>
+						<configuration>
+							<indexVersion>${version.jandex.index.format}</indexVersion>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
