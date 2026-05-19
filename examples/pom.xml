@@ -3,7 +3,7 @@
 
     <groupId>org.jboss.seam</groupId>
     <artifactId>examples</artifactId>
-    <version>2.3.1.Final</version>
+    <version>2.4.1-bravura-12</version>
     <packaging>pom</packaging>
 
     <name>Seam 2 EE 6 examples</name>
