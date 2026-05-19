@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Seam Conversation Sample</title>
+</h:head>
+<h:body>
+    <f:event type="preRenderView" listener="#{conversationJsfBean.touch()}"/>
+    <p>JSF conversation steps: #{conversationJsfBean.steps}</p>
+    <p>conversationId=#{conversationJsfBean.conversationId}</p>
+</h:body>
+</html>

@@ -21,7 +21,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 @Name("org.jboss.seam.cache.cacheProvider")
 @Scope(APPLICATION)
 @BypassInterceptors
-@Install(precedence = BUILT_IN, classDependencies={"org.jboss.cache.TreeCache", "org.jgroups.MembershipListener"})
+@Install(value = false, precedence = BUILT_IN, classDependencies={"org.jboss.cache.TreeCache", "org.jgroups.MembershipListener"})
 @AutoCreate
 public class JbossCacheProvider extends AbstractJBossCacheProvider<Object> {
 

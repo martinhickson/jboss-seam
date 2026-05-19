@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://jboss.org/schema/seam/pages"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
+       login-view-id="/login.xhtml">
+
+    <page view-id="/login.xhtml">
+        <navigation from-action="#{identity.login}">
+            <rule if-outcome="loggedIn">
+                <redirect view-id="/protected.xhtml"/>
+            </rule>
+        </navigation>
+    </page>
+
+    <page view-id="/protected.xhtml" login-required="true"/>
+
+    <page view-id="/admin.xhtml" login-required="true">
+        <restrict>#{identity.hasRole('admin')}</restrict>
+    </page>
+
+    <exception class="org.jboss.seam.security.NotLoggedInException">
+        <redirect view-id="/login.xhtml"/>
+    </exception>
+
+    <exception class="org.jboss.seam.security.AuthorizationException">
+        <redirect view-id="/security-denied.xhtml"/>
+    </exception>
+
+</pages>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Seam Session Sample</title>
+</h:head>
+<h:body>
+    <f:event type="preRenderView" listener="#{jsfSessionBean.touch()}"/>
+    <p>JSF session hits: #{jsfSessionBean.hits}</p>
+    <ul>
+        <li><a href="login.xhtml">Login</a></li>
+        <li><a href="protected.xhtml">Protected (login required)</a></li>
+        <li><a href="admin.xhtml">Admin (role required)</a></li>
+        <li><a href="conversation.xhtml">Conversation probe</a></li>
+    </ul>
+</h:body>
+</html>

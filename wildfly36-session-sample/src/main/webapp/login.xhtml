@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Seam Login</title>
+</h:head>
+<h:body>
+    <h1>Login</h1>
+    <h:messages globalOnly="true"/>
+    <h:form id="login">
+        <p>
+            <h:outputLabel for="username" value="Username"/>
+            <h:inputText id="username" value="#{identity.username}"/>
+        </p>
+        <p>
+            <h:outputLabel for="password" value="Password"/>
+            <h:inputSecret id="password" value="#{identity.password}"/>
+        </p>
+        <p>
+            <h:commandButton id="loginButton" value="Login" action="#{identity.login}"/>
+        </p>
+        <p>Try demo / secret (admin) or guest / guest (user only).</p>
+    </h:form>
+</h:body>
+</html>

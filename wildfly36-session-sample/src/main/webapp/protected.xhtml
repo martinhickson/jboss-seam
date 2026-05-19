@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Protected</title>
+</h:head>
+<h:body>
+    <h1>Protected page</h1>
+    <p>Logged in as: #{identity.username}</p>
+    <p>Protected greeting: #{protectedAction.greeting}</p>
+    <p>
+        <h:link outcome="admin" value="Admin area"/>
+        |
+        <h:link outcome="login" value="Login"/>
+    </p>
+    <h:form>
+        <h:commandLink action="#{identity.logout}" value="Logout"/>
+    </h:form>
+</h:body>
+</html>

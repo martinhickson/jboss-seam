@@ -168,11 +168,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Legacy JBoss Cache 1.x: compile-only for stubs; must not ship in WARs on WildFly -->
     <dependency>
       <groupId>jboss</groupId>
       <artifactId>jboss-cache</artifactId>
       <version>1.4.1.SP9</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>

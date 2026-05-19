@@ -7,6 +7,8 @@
 *.iws
 *.iml
 
+wildfly36/**
+
 jboss-seam-jakarta/src/main/java.backup.*
 jboss-seam-jakarta/src/generated/jakarta/**
 

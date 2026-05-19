@@ -130,24 +130,39 @@ public class DependencyManager
         {
             return true;   
         }
-            
+
+        ClassLoader loader = descriptor.getComponentClass().getClassLoader();
         for (String className: classDependencies) 
         {   
-            try 
-            {   
-                descriptor.getComponentClass().getClassLoader().loadClass(className);
-            }
-            catch (NoClassDefFoundError e)
+            if (!isClassDependencyPresent(className, loader))
             {
                return false;
-            }
-            catch (Exception e)
-            {
-                return false;                 
             }
         }
 
         return true;
+    }
+
+    /**
+     * Check optional integration classes without forcing full linkage of legacy
+     * types (e.g. JBoss Cache 1.x MBeans) that may be present but unusable on WildFly.
+     */
+    private static boolean isClassDependencyPresent(String className, ClassLoader loader)
+    {
+        String resource = className.replace('.', '/') + ".class";
+        if (loader.getResource(resource) == null)
+        {
+            return false;
+        }
+        try
+        {
+            Class.forName(className, false, loader);
+            return true;
+        }
+        catch (Throwable e)
+        {
+            return false;
+        }
     }
     
     private boolean checkGenericDependencies(ComponentDescriptor descriptor) 
