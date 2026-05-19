@@ -117,7 +117,10 @@ public class ServletLifecycle
    {
       Contexts.startup(ScopeType.APPLICATION);
       
-      Events.instance().raiseEvent("org.jboss.seam.postReInitialization");
+      if ( Events.exists() )
+      {
+         Events.instance().raiseEvent("org.jboss.seam.postReInitialization");
+      }
       
       // Clean up contexts used during reinitialization
       Contexts.destroy( Contexts.getConversationContext() );
@@ -142,7 +145,10 @@ public class ServletLifecycle
    {
       Contexts.startup(ScopeType.APPLICATION);
       
-      Events.instance().raiseEvent("org.jboss.seam.postInitialization");
+      if ( Events.exists() )
+      {
+         Events.instance().raiseEvent("org.jboss.seam.postInitialization");
+      }
       
       // Clean up contexts used during initialization
       Contexts.destroy( Contexts.getConversationContext() );

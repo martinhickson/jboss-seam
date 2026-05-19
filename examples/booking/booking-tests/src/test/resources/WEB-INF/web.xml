@@ -6,9 +6,8 @@
 
     <display-name>Seam Booking Test Application</display-name>
 
-    <!-- Patched Seam Bootstrap Listener for Jakarta EE compatibility -->
     <listener>
-        <listener-class>org.jboss.seam.servlet.PatchedSeamListener</listener-class>
+        <listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
     </listener>
 
     <!-- Seam Resource Servlet -->

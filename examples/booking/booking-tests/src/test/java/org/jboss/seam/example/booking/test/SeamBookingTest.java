@@ -57,11 +57,6 @@ public class SeamBookingTest {
                 BookingList.class,
                 SimpleAuthenticator.class
             )
-            // Add patched Seam classes for Jakarta EE compatibility
-            .addClasses(
-                org.jboss.seam.contexts.PatchedServletLifecycle.class,
-                org.jboss.seam.servlet.PatchedSeamListener.class
-            )
             // Add test class
             .addClass(SeamBookingTest.class)
             // Add Seam libraries (Jakarta EE variants)

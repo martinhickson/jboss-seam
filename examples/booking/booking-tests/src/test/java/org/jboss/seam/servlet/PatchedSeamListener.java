@@ -10,8 +10,11 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 /**
- * Patched SeamListener that uses PatchedServletLifecycle to handle Jakarta EE compatibility issues.
+ * @deprecated Use {@link org.jboss.seam.servlet.SeamListener} or
+ * {@link org.jboss.seam.servlet.JakartaSeamListener}. Bootstrap no longer requires skipping
+ * {@link org.jboss.seam.init.Initialization#init()} after ServletLifecycle guards post-init events.
  */
+@Deprecated
 public class PatchedSeamListener implements ServletContextListener {
 
     private static final LogProvider log = Logging.getLogProvider(PatchedSeamListener.class);

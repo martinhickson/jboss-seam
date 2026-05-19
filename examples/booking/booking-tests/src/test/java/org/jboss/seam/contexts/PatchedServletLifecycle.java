@@ -6,9 +6,10 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 /**
- * Patched version of ServletLifecycle that handles the Jakarta EE compatibility issue
- * where Events.instance() returns null during initialization.
+ * @deprecated No longer required; {@link org.jboss.seam.contexts.ServletLifecycle#endInitialization()}
+ * guards {@code org.jboss.seam.postInitialization} when the Events component is not yet installed.
  */
+@Deprecated
 public class PatchedServletLifecycle extends ServletLifecycle {
     
     private static final LogProvider log = Logging.getLogProvider(PatchedServletLifecycle.class);
