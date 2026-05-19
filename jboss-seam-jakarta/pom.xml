@@ -891,6 +891,26 @@
                 <resource>
                   <directory>${project.parent.basedir}/jboss-seam/src/main/resources</directory>
                   <filtering>false</filtering>
+                  <excludes>
+                    <exclude>META-INF/faces-config.xml</exclude>
+                  </excludes>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-jakarta-faces-config</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <outputDirectory>${project.basedir}/target/generated/resources</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/main/jakarta-resources</directory>
+                  <filtering>false</filtering>
                 </resource>
               </resources>
               <overwrite>true</overwrite>
