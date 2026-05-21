@@ -1,11 +1,9 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	    		xmlns:ui="http://java.sun.com/jsf/facelets"
-	  			xmlns:h="http://java.sun.com/jsf/html"
-	  			xmlns:f="http://java.sun.com/jsf/core"
+	    		xmlns:ui="jakarta.faces.facelets"
+	  			xmlns:h="jakarta.faces.html"
+	  			xmlns:f="jakarta.faces.core"
 	  			xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:a="http://richfaces.org/a4j"
-                xmlns:rich="http://richfaces.org/rich"
 				template="template.xhtml">
 
 <!-- content -->
@@ -27,12 +25,16 @@
 			
 		<s:decorate id="checkinDateDecorate" template="edit.xhtml">
 			<ui:define name="label">Check In Date:</ui:define>
-			<rich:calendar id="checkinDate" value="#{booking.checkinDate}" required="true" datePattern="MM/dd/yyyy" render="checkinDateDecorate" style="width: auto;" />
+			<h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
+				<f:convertDateTime pattern="MM/dd/yyyy"/>
+			</h:inputText>
 		</s:decorate>
 		
 		<s:decorate id="checkoutDateDecorate" template="edit.xhtml">
 			<ui:define name="label">Check Out Date:</ui:define>
-			<rich:calendar id="checkoutDate" value="#{booking.checkoutDate}" required="true" datePattern="MM/dd/yyyy" render="checkoutDateDecorate"  style="width: auto;"/>
+			<h:inputText id="checkoutDate" value="#{booking.checkoutDate}" required="true">
+				<f:convertDateTime pattern="MM/dd/yyyy"/>
+			</h:inputText>
 		</s:decorate>
 		
 		<s:decorate id="bedsDecorate" template="edit.xhtml">
@@ -54,16 +56,12 @@
 
 		<s:decorate id="creditCardDecorate" template="edit.xhtml">
 			<ui:define name="label">Credit Card #:</ui:define>
-			<h:inputText id="creditCard" value="#{booking.creditCard}" required="true">
-				<a:ajax event="blur" render="creditCardDecorate"/>
-			</h:inputText>
+			<h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
 		</s:decorate>
 
 		<s:decorate id="creditCardNameDecorate" template="edit.xhtml">
 			<ui:define name="label">Credit Card Name:</ui:define>
-			<h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true">
-				<a:ajax event="blur" render="creditCardNameDecorate"/>
-			</h:inputText>
+			<h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/>
 		</s:decorate>
 
 		<s:decorate id="creditCardExpiryDecorate" template="edit.xhtml">
@@ -92,7 +90,7 @@
 		</s:decorate>
 		
 		<div class="buttonBox">
-			<h:commandButton id="proceed" value="Proceed" action="#{hotelBooking.setBookingDetails}"/>
+			<h:commandButton id="proceed" value="Proceed" action="#{hotelBooking.setBookingDetails()}"/>
 			&#160;
 			<s:button id="cancel" value="Cancel" action="#{hotelBooking.cancel}"/>
 		</div>

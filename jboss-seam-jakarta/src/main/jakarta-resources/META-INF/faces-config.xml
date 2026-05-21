@@ -6,7 +6,7 @@
 
    <factory>
       <application-factory>org.jboss.seam.jsf.SeamApplicationFactory</application-factory>
-      <exception-handler-factory>com.sun.faces.context.ExceptionHandlerFactoryImpl</exception-handler-factory>
+      <exception-handler-factory>org.jboss.seam.jsf.SeamExceptionHandlerFactory</exception-handler-factory>
    </factory>
 
    <application>
@@ -14,6 +14,7 @@
       <view-handler>org.jboss.seam.jsf.SeamViewHandler</view-handler>
       <state-manager>org.jboss.seam.jsf.SeamStateManager</state-manager>
       <el-resolver>org.jboss.seam.el.SeamELResolver</el-resolver>
+      <el-resolver>org.jboss.seam.el.SeamBeanELResolver</el-resolver>
       <message-bundle>org.jboss.seam.core.SeamResourceBundle</message-bundle>
    </application>
 

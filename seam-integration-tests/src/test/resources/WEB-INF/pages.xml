@@ -31,13 +31,13 @@
         </redirect>
     </exception>
     
-    <exception class="javax.persistence.EntityNotFoundException">
+    <exception class="jakarta.persistence.EntityNotFoundException">
         <redirect view-id="/error.xhtml">
             <message>Not found</message>
         </redirect>
     </exception>
     
-    <exception class="javax.persistence.OptimisticLockException">
+    <exception class="jakarta.persistence.OptimisticLockException">
         <end-conversation/>
         <redirect view-id="/error.xhtml">
             <message>Another user changed the same data, please try again</message>

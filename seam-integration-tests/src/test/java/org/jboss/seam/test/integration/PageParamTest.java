@@ -1,8 +1,10 @@
 package org.jboss.seam.test.integration;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -20,11 +22,10 @@ import org.junit.runner.RunWith;
 public class PageParamTest extends JUnitSeamTest
 {
    @Deployment(name="PageParamTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment()
-    		  .addClasses(Person.class);
+      return Deployments.defaultSeamDeployment(PageParamTest.class, Person.class);
    }
 
    @Test
@@ -75,7 +76,11 @@ public class PageParamTest extends JUnitSeamTest
          @Override
          protected void invokeApplication() throws Exception
          {
-            List<FacesMessage> messages = (List<FacesMessage>) getValue("#{facesMessages.currentMessages}");
+            List<FacesMessage> messages = new ArrayList<>();
+            Iterator<FacesMessage> iter = getFacesContext().getMessages();
+            while (iter.hasNext()) {
+               messages.add(iter.next());
+            }
             assert messages.size() == 1;
             assert messages.get(0).getDetail().startsWith("'personName' parameter is invalid");
             assert getValue("#{person.name}") == null;

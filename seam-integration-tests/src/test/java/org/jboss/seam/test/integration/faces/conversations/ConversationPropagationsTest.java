@@ -45,11 +45,11 @@ public class ConversationPropagationsTest
    URL contextPath;
 
    @Deployment(name = "ConversationPropagationsTest")
-   @OverProtocol("Servlet 3.0")
+   @OverProtocol("Servlet 5.0")
    public static Archive<?> createDeployment()
    {
       // This is a client test, use a real (non-mocked) Seam deployment
-      WebArchive war = Deployments.realSeamDeployment().addClasses(ConversationAction.class, MyException.class,
+      WebArchive war = Deployments.realSeamDeployment(ConversationPropagationsTest.class, ConversationAction.class, MyException.class,
             MyConversationEndingException.class);
 
       war.delete("WEB-INF/pages.xml");

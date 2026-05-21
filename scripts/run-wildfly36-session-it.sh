@@ -93,4 +93,4 @@ fi
 
 mvn "${MVN_EXTRA[@]}" "${MVN_ARGS[@]}"
 
-echo "==> Done. 25 integration tests expected on success (Failsafe)."
+echo "==> Done. 27 integration tests expected on success (Failsafe)."

@@ -104,6 +104,10 @@ public class AnnotationDeploymentHandler extends AbstractClassDeploymentHandler
       }
       for (ClassDescriptor classDescriptor : getClasses())
       {
+         if (!classDescriptor.isLoaded())
+         {
+            continue;
+         }
          for (Annotation annotation: classDescriptor.getClazz().getAnnotations())
          {
             if (classes.containsKey(annotation.annotationType().getName()))

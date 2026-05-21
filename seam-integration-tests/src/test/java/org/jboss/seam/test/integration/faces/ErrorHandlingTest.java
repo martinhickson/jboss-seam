@@ -39,11 +39,11 @@ public class ErrorHandlingTest
    URL contextPath;
    
    @Deployment(name="ErrorHandlingTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
       // This is a client test, use a real (non-mocked) Seam deployment
-      WebArchive war = Deployments.realSeamDeployment();
+      WebArchive war = Deployments.realSeamDeployment(ErrorHandlingTest.class);
       war.delete("WEB-INF/pages.xml");
       war.addClasses(TestComponent.class, TestException.class)
             .addAsWebResource(new StringAsset(

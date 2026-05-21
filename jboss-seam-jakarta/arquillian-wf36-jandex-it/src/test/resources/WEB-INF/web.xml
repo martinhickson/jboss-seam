@@ -48,6 +48,14 @@
         <servlet-name>PhaseFourFeatureServlet</servlet-name>
         <servlet-class>org.jboss.seam.deployment.PhaseFourFeatureServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SessionLoginProbeServlet</servlet-name>
+        <servlet-class>org.jboss.seam.jakarta.it.jandex.SessionLoginProbeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoginProbeServlet</servlet-name>
+        <servlet-class>org.jboss.seam.jakarta.it.jandex.LoginProbeServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -76,6 +84,14 @@
     <servlet-mapping>
         <servlet-name>PhaseFourFeatureServlet</servlet-name>
         <url-pattern>/phase4</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SessionLoginProbeServlet</servlet-name>
+        <url-pattern>/session-probe</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginProbeServlet</servlet-name>
+        <url-pattern>/login-probe</url-pattern>
     </servlet-mapping>
 
 </web-app>

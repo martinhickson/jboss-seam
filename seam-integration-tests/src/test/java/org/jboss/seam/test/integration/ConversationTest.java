@@ -3,7 +3,7 @@ package org.jboss.seam.test.integration;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.model.SelectItem;
+import jakarta.faces.model.SelectItem;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -23,10 +23,10 @@ public class ConversationTest
     extends JUnitSeamTest
 {
 	@Deployment(name="ConversationTest")
-	@OverProtocol("Servlet 3.0") 
+	@OverProtocol("Servlet 5.0") 
 	public static Archive<?> createDeployment()
 	{
-		return Deployments.defaultSeamDeployment();
+		return Deployments.defaultSeamDeployment(ConversationTest.class);
 	}
 	
     @Test
@@ -206,7 +206,7 @@ public class ConversationTest
         }.run();
         
         
-        new FacesRequest("/pageWithDescription", conv2) {
+        new FacesRequest("/pageWithDescription.xhtml", conv2) {
             @Override
             protected void invokeApplication() throws Exception {
                 Manager.instance().endConversation(true);
@@ -219,7 +219,7 @@ public class ConversationTest
             }
         }.run();
         
-        new FacesRequest("/pageWithDescription", conv1) {
+        new FacesRequest("/pageWithDescription.xhtml", conv1) {
             @Override
             protected void invokeApplication() throws Exception {
                 Manager.instance().endConversation(true);
@@ -233,7 +233,7 @@ public class ConversationTest
         }.run();
         
         
-        new FacesRequest("/pageWithDescription", conv3) {
+        new FacesRequest("/pageWithDescription.xhtml", conv3) {
             @Override
             protected void invokeApplication() throws Exception {
                 Manager.instance().endConversation(true);
@@ -301,7 +301,7 @@ public class ConversationTest
             }
         }.run();
     
-        new FacesRequest() {
+        new FacesRequest("/index.xhtml") {
             @Override
             protected void renderResponse() throws Exception {
                 Switcher switcher = (Switcher) getValue("#{switcher}");

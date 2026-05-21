@@ -13,7 +13,6 @@ import javax.faces.component.UIData;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
 import javax.faces.event.ActionListener;
 import javax.faces.model.DataModel;
 
@@ -226,43 +225,27 @@ public abstract class UISeamCommandBase extends UIOutput implements ActionSource
       // Silently fail, RF requires this
       //throw new UnsupportedOperationException("Action listeners not supported by s:link/s:button");
    }
- 
-   @Deprecated
-   public void setAction(javax.faces.el.MethodBinding methodBinding)
-   {
-     // setActionExpression(new MethodBindingToMethodExpression(methodBinding));
-      
-      com.sun.faces.application.MethodExpressionMethodBindingAdapter adapter;
-      if (null != methodBinding) {
-          adapter = new com.sun.faces.application.MethodExpressionMethodBindingAdapter(methodBinding);
-          setActionExpression(adapter);
-      } else {
-          setActionExpression(null);
-      }
-   }
-   
-   @Deprecated
-   public javax.faces.el.MethodBinding getAction()
-   {
-      //return new org.jboss.seam.ui.util.cdk.MethodExpressionToMethodBinding(getActionExpression());
-      
-      MethodBinding result = null;
-      MethodExpression me;
 
-      if (null != (me = getActionExpression())) {
-          // if the MethodExpression is an instance of our private
-          // wrapper class.
-          if (me.getClass().equals(com.sun.faces.application.MethodExpressionMethodBindingAdapter.class)) {
-              result = ((com.sun.faces.application.MethodExpressionMethodBindingAdapter) me).getWrapped();
-          } else {
-              // otherwise, this is a real MethodExpression.  Wrap it
-              // in a MethodBinding.
-              result = new com.sun.faces.application.MethodBindingMethodExpressionAdapter(me);
-          }
-      }
-      return result;
+   public MethodExpression getActionExpression()
+   {
+      return (MethodExpression) getStateHelper().eval("actionExpression");
    }
-   
+
+   public void setActionExpression(MethodExpression actionExpression)
+   {
+      getStateHelper().put("actionExpression", actionExpression);
+   }
+
+   public boolean isImmediate()
+   {
+      return (Boolean) getStateHelper().eval("immediate", false);
+   }
+
+   public void setImmediate(boolean immediate)
+   {
+      getStateHelper().put("immediate", immediate);
+   }
+ 
    private static boolean isPortletRequest(FacesContext facesContext)
    {
       return PORTLET_REQUEST !=null && 

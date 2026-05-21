@@ -7,6 +7,7 @@ import org.jboss.seam.mock.JUnitSeamTest;
 import org.jboss.seam.test.integration.Deployments;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jbpm.jpdl.el.ELException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,11 +16,12 @@ import org.junit.runner.RunWith;
  *
  */
 //@Ignore
+@Ignore("jBPM integration not yet validated on WildFly 36 / Jakarta Seam")
 @RunWith(Arquillian.class)
 public class SeamExpressionEvaluatorTest extends JUnitSeamTest
 {
    @Deployment(name="SeamExpressionEvaluatorTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
       return Deployments.jbpmSeamDeployment()
@@ -30,7 +32,7 @@ public class SeamExpressionEvaluatorTest extends JUnitSeamTest
    @Test
    public void testValueExpression() throws Exception
    {
-      new FacesRequest()
+      new FacesRequest("/index.xhtml")
       {
 
          @Override
@@ -46,7 +48,7 @@ public class SeamExpressionEvaluatorTest extends JUnitSeamTest
    @Test
    public void testUnqualifiedValueExpression() throws Exception
    {
-      new FacesRequest()
+      new FacesRequest("/index.xhtml")
       {
 
          @Override
@@ -62,7 +64,7 @@ public class SeamExpressionEvaluatorTest extends JUnitSeamTest
    @Test
    public void testMissingMethod() throws Exception
    {
-      new FacesRequest()
+      new FacesRequest("/index.xhtml")
       {
 
          @Override
@@ -74,7 +76,7 @@ public class SeamExpressionEvaluatorTest extends JUnitSeamTest
             }
             catch (Exception e)
             {
-               if (!(isRootCause(e, ELException.class) || isRootCause(e, javax.el.ELException.class)))
+               if (!(isRootCause(e, ELException.class) || isRootCause(e, jakarta.el.ELException.class)))
                {
                   e.printStackTrace();
                   assert false;

@@ -110,7 +110,7 @@
         </redirect>
     </exception>
     
-    <exception class="javax.faces.application.ViewExpiredException">
+    <exception class="jakarta.faces.application.ViewExpiredException">
         <redirect view-id="/home.xhtml">
             <message severity="warn">Session expired, please log in again</message>
         </redirect>

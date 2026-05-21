@@ -38,6 +38,10 @@ import org.jboss.seam.jakarta.it.jandex.PhaseThreeApplicationState;
 import org.jboss.seam.jakarta.it.jandex.PhaseThreeSessionState;
 import org.jboss.seam.jakarta.it.jandex.PhaseTwoConversationState;
 import org.jboss.seam.jakarta.it.jandex.PlainPojo;
+import org.jboss.seam.jakarta.it.jandex.TestLoginAuthenticator;
+import org.jboss.seam.jakarta.it.jandex.SessionComponentProbe;
+import org.jboss.seam.jakarta.it.jandex.SessionLoginProbeServlet;
+import org.jboss.seam.jakarta.it.jandex.LoginProbeServlet;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -50,6 +54,10 @@ public class JandexScanWildFly36IT {
 
     @Deployment(testable = false)
     public static WebArchive deploy() throws Exception {
+        return createDeploymentArchive();
+    }
+
+    public static WebArchive createDeploymentArchive() throws Exception {
         File seamLibrary = new File(AbstractScanner.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         File jandexLibrary = new File(Indexer.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         File javassistLibrary = new File(MethodFilter.class.getProtectionDomain().getCodeSource().getLocation().toURI());
@@ -69,6 +77,10 @@ public class JandexScanWildFly36IT {
                         JsfPageOneBean.class,
                         JsfPageTwoBean.class,
                         JandexScanSupport.class,
+                        TestLoginAuthenticator.class,
+                        SessionComponentProbe.class,
+                        SessionLoginProbeServlet.class,
+                        LoginProbeServlet.class,
                         ScannerProbeServlet.class,
                         PhaseFourFeatureServlet.class,
                         PhaseOneFeatureServlet.class,
@@ -98,6 +110,9 @@ public class JandexScanWildFly36IT {
         indexClass(indexer, JsfPageOneBean.class);
         indexClass(indexer, JsfPageTwoBean.class);
         indexClass(indexer, JandexScanSupport.class);
+        indexClass(indexer, TestLoginAuthenticator.class);
+        indexClass(indexer, SessionLoginProbeServlet.class);
+        indexClass(indexer, LoginProbeServlet.class);
         indexClass(indexer, ScannerProbeServlet.class);
         indexClass(indexer, PhaseFourFeatureServlet.class);
         indexClass(indexer, PhaseOneFeatureServlet.class);

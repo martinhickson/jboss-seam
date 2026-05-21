@@ -36,12 +36,11 @@ public class PageScopedUIIncludeTest
    URL contextPath;
    
    @Deployment(name="PageScopedUIIncludeTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
       // This is a client test, use a real (non-mocked) Seam deployment
-      return Deployments.realSeamDeployment()
-            .addClasses(Component.class, Component1.class, Component2.class)
+      return Deployments.realSeamDeployment(PageScopedUIIncludeTest.class, Component.class, Component1.class, Component2.class)
             .addAsWebResource(new StringAsset(
                   "<html xmlns=\"http://www.w3.org/1999/xhtml\"" +
                   " xmlns:h=\"http://java.sun.com/jsf/html\"" +

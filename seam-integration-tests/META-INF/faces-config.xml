@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="3.0"
+              xmlns="https://jakarta.ee/xml/ns/jakartaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd">
+
+   <factory>
+      <application-factory>org.jboss.seam.jsf.SeamApplicationFactory</application-factory>
+      <exception-handler-factory>com.sun.faces.context.ExceptionHandlerFactoryImpl</exception-handler-factory>
+   </factory>
+
+   <application>
+      <navigation-handler>org.jboss.seam.jsf.SeamNavigationHandler</navigation-handler>
+      <view-handler>org.jboss.seam.jsf.SeamViewHandler</view-handler>
+      <state-manager>org.jboss.seam.jsf.SeamStateManager</state-manager>
+      <el-resolver>org.jboss.seam.el.SeamELResolver</el-resolver>
+      <el-resolver>org.jboss.seam.el.SeamBeanELResolver</el-resolver>
+      <message-bundle>org.jboss.seam.core.SeamResourceBundle</message-bundle>
+   </application>
+
+   <lifecycle>
+      <phase-listener>org.jboss.seam.jsf.SeamPhaseListener</phase-listener>
+   </lifecycle>
+
+   <lifecycle>
+      <phase-listener>org.jboss.seam.document.DocumentStorePhaseListener</phase-listener>
+   </lifecycle>
+
+</faces-config>

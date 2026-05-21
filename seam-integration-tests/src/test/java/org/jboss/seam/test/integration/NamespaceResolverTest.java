@@ -15,10 +15,10 @@ public class NamespaceResolverTest
     extends JUnitSeamTest
 {
 	@Deployment(name="NamespaceResolverTest")
-    @OverProtocol("Servlet 3.0") 
+    @OverProtocol("Servlet 5.0") 
     public static Archive<?> createDeployment()
     {
-        return Deployments.defaultSeamDeployment();
+        return Deployments.defaultSeamDeployment(NamespaceResolverTest.class);
     }
 	
 	NamespacePackageResolver resolver = new NamespacePackageResolver();

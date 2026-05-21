@@ -28,17 +28,12 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>seam</artifactId>
-            <type>ejb</type>
+            <artifactId>jboss-seam-jakarta</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>seam-ui</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.seam</groupId>
-            <artifactId>seam-debug</artifactId>
+            <artifactId>jboss-seam-ui-jakarta</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>

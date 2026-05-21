@@ -10,9 +10,9 @@
     <!-- WildFly 36 Managed Container Configuration -->
     <container qualifier="wildfly-managed" default="true">
         <configuration>
-            <property name="javaVmArguments">-Xmx1024m -Djboss.socket.binding.port-offset=100 ${jacoco.agent}</property>
-            <property name="jbossHome">target/wildfly-${version.wildfly36}</property>
-            <property name="serverConfig">standalone-full.xml</property>
+            <property name="javaVmArguments">-Xmx1024m -Djboss.socket.binding.port-offset=100</property>
+            <property name="jbossHome">target/wildfly-36.0.0.Final</property>
+            <property name="serverConfig">standalone.xml</property>
             <property name="allowConnectingToRunningServer">false</property>
             <property name="managementAddress">127.0.0.1</property>
             <property name="managementPort">10090</property>

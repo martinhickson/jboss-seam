@@ -918,7 +918,10 @@ public class Initialization
       for (ClassDescriptor classDescriptor: hotDeploymentStrategy.getScannedComponentClasses() )
       {
          Class<?> scannedClass = classDescriptor.getClazz();
-         installScannedComponentAndRoles(scannedClass);
+         if (scannedClass != null)
+         {
+            installScannedComponentAndRoles(scannedClass);
+         }
       }
    }
    
@@ -960,7 +963,10 @@ public class Initialization
       for ( ClassDescriptor classDescriptor : standardDeploymentStrategy.getAnnotatedComponents() ) 
       {
          Class<?> scannedClass = classDescriptor.getClazz();
-         installScannedComponentAndRoles(scannedClass);
+         if (scannedClass != null)
+         {
+            installScannedComponentAndRoles(scannedClass);
+         }
       }
       
       for ( FileDescriptor fileDescriptor : standardDeploymentStrategy.getXmlComponents() ) 

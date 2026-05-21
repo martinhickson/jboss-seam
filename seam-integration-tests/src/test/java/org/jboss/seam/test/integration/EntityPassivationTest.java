@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -43,11 +43,10 @@ import org.junit.runner.RunWith;
 public class EntityPassivationTest extends JUnitSeamTest
 {
    @Deployment(name="EntityPassivationTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-       return Deployments.defaultSeamDeployment()
-       	.addClasses(SomeComponent.class, NestedComponent.class, UnversionedThing.class);
+       return Deployments.defaultSeamDeployment(EntityPassivationTest.class, SomeComponent.class, NestedComponent.class, UnversionedThing.class);
    }
     
    @Test

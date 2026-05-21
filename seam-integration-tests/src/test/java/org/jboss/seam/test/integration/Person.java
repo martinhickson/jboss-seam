@@ -1,7 +1,7 @@
 package org.jboss.seam.test.integration;
 
 import java.io.Serializable;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 import org.jboss.seam.annotations.Name;
 

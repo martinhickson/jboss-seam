@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.faces.component.UIInput;
+import jakarta.faces.component.UIInput;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -42,12 +42,11 @@ public class BoundComponentConversationTest
    URL contextPath;
    
    @Deployment(name="BoundComponentConversationTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
       // This is a client test, use a real (non-mocked) Seam deployment
-      return Deployments.realSeamDeployment()
-            .addClasses(MyComponent.class, MyBackingBean.class)
+      return Deployments.realSeamDeployment(BoundComponentConversationTest.class, MyComponent.class, MyBackingBean.class)
             .addAsWebResource(new StringAsset(
                   "<html xmlns=\"http://www.w3.org/1999/xhtml\"" +
                   " xmlns:h=\"http://java.sun.com/jsf/html\"" +

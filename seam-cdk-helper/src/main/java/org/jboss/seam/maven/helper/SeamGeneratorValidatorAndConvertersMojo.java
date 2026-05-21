@@ -47,9 +47,15 @@ public class SeamGeneratorValidatorAndConvertersMojo extends AbstractMojo
       validatorGenerator = new ValidatorGenerator(targetDirectory, getLog());
       try
       {
-         File sourceFolder = new File(sourceDirectory);
-         getLog().info("Source Folder: " + sourceFolder);
-         visitFolder(sourceFolder);
+      File sourceFolder = new File(sourceDirectory);
+      getLog().info("Source Folder: " + sourceFolder);
+      visitFolder(sourceFolder);
+      File generatedJakarta = new File(sourceFolder.getParentFile().getParentFile(), "generated/jakarta");
+      if (generatedJakarta.isDirectory())
+      {
+         getLog().info("Generated Jakarta source folder: " + generatedJakarta);
+         visitFolder(generatedJakarta);
+      }
          converterGenerator.generateConverters();
          visitFolder(new File(sourceFolder.getParent(), "config/component"));
          validatorGenerator.generateValidators();

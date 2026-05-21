@@ -7,8 +7,11 @@ import jakarta.ejb.Stateful;
 import jakarta.persistence.EntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.annotations.datamodel.DataModel;
 
 /**
  * Seam component for hotel searching functionality
@@ -16,10 +19,12 @@ import org.jboss.seam.annotations.Scope;
 @Stateful
 @Name("hotelSearch")
 @Scope(ScopeType.SESSION)
+@Transactional
 public class HotelSearching implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
+    @In
     private EntityManager entityManager;
     
     public HotelSearching() {
@@ -30,34 +35,12 @@ public class HotelSearching implements Serializable {
         // Component initialization
     }
     
-    // Get EntityManager from JNDI - WildFly 36 provides both direct EM and EMF bindings
-    private EntityManager getEntityManager() {
-        if (entityManager == null) {
-            try {
-                javax.naming.InitialContext ctx = new javax.naming.InitialContext();
-                
-                // Try direct EntityManager first (WildFly 36 provides this)
-                try {
-                    entityManager = (jakarta.persistence.EntityManager) ctx.lookup("java:/EntityManager/testPU");
-                } catch (javax.naming.NameNotFoundException e) {
-                    // Fallback to EntityManagerFactory approach
-                    jakarta.persistence.EntityManagerFactory emf = (jakarta.persistence.EntityManagerFactory) 
-                        ctx.lookup("java:jboss/EntityManagerFactory/testPU");
-                    entityManager = emf.createEntityManager();
-                }
-                
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to get EntityManager from JNDI", e);
-            }
-        }
-        return entityManager;
-    }
-    
     private String searchString;
     private int pageSize = 10;
     private int page;
     
-        private List<Hotel> hotels;
+    @DataModel
+    private List<Hotel> hotels;
 
     private Hotel selectedHotel;
     
@@ -72,11 +55,10 @@ public class HotelSearching implements Serializable {
     }
     
     private void queryHotels() {
-        EntityManager em = getEntityManager();
         String searchPattern = searchString == null ? "%" : '%' + searchString.toLowerCase().replace('*', '%') + '%';
         
         try {
-            jakarta.persistence.TypedQuery<Hotel> query = em.createQuery(
+            jakarta.persistence.TypedQuery<Hotel> query = entityManager.createQuery(
                 "select h from Hotel h where lower(h.name) like :pattern " +
                 "or lower(h.city) like :pattern " +
                 "or lower(h.zip) like :pattern " +

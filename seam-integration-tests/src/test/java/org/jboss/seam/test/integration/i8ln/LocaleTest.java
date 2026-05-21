@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.component.UIOutput;
-import javax.faces.event.ValueChangeEvent;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.event.ValueChangeEvent;
 
 import junit.framework.Assert;
 
@@ -27,29 +27,26 @@ import org.junit.runner.RunWith;
 public class LocaleTest extends JUnitSeamTest
 {
    @Deployment(name="LocaleTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment();
+      return Deployments.defaultSeamDeployment("WEB-INF/components.xml", LocaleTest.class);
    }
 
    @Test
    public void localeTest() throws Exception
    {
-      new NonFacesRequest()
+      new ComponentTest()
       {
          @Override
-         protected void renderResponse() throws Exception
+         protected void testComponents() throws Exception
          {
-            // it's necessary to emulate the startup behavior of LocaleConfig since it alters the JSF Application
-            // and we cannot be sure that the JSF Application wasn't cleared by an earlier class
-            // NOTE: I wish this test suite had some better place of initializing the application context
             Contexts.getApplicationContext().remove(Seam.getComponentName(LocaleConfig.class));
             LocaleConfig.instance();
          }
       }.run();
 
-      new FacesRequest()
+      new FacesRequest("/index.xhtml")
       {
 
          @Override
@@ -75,7 +72,7 @@ public class LocaleTest extends JUnitSeamTest
             getFacesContext().getApplication().setDefaultLocale(Locale.ENGLISH);
             //getFacesContext().getApplication().setSupportedLocales(null);
             
-            Assert.assertEquals(Locale.getDefault(), org.jboss.seam.international.Locale.instance());
+            Assert.assertEquals(getFacesContext().getApplication().getDefaultLocale(), org.jboss.seam.international.Locale.instance());
             
             LocaleSelector.instance().setLocale(Locale.UK);
             

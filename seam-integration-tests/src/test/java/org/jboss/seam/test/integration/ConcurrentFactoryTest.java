@@ -7,18 +7,29 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Factory;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.OverProtocol;
+import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.mock.JUnitSeamTest;
+import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.After;
+import org.junit.runner.RunWith;
 
 // JBSEAM-4669
-public class ConcurrentFactoryTest 
-    extends JUnitSeamTest 
+@RunWith(Arquillian.class)
+public class ConcurrentFactoryTest extends JUnitSeamTest
 {
+    @Deployment
+    @OverProtocol("Servlet 5.0")
+    public static Archive<?> createDeployment() {
+        return Deployments.defaultSeamDeployment(ConcurrentFactoryTest.class);
+    }
+
     private volatile boolean exceptionOccured = false;
     static AtomicInteger testSequence = new AtomicInteger(0);
 

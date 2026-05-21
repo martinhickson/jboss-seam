@@ -41,22 +41,21 @@ public class RestoreViewComponentAccessTest
    URL contextPath;
 
    @Deployment(name="RestoreViewComponentAccessTest")
-   @OverProtocol("Servlet 3.0")
+   @OverProtocol("Servlet 5.0")
    public static WebArchive createDeployment()
    {
       // This is a client test, use a real (non-mocked) Seam deployment
-      WebArchive war = Deployments.realSeamDeployment()
-            .addClasses(SequenceAction.class);
+      WebArchive war = Deployments.realSeamDeployment(RestoreViewComponentAccessTest.class, SequenceAction.class);
 
       war.delete("WEB-INF/pages.xml");
       war.delete("WEB-INF/components.xml");
 
       war.addAsWebResource(new StringAsset(
-            "<html xmlns=\"http://www.w3.org/1999/xhtml\"" +
-            " xmlns:h=\"http://java.sun.com/jsf/html\"" +
-            " xmlns:f=\"http://java.sun.com/jsf/core\"" +
+            "<html xmlns=\"https://www.w3.org/1999/xhtml\"" +
+            " xmlns:h=\"jakarta.faces.html\"" +
+            " xmlns:f=\"jakarta.faces.core\"" +
             " xmlns:s=\"http://jboss.org/schema/seam/taglib\"" +
-            " xmlns:ui=\"http://java.sun.com/jsf/facelets\">" +
+            " xmlns:ui=\"jakarta.faces.facelets\">" +
             "<h:head></h:head>" +
             "<h:body>" +
                "<h:form id='form'>" +
@@ -71,8 +70,10 @@ public class RestoreViewComponentAccessTest
             "</html>"), "test.xhtml");
 
       war.addAsWebInfResource(new StringAsset(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<pages xmlns=\"http://jboss.org/schema/seam/pages\""+
-            " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
+            " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+            " xsi:schemaLocation=\"http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd\">" +
             "<page view-id='/test.xhtml'>" +
             "<begin-conversation join='true'/>" +
             "<navigation><redirect view-id='/test.xhtml'/></navigation>" +
@@ -100,8 +101,9 @@ public class RestoreViewComponentAccessTest
       ((HtmlTextInput)page.getElementById("form:input")).setText("1");
       page = page.getElementById("form:append").click();
 
-      assertFalse(page.getBody().getTextContent().contains("Sequence: 1, 2, 1"));
-      assertTrue(page.getBody().getTextContent().contains("value must be greater than or equal to 2"));
+      String body = page.getBody().getTextContent();
+      assertFalse(body.contains("Sequence: 1, 2, 1"));
+      assertTrue(body.contains("allowable minimum of '2'") || body.contains("greater than or equal to 2"));
    }
 
    @Name("sequence")

@@ -39,12 +39,11 @@ public class RedirectTest {
 	URL contextPath;
 	   
 	@Deployment(name="RedirectTest")
-	@OverProtocol("Servlet 3.0") 
+	@OverProtocol("Servlet 5.0") 
 	public static Archive<?> createDeployment()
 	{
 		// This is a client test, use a real (non-mocked) Seam deployment
-		return Deployments.realSeamDeployment()
-				    .addClasses(MyComponent.class, MyException.class)
+		return Deployments.realSeamDeployment(RedirectTest.class, MyComponent.class, MyException.class)
 				    
 		            .addAsWebResource(new StringAsset(
 		            	 "<html xmlns=\"http://www.w3.org/1999/xhtml\"" +

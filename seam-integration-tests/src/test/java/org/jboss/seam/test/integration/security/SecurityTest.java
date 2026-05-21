@@ -34,10 +34,10 @@ import org.junit.runner.RunWith;
 public class SecurityTest extends JUnitSeamTest
 {
    @Deployment(name="SecurityTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment();
+      return Deployments.defaultSeamDeployment(SecurityTest.class);
    }
 	
    private Configuration createMockJAASConfiguration()

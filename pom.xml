@@ -60,7 +60,7 @@
     <!--module>jboss-seam-wicket</module-->
     <!--module>jboss-seam-ioc</module-->
     <!--module>functional-tests</module-->
-    <!--module>seam-integration-tests</module-->
+    <module>seam-integration-tests</module>
   </modules>
 
   <scm>

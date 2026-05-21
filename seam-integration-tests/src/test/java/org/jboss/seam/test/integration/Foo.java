@@ -8,9 +8,9 @@ package org.jboss.seam.test.integration;
 
 import java.io.Serializable;
 
-import javax.ejb.Remove;
+import jakarta.ejb.Remove;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.End;

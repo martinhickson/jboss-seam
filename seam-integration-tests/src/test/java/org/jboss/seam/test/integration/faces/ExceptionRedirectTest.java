@@ -43,11 +43,11 @@ public class ExceptionRedirectTest
    URL contextPath;
    
    @Deployment(name="ExceptionRedirectTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
       // This is a client test, use a real (non-mocked) Seam deployment
-      WebArchive war= Deployments.realSeamDeployment();
+      WebArchive war = Deployments.realSeamDeployment(ExceptionRedirectTest.class);
       war.delete("WEB-INF/pages.xml");
       war.addClasses(TestComponent.class, PageScopedComponent.class)
             .addAsWebResource(new StringAsset(

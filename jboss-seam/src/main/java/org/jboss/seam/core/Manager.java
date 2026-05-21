@@ -71,7 +71,7 @@ public class Manager
    private int conversationTimeout = 600000; //10 mins
    private int concurrentRequestTimeout = 1000; //one second
    
-   private String conversationIdParameter = "conversationId";
+   private String conversationIdParameter = "scid";
    private String parentConversationIdParameter = "parentConversationId";
 
    private String URIEncoding = DEFAULT_ENCODING;
@@ -664,6 +664,10 @@ public class Manager
 
    private ConversationEntry createConversationEntry()
    {
+      if ( getCurrentConversationIdStack() == null )
+      {
+         initializeTemporaryConversation();
+      }
       ConversationEntry entry = ConversationEntries.instance()
             .createConversationEntry( getCurrentConversationId(), getCurrentConversationIdStack() );
       if ( !entry.isNested() ) 

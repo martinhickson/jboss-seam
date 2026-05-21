@@ -122,7 +122,7 @@ public class AbstractSeamTest
 
    protected String getConversationIdParameter()
    {
-      return "conversationId";
+      return "scid";
    }
 
    /**
@@ -922,8 +922,11 @@ public class AbstractSeamTest
 
    public void end()
    {
-      ServletLifecycle.endSession(session);
-      session = null;
+      if (session != null)
+      {
+         ServletLifecycle.endSession(session);
+         session = null;
+      }
    }
 
    /**

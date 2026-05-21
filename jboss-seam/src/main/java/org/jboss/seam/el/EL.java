@@ -36,6 +36,7 @@ public class EL
    {
       CompositeELResolver resolver = new CompositeELResolver();
       resolver.add( new SeamELResolver() );
+      resolver.add( new SeamBeanELResolver() );
       resolver.add( new MapELResolver() );
       resolver.add( new ListELResolver() );
       resolver.add( new ArrayELResolver() );

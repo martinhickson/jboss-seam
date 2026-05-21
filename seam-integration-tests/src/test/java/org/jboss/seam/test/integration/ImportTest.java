@@ -17,18 +17,17 @@ public class ImportTest
     extends JUnitSeamTest
 {
 	@Deployment(name="IdentifierTest")
-	@OverProtocol("Servlet 3.0")
+	@OverProtocol("Servlet 5.0")
 	public static Archive<?> createDeployment()
 	{
-		return Deployments.defaultSeamDeployment()
-				.addClasses(Importer.class);
+		return Deployments.defaultSeamDeployment(ImportTest.class, Importer.class);
 	}
 
     @Test
     public void testImport() 
         throws Exception 
     {        
-        new FacesRequest() {
+        new FacesRequest("/index.xhtml") {
             @Override
             protected void invokeApplication()
                 throws Exception

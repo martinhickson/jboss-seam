@@ -7,7 +7,7 @@ import org.jboss.seam.mock.JUnitSeamTest;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -23,11 +23,10 @@ public class EntityTest
     extends JUnitSeamTest 
 {
 	@Deployment(name="EntityTest")
-	@OverProtocol("Servlet 3.0")
+	@OverProtocol("Servlet 5.0")
 	public static Archive<?> createDeployment()
 	{
-		return Deployments.defaultSeamDeployment()
-				.addClasses(Thing.class);
+		return Deployments.defaultSeamDeployment(EntityTest.class, Thing.class);
 	}
 
     @Test
@@ -149,7 +148,7 @@ public class EntityTest
         
         private boolean exceptionSeen;
 
-        @Observer(value="org.jboss.seam.exceptionHandled.javax.persistence.OptimisticLockException")
+        @Observer(value="org.jboss.seam.exceptionHandled.jakarta.persistence.OptimisticLockException")
         public void handleException(Exception e) {
             exceptionSeen=true;
         }

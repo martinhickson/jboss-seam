@@ -2,8 +2,8 @@ package org.jboss.seam.test.integration.i8ln;
 
 import java.util.TimeZone;
 
-import javax.faces.component.UIOutput;
-import javax.faces.event.ValueChangeEvent;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.event.ValueChangeEvent;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -24,16 +24,16 @@ import org.junit.runner.RunWith;
 public class TimeZoneTest extends JUnitSeamTest
 {
    @Deployment(name="TimeZoneTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment();
+      return Deployments.defaultSeamDeployment("WEB-INF/components.xml", TimeZoneTest.class);
    } 
 
    @Test
    public void timeZoneTest() throws Exception
    {
-      new FacesRequest()
+      new FacesRequest("/index.xhtml")
       {
          @Override
          protected void invokeApplication() throws Exception

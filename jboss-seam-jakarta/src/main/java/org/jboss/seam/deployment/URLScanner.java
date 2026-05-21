@@ -129,7 +129,15 @@ public class URLScanner extends AbstractScanner
             if (instance.target().kind() == org.jboss.jandex.AnnotationTarget.Kind.CLASS)
             {
                String classResource = instance.target().asClass().name().toString().replace('.', '/') + ".class";
-               classHandler.getClasses().add(new ClassDescriptor(classResource, classLoader, getDeploymentStrategy().getServletContext()));
+               ClassDescriptor descriptor = new ClassDescriptor(classResource, classLoader, getDeploymentStrategy().getServletContext());
+               if (descriptor.isLoaded())
+               {
+                  classHandler.getClasses().add(descriptor);
+               }
+               else
+               {
+                  log.debug("Skipping jandex-indexed class that is not loadable: " + classResource);
+               }
             }
          }
       }

@@ -191,6 +191,9 @@
                   <excludes>
                     <exclude>**/org/jboss/seam/ui/validator/ModelValidator.java</exclude>
                     <exclude>**/org/jboss/seam/ui/facelet/RendererRequest.java</exclude>
+                    <exclude>**/org/jboss/seam/ui/util/cdk/MethodBindingToMethodExpression.java</exclude>
+                    <exclude>**/org/jboss/seam/ui/util/cdk/MethodExpressionToMethodBinding.java</exclude>
+                    <exclude>**/org/jboss/seam/ui/util/cdk/SimpleActionMethodBinding.java</exclude>
                     <!-- Exclude complex files that need manual override -->
                     <!--
                                         <exclude>**/org/jboss/seam/ui/component/**</exclude>
@@ -222,7 +225,7 @@
           <activeRecipes>
             <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
           </activeRecipes>
-          <sourceDirectory>${project.build.directory}/generated/jakarta</sourceDirectory>
+          <sourceDirectory>${project.basedir}/src/generated/jakarta</sourceDirectory>
           <exclusions>
             <!-- Exclude complex UI components from automated transformation -->
             <exclusion>**/richfaces-cdk/**</exclusion>
@@ -276,46 +279,72 @@
               </sources>
             </configuration>
           </execution>
+          <execution>
+            <id>add-cdk-generated-sources</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/main/java</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-cdk-generated-resources</id>
+            <goals>
+              <goal>add-resource</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}/generated-sources/main/resources</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
       <!-- RichFaces CDK Plugin for UI component generation -->
-      <!-- <plugin>
-                <groupId>org.richfaces.cdk</groupId>
-                <artifactId>maven-cdk-plugin</artifactId>
-                <version>${version.richfaces.cdk}</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <library>
-                        <prefix>org.jboss.seam.ui</prefix>
-                        <description>JSF controls for JBoss Seam Jakarta</description>
-                    </library>
-                    <jvmArgs>
-                        <jvmArg>- -add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
-                    </jvmArgs>
-                </configuration>
-            </plugin>
+      <plugin>
+        <groupId>org.richfaces.cdk</groupId>
+        <artifactId>maven-cdk-plugin</artifactId>
+        <version>${version.richfaces.cdk}</version>
+        <configuration>
+          <library>
+            <prefix>org.jboss.seam.ui</prefix>
+            <description>JSF controls for JBoss Seam Jakarta</description>
+          </library>
+          <jvmArgs>
+            <jvmArg>--add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
+          </jvmArgs>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
 
-            <plugin>
-                <groupId>org.jboss.seam</groupId>
-                <artifactId>seam-cdk-helper</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> -->
+      <plugin>
+        <groupId>org.jboss.seam</groupId>
+        <artifactId>seam-cdk-helper</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
 
       <!-- Java 17 Compiler Configuration -->
       <plugin>

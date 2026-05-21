@@ -52,10 +52,15 @@ public class ClassDescriptor extends FileDescriptor
       return clazz;
    }
    
+   public boolean isLoaded()
+   {
+      return clazz != null;
+   }
+
    @Override
    public String toString()
    {
-      return clazz.getName();
+      return clazz == null ? getName() : clazz.getName();
    }
    
    /**
@@ -73,18 +78,19 @@ public class ClassDescriptor extends FileDescriptor
       if (other instanceof ClassDescriptor)
       {
          ClassDescriptor that = (ClassDescriptor) other;
-         return this.getClazz().equals(that.getClazz());
+         if (clazz == null || that.clazz == null)
+         {
+            return clazz == null && that.clazz == null && getName().equals(that.getName());
+         }
+         return clazz.equals(that.clazz);
       }
-      else
-      {
-         return false;
-      }
+      return false;
    }
    
    @Override
    public int hashCode()
    {
-      return getClazz().hashCode();
+      return clazz == null ? getName().hashCode() : clazz.hashCode();
    }
 
 }

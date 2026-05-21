@@ -16,11 +16,10 @@ import org.junit.runner.RunWith;
 public class JavaBeanEqualsTest extends JUnitSeamTest
 {
 	@Deployment(name="JavaBeanEqualsTest")
-	@OverProtocol("Servlet 3.0") 
+	@OverProtocol("Servlet 5.0") 
 	public static Archive<?> createDeployment()
 	{
-		return Deployments.defaultSeamDeployment()
-				.addClasses(BeanA.class);
+		return Deployments.defaultSeamDeployment(JavaBeanEqualsTest.class, BeanA.class);
 	}
    
    @Test

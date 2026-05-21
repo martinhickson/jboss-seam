@@ -1,6 +1,6 @@
 package org.jboss.seam.test.integration.synchronization;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 @Local
 public interface TestLocal

@@ -4,14 +4,11 @@ import java.io.Serializable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.jboss.seam.annotations.Name;
-
 /**
  * User entity for the booking application
  */
 @Entity
 @Table(name = "Customer")
-@Name("user")
 public class User implements Serializable {
     
     private static final long serialVersionUID = 1L;

@@ -32,22 +32,11 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>seam</artifactId>
-            <type>ejb</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.testng</groupId>
-                    <artifactId>testng</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.el</groupId>
-                    <artifactId>el-api</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>jboss-seam-jakarta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.seam</groupId>
+            <artifactId>jboss-seam-ui-jakarta</artifactId>
         </dependency>
     </dependencies>
 
@@ -72,11 +61,6 @@
                             <artifactId>booking-ejb</artifactId>
                             <bundleFileName>booking-ejb.jar</bundleFileName>
                         </ejbModule>
-                        <ejbModule>
-                            <groupId>org.jboss.seam</groupId>
-                            <artifactId>seam</artifactId>
-                            <bundleFileName>jboss-seam.jar</bundleFileName>
-                        </ejbModule>                        
                     </modules>
                 </configuration>
             </plugin>

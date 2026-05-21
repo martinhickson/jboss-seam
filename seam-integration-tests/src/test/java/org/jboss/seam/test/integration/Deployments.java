@@ -1,106 +1,208 @@
 package org.jboss.seam.test.integration;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import org.jboss.shrinkwrap.api.ArchivePath;
+import org.apache.cxf.common.security.GroupPrincipal;
+import org.dom4j.DocumentException;
+import org.jboss.el.util.ReflectionUtil;
+import org.jboss.jandex.Index;
+import org.jboss.jandex.Indexer;
+import org.jboss.jandex.IndexWriter;
+import org.jboss.seam.Seam;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.deployment.AbstractScanner;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
-public class Deployments {
-   public static WebArchive defaultSeamDeployment() {
-      return defaultSeamDeployment("WEB-INF/components.xml");
-   }
-   
-   // Deployment that use the proper SeamListener instead of the MockSeamListener
-   public static WebArchive realSeamDeployment() {
-      return ShrinkWrap.create(ZipImporter.class, "test.war").importFrom(new File("target/seam-integration-tests.war")).as(WebArchive.class)
-            .addAsWebInfResource(new StringAsset(
-                  "<jboss-deployment-structure>" +
-                        "<deployment>" +
-                        "<dependencies>" +
-                        "<module name=\"org.javassist\"/>" +
-                        "<module name=\"org.dom4j\"/>" +
-                        "<module name=\"org.apache.commons.collections\"/>" +
-                        "</dependencies>" +
-                        "</deployment>" +
-                  "</jboss-deployment-structure>"), "jboss-deployment-structure.xml")
-                  .addAsResource("seam.properties")
-                  .addAsResource("components.properties")
-                  .addAsResource("messages_en.properties")
-                  .addAsResource("META-INF/persistence.xml")
+import javassist.util.proxy.MethodFilter;
 
-                  .addAsResource("hibernate.cfg.xml")
-                  .addAsWebInfResource("WEB-INF/components.xml", "components.xml")
-                  .addAsWebInfResource("WEB-INF/pages.xml", "pages.xml")
-                  .addAsWebInfResource("WEB-INF/real-web.xml", "web.xml")
-                  .addAsWebInfResource("WEB-INF/ejb-jar.xml", "ejb-jar.xml")
-                  .addAsWebInfResource("WEB-INF/jboss-seam-integration-tests-hornetq-jms.xml", "jboss-seam-integration-tests-hornetq-jms.xml");
-   }
+/**
+ * Builds Seam integration test WARs for WildFly 36 using Jakarta Seam artifacts.
+ */
+public final class Deployments {
 
-   public static WebArchive jbpmSeamDeployment() {
-      return ShrinkWrap.create(ZipImporter.class, "test.war").importFrom(new File("target/seam-integration-tests.war")).as(WebArchive.class)
-            .addAsWebInfResource(new StringAsset(
-                  "<jboss-deployment-structure>" +
-                        "<deployment>" +
-                        "<dependencies>" +
-                        "<module name=\"org.javassist\"/>" +
-                        "<module name=\"org.dom4j\"/>" +
-                        "<module name=\"org.apache.commons.collections\"/>" +
-                        "</dependencies>" +
-                        "</deployment>" +
-                  "</jboss-deployment-structure>"), "jboss-deployment-structure.xml")
-                  .addAsResource("seam.properties")
-                  .addAsResource("components.properties")
-                  .addAsResource("messages_en.properties")
-                  .addAsResource("META-INF/persistence.xml")
+    private Deployments() {
+    }
 
-                  .addAsResource("testProcess1.jpdl.xml")
-                  .addAsResource("testProcess2.jpdl.xml")
-                  .addAsResource("testProcess3.jpdl.xml")
-                  .addAsResource("testProcess4.jpdl.xml")
+    public static WebArchive defaultSeamDeployment() {
+        return defaultSeamDeployment("WEB-INF/components-mock.xml");
+    }
 
-                  .addAsResource("jbpm.cfg.xml")
+    public static WebArchive defaultSeamDeployment(Class<?> testClass, Class<?>... indexClasses) {
+        return defaultSeamDeployment("WEB-INF/components-mock.xml", archiveName(testClass), testClass, indexClasses);
+    }
 
-                  .addAsResource("hibernate.cfg.xml")
-                  .addAsWebInfResource("WEB-INF/components-jbpm.xml", "components.xml")
-                  .addAsWebInfResource("WEB-INF/pages.xml", "pages.xml")
-                  .addAsWebInfResource("WEB-INF/web.xml", "web.xml")
-                  .addAsWebInfResource("WEB-INF/ejb-jar.xml", "ejb-jar.xml");
-   }
+    private static String archiveName(Class<?> testClass) {
+        if (testClass == null) {
+            return "seam-integration-tests.war";
+        }
+        return "seam-it-" + testClass.getSimpleName().toLowerCase() + ".war";
+    }
 
-   public static WebArchive defaultSeamDeployment(String customComponentsXml) {
-      WebArchive war = ShrinkWrap.create(ZipImporter.class, "test.war").importFrom(new File("target/seam-integration-tests.war")).as(WebArchive.class)
-            .addAsWebInfResource(new StringAsset(
-                  "<jboss-deployment-structure>" +
-                        "<deployment>" +
-                        "<dependencies>" +
-                        "<module name=\"org.javassist\"/>" +
-                        "<module name=\"org.dom4j\"/>" +
-                        "</dependencies>" +
-                        "</deployment>" +
-                  "</jboss-deployment-structure>"), "jboss-deployment-structure.xml")
-                  .addAsResource("seam.properties")
-                  .addAsResource("components.properties")
-                  .addAsResource("messages_en.properties")
-                  .addAsResource("META-INF/persistence.xml")
-   
-                  .addAsResource("hibernate.cfg.xml")
-                  .addAsWebInfResource(customComponentsXml, "components.xml")
-                  .addAsWebInfResource("WEB-INF/pages.xml", "pages.xml")
-                  .addAsWebInfResource("WEB-INF/web.xml", "web.xml")
-                  .addAsWebInfResource("WEB-INF/ejb-jar.xml", "ejb-jar.xml")
-                  .addAsWebInfResource("WEB-INF/jboss-seam-integration-tests-hornetq-jms.xml", "jboss-seam-integration-tests-hornetq-jms.xml");
-      
-      // Remove jboss-seam-ui for a Mock SeamTest test as it would cause Mojarra to initialize
-      for (ArchivePath path : war.getContent().keySet()) {
-         if (path.get().contains("jboss-seam-ui")) {
-            war.delete(path);
-            break;
-         }
-      }
-      
-      return war;
-   }
+    public static WebArchive realSeamDeployment() {
+        return realSeamDeployment((Class<?>) null);
+    }
+
+    public static WebArchive realSeamDeployment(Class<?> testClass, Class<?>... indexClasses) {
+        WebArchive war = baseArchive(true, false, archiveName(testClass))
+                .addAsWebInfResource("WEB-INF/components.xml", "components.xml")
+                .addAsWebInfResource("WEB-INF/pages.xml", "pages.xml")
+                .addAsWebInfResource("WEB-INF/real-web.xml", "web.xml")
+                .addAsWebInfResource("WEB-INF/faces-config.xml", "faces-config.xml");
+        if (indexClasses.length > 0) {
+            war.addClasses(indexClasses);
+        }
+        return addJandexIndex(war, indexClasses(testClass, indexClasses));
+    }
+
+    public static WebArchive jbpmSeamDeployment(Class<?>... indexClasses) {
+        WebArchive war = baseArchive(true, true, "seam-integration-jbpm.war")
+                .addAsResource("testProcess1.jpdl.xml")
+                .addAsResource("testProcess2.jpdl.xml")
+                .addAsResource("testProcess3.jpdl.xml")
+                .addAsResource("testProcess4.jpdl.xml")
+                .addAsResource("jbpm.cfg.xml")
+                .addAsResource("hibernate.cfg.xml")
+                .addAsWebInfResource("WEB-INF/components-jbpm.xml", "components.xml")
+                .addAsWebInfResource("WEB-INF/pages.xml", "pages.xml")
+                .addAsWebInfResource("WEB-INF/web.xml", "web.xml");
+        if (indexClasses.length > 0) {
+            war.addClasses(indexClasses);
+        }
+        return addJandexIndex(war, indexClasses(null, indexClasses));
+    }
+
+    public static WebArchive defaultSeamDeployment(String customComponentsXml) {
+        return defaultSeamDeployment(customComponentsXml, "seam-integration-tests.war", null);
+    }
+
+    public static WebArchive defaultSeamDeployment(String customComponentsXml, Class<?> testClass, Class<?>... indexClasses) {
+        return defaultSeamDeployment(customComponentsXml, archiveName(testClass), testClass, indexClasses);
+    }
+
+    private static WebArchive defaultSeamDeployment(String customComponentsXml, String archiveName, Class<?> testClass, Class<?>... indexClasses) {
+        WebArchive war = baseArchive(false, false, archiveName)
+                .addAsWebInfResource(customComponentsXml, "components.xml")
+                .addAsWebInfResource("WEB-INF/pages.xml", "pages.xml")
+                .addAsWebInfResource("WEB-INF/web.xml", "web.xml");
+        if (indexClasses.length > 0) {
+            war.addClasses(indexClasses);
+        }
+        return addJandexIndex(war, indexClasses(testClass, indexClasses));
+    }
+
+    public static WebArchive withJandex(WebArchive war, Class<?> testClass, Class<?>... additionalClasses) {
+        return addJandexIndex(war, indexClasses(testClass, additionalClasses));
+    }
+
+    private static Class<?>[] indexClasses(Class<?> testClass, Class<?>... additionalClasses) {
+        List<Class<?>> classes = new ArrayList<>();
+        classes.add(AbstractScanner.class);
+        if (testClass != null) {
+            collectNamedComponents(testClass, classes);
+        }
+        for (Class<?> clazz : additionalClasses) {
+            if (clazz.isAnnotationPresent(Name.class) && !classes.contains(clazz)) {
+                classes.add(clazz);
+            }
+            collectNamedComponents(clazz, classes);
+        }
+        return classes.toArray(Class<?>[]::new);
+    }
+
+    private static void collectNamedComponents(Class<?> type, List<Class<?>> classes) {
+        if (type.isAnnotationPresent(Name.class) && !classes.contains(type)) {
+            classes.add(type);
+        }
+        for (Class<?> inner : type.getDeclaredClasses()) {
+            collectNamedComponents(inner, classes);
+        }
+    }
+
+    private static WebArchive addJandexIndex(WebArchive war, Class<?>... classes) {
+        try {
+            return war.addAsResource(new ByteArrayAsset(createJandexIndex(Arrays.asList(classes))), "META-INF/jandex.idx");
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to build jandex index", e);
+        }
+    }
+
+    private static WebArchive baseArchive(boolean includeSeamUi, boolean includeJbpm, String archiveName) {
+        WebArchive war = ShrinkWrap.create(WebArchive.class, archiveName)
+                .addAsLibraries(
+                        jarFor(Seam.class),
+                        jarFor(MethodFilter.class),
+                        jarFor(Indexer.class),
+                        jarFor(GroupPrincipal.class),
+                        jarFor(DocumentException.class),
+                        jarFor(ReflectionUtil.class),
+                        jarFor(jakarta.faces.webapp.FacesServlet.class))
+                .addAsResource("seam.properties")
+                .addAsResource("components.properties")
+                .addAsResource("messages_en.properties")
+                .addAsResource("META-INF/persistence.xml")
+                .addAsWebResource("index.xhtml")
+                .addAsWebResource("page.xhtml")
+                .addAsWebResource("test.xhtml")
+                .addAsWebResource("pageWithDescription.xhtml")
+                .addAsWebResource("pageWithoutDescription.xhtml")
+                .addAsWebResource("pageWithAnotherDescription.xhtml")
+                .addAsWebResource("pageWithParameter.xhtml")
+                .addAsWebResource("pageWithRequiredParameter.xhtml")
+                .addAsWebResource("pageWithValidateModelDisabledParameter.xhtml")
+                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+
+        if (includeSeamUi) {
+            war.addAsLibraries(jarFor(org.jboss.seam.ui.facelet.RendererRequest.class));
+        }
+
+        if (includeJbpm) {
+            war.addAsLibraries(Maven.resolver()
+                    .loadPomFromFile("pom.xml")
+                    .resolve("org.jbpm.jbpm3:jbpm-jpdl")
+                    .withTransitivity()
+                    .asFile());
+        }
+
+        return war;
+    }
+
+    private static File jarFor(Class<?> anchor) {
+        try {
+            return new File(anchor.getProtectionDomain().getCodeSource().getLocation().toURI());
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot locate JAR for " + anchor.getName(), e);
+        }
+    }
+
+    private static byte[] createJandexIndex(List<Class<?>> classes) throws IOException {
+        Indexer indexer = new Indexer();
+        for (Class<?> clazz : classes) {
+            indexClass(indexer, clazz);
+        }
+        Index index = indexer.complete();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        new IndexWriter(output).write(index);
+        return output.toByteArray();
+    }
+
+    private static void indexClass(Indexer indexer, Class<?> clazz) throws IOException {
+        String resourceName = clazz.getName().replace('.', '/') + ".class";
+        try (InputStream stream = clazz.getClassLoader().getResourceAsStream(resourceName)) {
+            if (stream == null) {
+                throw new IllegalStateException("Missing class resource: " + resourceName);
+            }
+            indexer.index(stream);
+        }
+    }
 }

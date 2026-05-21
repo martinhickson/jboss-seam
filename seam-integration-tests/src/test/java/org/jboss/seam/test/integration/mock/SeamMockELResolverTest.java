@@ -1,13 +1,10 @@
 package org.jboss.seam.test.integration.mock;
 
-import java.beans.FeatureDescriptor;
-import java.util.Iterator;
-
-import javax.el.ELContext;
-import javax.el.ELException;
-import javax.el.ELResolver;
-import javax.el.PropertyNotFoundException;
-import javax.el.PropertyNotWritableException;
+import jakarta.el.ELContext;
+import jakarta.el.ELException;
+import jakarta.el.ELResolver;
+import jakarta.el.PropertyNotFoundException;
+import jakarta.el.PropertyNotWritableException;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -29,10 +26,10 @@ import org.junit.Test;
 public class SeamMockELResolverTest extends JUnitSeamTest
 {
    @Deployment(name="SecurityTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment();
+      return Deployments.defaultSeamDeployment(SeamMockELResolverTest.class);
    }
    
    private static final String property = "customELResolverTest";
@@ -46,12 +43,6 @@ public class SeamMockELResolverTest extends JUnitSeamTest
 
          @Override
          public Class<?> getCommonPropertyType(ELContext arg0, Object arg1)
-         {
-            return null;
-         }
-
-         @Override
-         public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext arg0, Object arg1)
          {
             return null;
          }
@@ -107,12 +98,6 @@ public class SeamMockELResolverTest extends JUnitSeamTest
           }
 
           @Override
-          public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext arg0, Object arg1)
-          {
-             return null;
-          }
-
-          @Override
           public Class<?> getType(ELContext arg0, Object base, Object property)
                    throws NullPointerException, PropertyNotFoundException, ELException
           {
@@ -152,7 +137,7 @@ public class SeamMockELResolverTest extends JUnitSeamTest
    @Test
    public void testCustomELResolver() throws Exception
    {
-      new FacesRequest()
+      new FacesRequest("/index.xhtml")
       {
          @Override
          protected void invokeApplication() throws Exception

@@ -1,16 +1,27 @@
 package org.jboss.seam.test.integration;
 
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.OverProtocol;
+import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Out;
 import org.jboss.seam.core.Init;
 import org.jboss.seam.mock.JUnitSeamTest;
+import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class NamespaceTest 
-    extends JUnitSeamTest 
+@RunWith(Arquillian.class)
+public class NamespaceTest extends JUnitSeamTest
 {
+    @Deployment
+    @OverProtocol("Servlet 5.0")
+    public static Archive<?> createDeployment() {
+        return Deployments.defaultSeamDeployment(NamespaceTest.class);
+    } 
+
     @Test
     public void nameSpaceComponent() 
         throws Exception 

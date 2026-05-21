@@ -20,12 +20,11 @@ import org.junit.runner.RunWith;
 public class SFSBSynchronizationTest
 {
    @Deployment(name="SFSBSynchronizationTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
       // This is a client test, use a real (non-mocked) Seam deployment
-      return Deployments.realSeamDeployment()
-            .addClasses(TestAction.class, TestLocal.class)
+      return Deployments.realSeamDeployment(SFSBSynchronizationTest.class, TestAction.class, TestLocal.class)
             .addAsWebResource(new StringAsset(
                   "<html xmlns=\"http://www.w3.org/1999/xhtml\"" +
                   " xmlns:s=\"http://jboss.org/schema/seam/taglib\"" +

@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import jakarta.ejb.Stateful;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.End;
@@ -13,6 +12,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Out;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.core.Manager;
 // import org.jboss.seam.faces.FacesMessages;
 
@@ -22,12 +22,13 @@ import org.jboss.seam.core.Manager;
 @Stateful
 @Name("hotelBooking")
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class HotelBooking implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
-    @PersistenceContext
-    private EntityManager em;
+    @In
+    private EntityManager entityManager;
     
     @In
     private User user;
@@ -37,14 +38,14 @@ public class HotelBooking implements Serializable {
     private Hotel hotel;
     
     @In(required = false)
-    @Out
+    @Out(required = false)
     private Booking booking;
     
     private boolean bookingValid;
     
     @Begin
     public void selectHotel(Hotel selectedHotel) {
-        hotel = em.find(Hotel.class, selectedHotel.getId());
+        hotel = entityManager.find(Hotel.class, selectedHotel.getId());
     }
     
     public void bookHotel() {
@@ -78,7 +79,7 @@ public class HotelBooking implements Serializable {
     
     @End
     public void confirm() {
-        em.persist(booking);
+        entityManager.persist(booking);
         // FacesMessages.instance().add("Thank you, #{user.name}, your confimation number for #{hotel.name} is #{booking.id}");
         System.out.println("Booking confirmed for " + user.getName() + " at " + hotel.getName());
         Manager.instance().endConversation(false);

@@ -60,20 +60,22 @@
         <param-value>Development</param-value>
     </context-param>
     
-    <context-param>
-        <param-name>jakarta.faces.CONFIG_FILES</param-name>
-        <param-value>/WEB-INF/faces-config.xml</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>com.sun.faces.forceLoadConfiguration</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>com.sun.faces.validateXml</param-name>
-        <param-value>true</param-value>
-    </context-param>
+    <servlet>
+        <servlet-name>BookingSeamSessionProbeServlet</servlet-name>
+        <servlet-class>org.jboss.seam.example.booking.test.BookingSeamSessionProbeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingLoginProbeServlet</servlet-name>
+        <servlet-class>org.jboss.seam.example.booking.test.BookingLoginProbeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BookingSeamSessionProbeServlet</servlet-name>
+        <url-pattern>/probe/session</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingLoginProbeServlet</servlet-name>
+        <url-pattern>/probe/login</url-pattern>
+    </servlet-mapping>
 
     <!-- Security -->
     <security-constraint>

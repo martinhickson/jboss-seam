@@ -8,8 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.application.Application;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.Application;
+import jakarta.faces.context.FacesContext;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -31,11 +31,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class RealLocaleTest {
 	   
 	   @Deployment(name="RealLocaleTest")
-	   @OverProtocol("Servlet 3.0") 
+	   @OverProtocol("Servlet 5.0") 
 	   public static Archive<?> createDeployment()
 	   {
-	      return Deployments.realSeamDeployment()
-	               .addClass(TestBean.class)
+	      return Deployments.realSeamDeployment(RealLocaleTest.class)
+			.addClass(TestBean.class)
 	               .addAsWebResource("locale.xhtml","locale.xhtml");
 	   }
 

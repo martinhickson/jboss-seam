@@ -67,7 +67,7 @@ if [[ "${INSTALL_PARENT}" -eq 1 ]]; then
     -Dmaven.repo.local="${M2_LOCAL}" -DskipTests)
 fi
 
-WAR="${SAMPLE_DIR}/target/${WAR_NAME}"
+WAR="${SAMPLE_DIR}/webapp/target/${WAR_NAME}"
 
 if [[ "${DO_BUILD}" -eq 1 ]]; then
   echo "==> Building ${WAR_NAME}"
@@ -105,6 +105,7 @@ print_urls() {
 
   Servlet probes
     Session:      ${BASE_URL}/probe/servlet
+    Lib JAR:      ${BASE_URL}/probe/lib/enhanced
     Raw (no ctx): ${BASE_URL}/probe/raw
     Identity:     ${BASE_URL}/core/identity/status
     Login probe:  ${BASE_URL}/core/identity/login?username=demo&password=secret

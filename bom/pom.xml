@@ -128,6 +128,18 @@
 
       <dependency>
         <groupId>org.jboss.seam</groupId>
+        <artifactId>jboss-seam-jakarta</artifactId>
+        <version>${version.seam}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.seam</groupId>
+        <artifactId>jboss-seam-ui-jakarta</artifactId>
+        <version>${version.seam}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.seam</groupId>
         <artifactId>seam-gen</artifactId>
         <version>${version.seam}</version>
       </dependency>

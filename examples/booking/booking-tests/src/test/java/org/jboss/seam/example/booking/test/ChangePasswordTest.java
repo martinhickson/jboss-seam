@@ -1,21 +1,19 @@
 //$Id: ChangePasswordTest.java 5810 2007-07-16 06:46:47Z gavin $
 package org.jboss.seam.example.booking.test;
 
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.contexts.Lifecycle;
-import org.jboss.seam.core.Manager;
-import org.jboss.seam.example.booking.ChangePassword;
 import org.jboss.seam.example.booking.User;
+import org.jboss.seam.core.Manager;
 import org.jboss.seam.security.Identity;
+import org.jboss.shrinkwrap.api.Archive;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,85 +21,73 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class ChangePasswordTest
-{
-   @Deployment(name="ChangePasswordTest")
-   @OverProtocol("Servlet 3.0") 
-   public static Archive<?> createDeployment()
-   {
-      EnterpriseArchive er = Deployments.bookingDeployment();
-      WebArchive web = er.getAsType(WebArchive.class, "booking-web.war");
+public class ChangePasswordTest {
 
-      web.addClasses(ChangePasswordTest.class);
+    @Deployment(name = "ChangePasswordTest")
+    public static Archive<?> createDeployment() throws Exception {
+        return Deployments.bookingDeployment()
+                .addClass(ChangePasswordTest.class);
+    }
 
-      return er;
-   }
+    @Before
+    public void before() {
+        Lifecycle.beginCall();
+        Manager.instance().initializeTemporaryConversation();
+    }
 
-   @Before
-   public void before() {
-      Lifecycle.beginCall();
-   }
+    @After
+    public void after() {
+        Lifecycle.endCall();
+    }
 
-   @After
-   public void after() {
-      Lifecycle.endCall();
-   }
+    @Test
+    public void testChangePassword() throws Exception {
+        Identity identity = Identity.instance();
 
-   @Test
-   public void testChangePassword() throws Exception
-   {
-      Identity identity = Identity.instance();
+        Contexts.getSessionContext().set("user", new User("Gavin King", "foobar", "gavin"));
+        identity.setUsername("gavin");
+        identity.setPassword("foobar");
+        identity.login();
 
-      Contexts.getSessionContext().set("user", new User("Gavin King", "foobar", "gavin"));
-      identity.setUsername("gavin");
-      identity.setPassword("foobar");
-      identity.login();
+        User user = sessionUser();
+        assertEquals("Gavin King", user.getName());
+        assertEquals("gavin", user.getUsername());
+        assertEquals("foobar", user.getPassword());
+        assertFalse(Manager.instance().isLongRunningConversation());
+        assertTrue(identity.isLoggedIn());
 
-      User user = (User)Component.getInstance("user");
-      assertEquals("Gavin King", user.getName());
-      assertEquals("gavin", user.getUsername());
-      assertEquals("foobar", user.getPassword());
-      assertFalse(Manager.instance().isLongRunningConversation());
-      assertTrue(identity.isLoggedIn());
+        SimpleChangePassword changePassword = (SimpleChangePassword) Component.getInstance("changePassword");
+        changePassword.changePassword("xxxyyy", "xxyyyx");
 
-      user.setPassword("xxxyyy");
-      ChangePassword changePassword = (ChangePassword)Component.getInstance("changePassword");
-      changePassword.setVerify("xxyyyx");
-      changePassword.changePassword();
+        user = sessionUser();
+        assertEquals("Gavin King", user.getName());
+        assertEquals("gavin", user.getUsername());
+        assertEquals("foobar", user.getPassword());
+        assertFalse(Manager.instance().isLongRunningConversation());
+        assertTrue(identity.isLoggedIn());
 
-      user = (User)Component.getInstance("user");
-      assertEquals("Gavin King", user.getName());
-      assertEquals("gavin", user.getUsername());
-      assertEquals("foobar", user.getPassword());
-      assertFalse(Manager.instance().isLongRunningConversation());
-      assertTrue(identity.isLoggedIn());
+        changePassword.changePassword("xxxyyy", "xxxyyy");
 
-      user = (User)Component.getInstance("user");
-      user.setPassword("xxxyyy");
-      changePassword = (ChangePassword)Component.getInstance("changePassword");
-      changePassword.setVerify("xxxyyy");
-      changePassword.changePassword();
+        user = sessionUser();
+        assertEquals("Gavin King", user.getName());
+        assertEquals("gavin", user.getUsername());
+        assertEquals("xxxyyy", user.getPassword());
+        assertFalse(Manager.instance().isLongRunningConversation());
+        assertTrue(identity.isLoggedIn());
 
-      user = (User)Component.getInstance("user");
-      assertEquals("Gavin King", user.getName());
-      assertEquals("gavin", user.getUsername());
-      assertEquals("xxxyyy", user.getPassword());
-      assertFalse(Manager.instance().isLongRunningConversation());
-      assertTrue(identity.isLoggedIn());
+        user = sessionUser();
+        assertEquals("xxxyyy", user.getPassword());
+        changePassword.changePassword("foobar", "foobar");
 
-      user = (User)Component.getInstance("user");
-      assertEquals("xxxyyy", user.getPassword());
-      user.setPassword("foobar");
-      changePassword = (ChangePassword)Component.getInstance("changePassword");
-      changePassword.setVerify("foobar");
-      changePassword.changePassword();
+        user = sessionUser();
+        assertEquals("Gavin King", user.getName());
+        assertEquals("gavin", user.getUsername());
+        assertEquals("foobar", user.getPassword());
+        assertFalse(Manager.instance().isLongRunningConversation());
+        assertTrue(identity.isLoggedIn());
+    }
 
-      user = (User)Component.getInstance("user");
-      assertEquals("Gavin King", user.getName());
-      assertEquals("gavin", user.getUsername());
-      assertEquals("foobar", user.getPassword());
-      assertFalse(Manager.instance().isLongRunningConversation());
-      assertTrue(identity.isLoggedIn());
-   }
-
+    private static User sessionUser() {
+        return (User) Contexts.getSessionContext().get("user");
+    }
 }

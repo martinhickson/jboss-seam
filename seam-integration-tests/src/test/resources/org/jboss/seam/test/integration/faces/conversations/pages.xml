@@ -35,19 +35,19 @@
         </redirect>
     </exception>
     
-    <exception class="javax.persistence.EntityNotFoundException">
+    <exception class="jakarta.persistence.EntityNotFoundException">
         <redirect view-id="/error.xhtml">
             <message severity="warn">Record not found</message>
         </redirect>
     </exception>
     
-    <exception class="javax.persistence.EntityExistsException">
+    <exception class="jakarta.persistence.EntityExistsException">
         <redirect view-id="/error.xhtml">
             <message severity="warn">Duplicate record</message>
         </redirect>
     </exception>
     
-    <exception class="javax.persistence.OptimisticLockException">
+    <exception class="jakarta.persistence.OptimisticLockException">
         <end-conversation/>
         <redirect view-id="/error.xhtml">
             <message severity="warn">Another user changed the same data, please try again</message>
@@ -66,7 +66,7 @@
         </redirect>
     </exception>
     
-    <exception class="javax.faces.application.ViewExpiredException">
+    <exception class="jakarta.faces.application.ViewExpiredException">
         <redirect view-id="/error.xhtml">
             <message severity="warn">Your session has timed out, please try again</message>
         </redirect>

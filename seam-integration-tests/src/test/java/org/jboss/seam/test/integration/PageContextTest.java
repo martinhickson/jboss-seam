@@ -18,10 +18,10 @@ import org.junit.runner.RunWith;
 public class PageContextTest extends JUnitSeamTest
 {
    @Deployment(name="PageContextTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment();
+      return Deployments.defaultSeamDeployment(PageContextTest.class);
    }
 
    @Test

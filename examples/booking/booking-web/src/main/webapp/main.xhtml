@@ -1,10 +1,9 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	    		xmlns:ui="http://java.sun.com/jsf/facelets"
-	  			xmlns:h="http://java.sun.com/jsf/html"
-	  			xmlns:f="http://java.sun.com/jsf/core"
+	    		xmlns:ui="jakarta.faces.facelets"
+	  			xmlns:h="jakarta.faces.html"
+	  			xmlns:f="jakarta.faces.core"
 	  			xmlns:s="http://jboss.org/schema/seam/taglib"
-                xmlns:a="http://richfaces.org/a4j"
 				template="template.xhtml">
 
 <!-- content -->
@@ -20,17 +19,9 @@
 
 	<h:form id="searchCriteria">
 	<fieldset>
-       <h:inputText id="searchString" value="#{hotelSearch.searchString}" style="width: 165px;">
-        <a:ajax event="keyup" render="searchResults" listener="#{hotelSearch.find}"/>
-       </h:inputText>                     
+       <h:inputText id="searchString" value="#{hotelSearch.searchString}" style="width: 165px;"/>
        &#160;
-	   <a:commandButton id="findHotels" value="Find Hotels" actionListener="#{hotelSearch.find}"  render="searchResults"/>
-       &#160;
-       <a:status id="status">
-          <f:facet id="StartStatus" name="start">
-             <h:graphicImage id="SpinnerGif" value="/img/spinner.gif"/>
-          </f:facet>
-       </a:status>
+	   <h:commandButton id="findHotels" value="Find Hotels" action="#{hotelSearch.find}"/>
 	   <br/>
        <h:outputLabel id="MaximumResultsLabel" for="pageSize">Maximum results:</h:outputLabel>&#160;
        <h:selectOneMenu id="pageSize" value="#{hotelSearch.pageSize}">
@@ -43,8 +34,7 @@
     
 </div>
 
-<a:outputPanel id="searchResults">
-  <div class="section">
+<div id="searchResults" class="section">
 	<h:outputText id="NoHotelsFoundMessage" value="No Hotels Found" rendered="#{hotels != null and hotels.rowCount==0}"/>
 	<h:dataTable id="hotels" value="#{hotels}" var="hot" rendered="#{hotels.rowCount>0}">
 		<h:column id="column1">
@@ -69,8 +59,7 @@
 		</h:column>
 	</h:dataTable>
 	<s:link id="MoreResultsLink" value="More results" action="#{hotelSearch.nextPage}" rendered="#{hotelSearch.nextPageAvailable}"/>
-  </div>
-</a:outputPanel>
+</div>
 
 <div class="section">
 	<h1>Current Hotel Bookings</h1>

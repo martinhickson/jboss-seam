@@ -26,11 +26,10 @@ public class FactoryLockTest extends JUnitSeamTest
    private volatile boolean exceptionOccured = false;
    
    @Deployment(name="FactoryLockTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment()
-            .addClasses(FactoryLockAction.class, FactoryLockLocal.class, TestProducer.class, SeamSynchronizedFactoryLockAction.class, KnitFactory.class, PurlFactory.class);
+      return Deployments.defaultSeamDeployment(FactoryLockTest.class, FactoryLockAction.class, FactoryLockLocal.class, TestProducer.class, SeamSynchronizedFactoryLockAction.class, KnitFactory.class, PurlFactory.class);
    }
    
    private abstract class TestThread extends Thread {

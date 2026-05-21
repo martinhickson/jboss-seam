@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
+import jakarta.faces.model.DataModel;
+import jakarta.faces.model.ListDataModel;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -38,18 +38,17 @@ import org.junit.runner.RunWith;
 public class DataModelTest extends JUnitSeamTest
 {
    @Deployment(name="DataModelTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment()
-    		  .addClasses(Foo.class, Person.class, People.class);
+      return Deployments.defaultSeamDeployment(DataModelTest.class, Foo.class, Person.class, People.class);
    }
    
    @Test
    public void testDataModels() throws Exception
    {
     
-      new FacesRequest()
+      new FacesRequest("/index.xhtml")
       {
          @Override
          protected void invokeApplication() throws Exception
@@ -80,7 +79,7 @@ public class DataModelTest extends JUnitSeamTest
    public void testArrayDataModelSerialization() throws Exception
    {
       String[] array = {"Seam", "Hibernate"};
-      javax.faces.model.ArrayDataModel arrayDataModel = new ArrayDataModel(array);
+      jakarta.faces.model.ArrayDataModel arrayDataModel = new ArrayDataModel(array);
       arrayDataModel.setRowIndex(1);
       
       Object object = null;
@@ -92,9 +91,9 @@ public class DataModelTest extends JUnitSeamTest
       {
          assert false;
       }
-      assert object instanceof javax.faces.model.ArrayDataModel;
+      assert object instanceof jakarta.faces.model.ArrayDataModel;
       
-      javax.faces.model.ArrayDataModel serializedArrayDataModel = (javax.faces.model.ArrayDataModel) object;
+      jakarta.faces.model.ArrayDataModel serializedArrayDataModel = (jakarta.faces.model.ArrayDataModel) object;
       
       assert serializedArrayDataModel.getRowIndex() == 1;
       
@@ -121,7 +120,7 @@ public class DataModelTest extends JUnitSeamTest
    {
       
       List<String> list = Arrays.asList("Seam", "Hibernate");
-      javax.faces.model.ListDataModel listDataModel = new org.jboss.seam.jsf.ListDataModel(list);
+      jakarta.faces.model.ListDataModel listDataModel = new org.jboss.seam.jsf.ListDataModel(list);
       listDataModel.setRowIndex(1);
       
       Object object = null;
@@ -134,8 +133,8 @@ public class DataModelTest extends JUnitSeamTest
          assert false;
       }
       
-      assert object instanceof javax.faces.model.ListDataModel;
-      javax.faces.model.ListDataModel serializedListDataModel = (javax.faces.model.ListDataModel) object;
+      assert object instanceof jakarta.faces.model.ListDataModel;
+      jakarta.faces.model.ListDataModel serializedListDataModel = (jakarta.faces.model.ListDataModel) object;
       List<String> serializedList = (List<String>) serializedListDataModel.getWrappedData();
       
       assert serializedListDataModel.getRowIndex() == 1;
@@ -150,7 +149,7 @@ public class DataModelTest extends JUnitSeamTest
       map.put("0", new Person("Gavin"));
       map.put("1", new Person("Tom"));
       
-      javax.faces.model.DataModel mapDataModel = new MapDataModel();
+      jakarta.faces.model.DataModel mapDataModel = new MapDataModel();
       
       assert mapDataModel.getRowCount() == -1;
       assert mapDataModel.getRowData() == null;
@@ -208,7 +207,7 @@ public class DataModelTest extends JUnitSeamTest
       map.put("0", new Person("Gavin"));
       map.put("1", new Person("Tom"));
       
-      javax.faces.model.DataModel mapDataModel = new MapDataModel(map);    
+      jakarta.faces.model.DataModel mapDataModel = new MapDataModel(map);    
       mapDataModel.setRowIndex(1);
 
       Object object = null;
@@ -222,8 +221,8 @@ public class DataModelTest extends JUnitSeamTest
       }
       
       
-      assert object instanceof javax.faces.model.DataModel;
-      javax.faces.model.DataModel serializedMapDataModel = (javax.faces.model.DataModel) object;
+      assert object instanceof jakarta.faces.model.DataModel;
+      jakarta.faces.model.DataModel serializedMapDataModel = (jakarta.faces.model.DataModel) object;
       Map<String, Person> serializedMap = (Map<String, Person>) serializedMapDataModel.getWrappedData();
       
       assert serializedMapDataModel.getRowIndex() == 1;
@@ -241,7 +240,7 @@ public class DataModelTest extends JUnitSeamTest
       set.add(gavin);
       set.add(tom);
       
-      javax.faces.model.DataModel setDataModel = new SetDataModel();
+      jakarta.faces.model.DataModel setDataModel = new SetDataModel();
       
       assert setDataModel.getRowCount() == -1;
       assert setDataModel.getRowData() == null;
@@ -299,7 +298,7 @@ public class DataModelTest extends JUnitSeamTest
       set.add(gavin);
       set.add(tom);
       
-      javax.faces.model.DataModel setDataModel = new SetDataModel(set);    
+      jakarta.faces.model.DataModel setDataModel = new SetDataModel(set);    
       setDataModel.setRowIndex(1);
 
       Object object = null;
@@ -313,8 +312,8 @@ public class DataModelTest extends JUnitSeamTest
       }
       
       
-      assert object instanceof javax.faces.model.DataModel;
-      javax.faces.model.DataModel serializedSetDataModel = (javax.faces.model.DataModel) object;
+      assert object instanceof jakarta.faces.model.DataModel;
+      jakarta.faces.model.DataModel serializedSetDataModel = (jakarta.faces.model.DataModel) object;
       Set<Person> serializedSet = (Set<Person>) serializedSetDataModel.getWrappedData();
       
       assert serializedSetDataModel.getRowIndex() == 1;
@@ -325,7 +324,7 @@ public class DataModelTest extends JUnitSeamTest
    @Test
    public void testDataModelOutjection() throws Exception
    {
-      new FacesRequest()
+      new FacesRequest("/index.xhtml")
       {
          
          @Override

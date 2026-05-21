@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>Seam Session WF36 Sample</display-name>
+
+    <listener>
+        <listener-class>org.jboss.seam.servlet.JakartaSeamListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>Seam Filter</filter-name>
+        <filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Seam Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>Session Probe</servlet-name>
+        <servlet-class>org.jboss.seam.example.sessionwf36.SessionProbeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Session Probe</servlet-name>
+        <url-pattern>/probe/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Core Seam Probe</servlet-name>
+        <servlet-class>org.jboss.seam.example.sessionwf36.CoreSeamProbeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Core Seam Probe</servlet-name>
+        <url-pattern>/core/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Lib Jar Probe</servlet-name>
+        <servlet-class>org.jboss.seam.example.sessionwf36.LibJarProbeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Lib Jar Probe</servlet-name>
+        <url-pattern>/probe/lib/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+
+    <context-param>
+        <param-name>jakarta.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+    <context-param>
+        <param-name>jakarta.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
+
+</web-app>

@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: mhickson
+Build-Jdk: 17.0.18
+Specification-Title: RichFaces CDK Generator
+Specification-Version: 4.2.2.Final
+Specification-Vendor: JBoss by Red Hat
+Implementation-Title: RichFaces CDK Generator
+Implementation-Version: 4.2.2.Final
+Implementation-Vendor-Id: org.richfaces.cdk
+Implementation-Vendor: JBoss by Red Hat
+Build-Number: 
+Implementation-URL: http://richfaces.org/richfaces-root-parent/parent/
+ generator
+Java-Vendor: Ubuntu
+Java-Version: 17.0.18
+Os-Arch: amd64
+Os-Name: Linux
+Os-Version: 6.17.0-23-generic
+Scm-Url: https://github.com/richfaces/cdk/generator
+mode: development
+

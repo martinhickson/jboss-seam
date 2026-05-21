@@ -16,6 +16,8 @@
   <name>Seam Jakarta Arquillian WildFly36 Jandex IT</name>
 
   <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <arquillian.stack.version>1.7.0.Final</arquillian.stack.version>
     <wildfly.arquillian.stack.version>5.0.1.Final</wildfly.arquillian.stack.version>
     <wildfly.jandex.version>3.2.7</wildfly.jandex.version>

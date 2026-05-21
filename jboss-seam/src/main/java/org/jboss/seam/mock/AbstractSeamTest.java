@@ -122,7 +122,7 @@ public class AbstractSeamTest
 
    protected String getConversationIdParameter()
    {
-      return "conversationId";
+      return "scid";
    }
    
    /**

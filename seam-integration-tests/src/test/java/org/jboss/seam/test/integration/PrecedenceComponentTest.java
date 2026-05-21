@@ -15,11 +15,10 @@ public class PrecedenceComponentTest
    extends JUnitSeamTest
 {
    @Deployment(name="JavaBeanEqualsTest")
-   @OverProtocol("Servlet 3.0") 
+   @OverProtocol("Servlet 5.0") 
    public static Archive<?> createDeployment()
    {
-      return Deployments.defaultSeamDeployment("WEB-INF/components-precedence.xml")
-            .addClasses(Component1.class, Component2.class);
+      return Deployments.defaultSeamDeployment("WEB-INF/components-precedence.xml", PrecedenceComponentTest.class, Component1.class, Component2.class);
    }
     
     /**
@@ -37,7 +36,7 @@ public class PrecedenceComponentTest
     public void testPrecedenceComponents() throws Exception
     {       
        
-       new FacesRequest()
+       new FacesRequest("/index.xhtml")
        {
           @Override
           protected void invokeApplication() throws Exception {

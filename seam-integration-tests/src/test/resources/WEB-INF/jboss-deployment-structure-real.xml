@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+    <deployment>
+        <exclude-subsystems>
+            <subsystem name="weld"/>
+        </exclude-subsystems>
+        <dependencies>
+            <module name="jakarta.faces.api"/>
+            <module name="jakarta.faces.impl"/>
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>
