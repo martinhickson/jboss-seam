@@ -119,7 +119,10 @@
     <version.emma>2.0.5312</version.emma>
     <version.jsf2>2.1.7</version.jsf2>
     <version.junit>4.8.2</version.junit>
-    <version.richfaces.cdk>4.2.2.Final</version.richfaces.cdk>
+    <version.maven-replacer-plugin>1.5.3</version.maven-replacer-plugin>
+    <version.richfaces>4.2.2-bravura-17</version.richfaces>
+    <version.richfaces.cdk>4.2.2-bravura-20</version.richfaces.cdk>
+    <version.richfaces.bom>4.2.2.Final</version.richfaces.bom>
 
     <!-- ***************** -->
     <!-- Repository Deployment URLs -->
@@ -372,6 +375,43 @@
         <version>${version.wildfly.arquillian}</version>
       </dependency>
 
+      <!-- Bravura RichFaces (GitHub Packages): BOM pin stays upstream Final -->
+      <dependency>
+        <groupId>org.richfaces.core</groupId>
+        <artifactId>richfaces-core-api</artifactId>
+        <version>${version.richfaces}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.richfaces.core</groupId>
+        <artifactId>richfaces-core-impl</artifactId>
+        <version>${version.richfaces}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.richfaces.ui</groupId>
+        <artifactId>richfaces-components-api</artifactId>
+        <version>${version.richfaces}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.richfaces.ui</groupId>
+        <artifactId>richfaces-components-ui</artifactId>
+        <version>${version.richfaces}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.richfaces.ui</groupId>
+        <artifactId>static-resources</artifactId>
+        <version>${version.richfaces}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.richfaces.cdk</groupId>
+        <artifactId>annotations</artifactId>
+        <version>${version.richfaces.cdk}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.richfaces.cdk</groupId>
+        <artifactId>maven-cdk-plugin</artifactId>
+        <version>${version.richfaces.cdk}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -383,8 +423,23 @@
     </repository>
     <repository>
       <id>github-packages</id>
-      <name>GitHub Packages</name>
+      <name>GitHub Packages (JBoss EL)</name>
       <url>https://maven.pkg.github.com/martinhickson/jboss-el</url>
+    </repository>
+    <repository>
+      <id>github-packages-richfaces</id>
+      <name>GitHub Packages (RichFaces UI)</name>
+      <url>https://maven.pkg.github.com/martinhickson/richfaces</url>
+    </repository>
+    <repository>
+      <id>github-packages-richfaces-core</id>
+      <name>GitHub Packages (RichFaces Core)</name>
+      <url>https://maven.pkg.github.com/martinhickson/richfaces4-core</url>
+    </repository>
+    <repository>
+      <id>github-packages-cdk</id>
+      <name>GitHub Packages (RichFaces CDK)</name>
+      <url>https://maven.pkg.github.com/martinhickson/richfaces-cdk</url>
     </repository>
   </repositories>
 
@@ -393,12 +448,148 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.openrewrite.maven</groupId>
-          <artifactId>rewrite-maven-plugin</artifactId>
-          <version>6.13.0</version>
+          <groupId>com.google.code.maven-replacer-plugin</groupId>
+          <artifactId>replacer</artifactId>
+          <version>${version.maven-replacer-plugin}</version>
           <configuration>
-            <skip>true</skip>
-            <runPerSubmodule>true</runPerSubmodule>
+            <includes>
+              <include>**/*.java</include>
+              <include>**/*.xml</include>
+            </includes>
+            <replacements>
+              <replacement>
+                <token>javax.servlet.jsp</token>
+                <value>jakarta.servlet.jsp</value>
+              </replacement>
+              <replacement>
+                <token>javax.security.auth.message</token>
+                <value>jakarta.security.auth.message</value>
+              </replacement>
+              <replacement>
+                <token>javax.security.enterprise</token>
+                <value>jakarta.security.enterprise</value>
+              </replacement>
+              <replacement>
+                <token>javax.websocket</token>
+                <value>jakarta.websocket</value>
+              </replacement>
+              <replacement>
+                <token>javax.persistence</token>
+                <value>jakarta.persistence</value>
+              </replacement>
+              <replacement>
+                <token>javax.interceptor</token>
+                <value>jakarta.interceptor</value>
+              </replacement>
+              <replacement>
+                <token>javax.transaction</token>
+                <value>jakarta.transaction</value>
+              </replacement>
+              <replacement>
+                <token>javax.validation</token>
+                <value>jakarta.validation</value>
+              </replacement>
+              <replacement>
+                <token>javax.enterprise</token>
+                <value>jakarta.enterprise</value>
+              </replacement>
+              <replacement>
+                <token>javax.annotation</token>
+                <value>jakarta.annotation</value>
+              </replacement>
+              <replacement>
+                <token>javax.inject</token>
+                <value>jakarta.inject</value>
+              </replacement>
+              <replacement>
+                <token>javax.activation</token>
+                <value>jakarta.activation</value>
+              </replacement>
+              <replacement>
+                <token>javax.xml.bind</token>
+                <value>jakarta.xml.bind</value>
+              </replacement>
+              <replacement>
+                <token>javax.xml.ws</token>
+                <value>jakarta.xml.ws</value>
+              </replacement>
+              <replacement>
+                <token>javax.xml.soap</token>
+                <value>jakarta.xml.soap</value>
+              </replacement>
+              <replacement>
+                <token>javax.faces</token>
+                <value>jakarta.faces</value>
+              </replacement>
+              <replacement>
+                <token>javax.servlet</token>
+                <value>jakarta.servlet</value>
+              </replacement>
+              <replacement>
+                <token>javax.ws.rs</token>
+                <value>jakarta.ws.rs</value>
+              </replacement>
+              <replacement>
+                <token>javax.portlet</token>
+                <value>jakarta.portlet</value>
+              </replacement>
+              <replacement>
+                <token>javax.resource</token>
+                <value>jakarta.resource</value>
+              </replacement>
+              <replacement>
+                <token>javax.ejb</token>
+                <value>jakarta.ejb</value>
+              </replacement>
+              <replacement>
+                <token>javax.mail</token>
+                <value>jakarta.mail</value>
+              </replacement>
+              <replacement>
+                <token>javax.jms</token>
+                <value>jakarta.jms</value>
+              </replacement>
+              <replacement>
+                <token>javax.el</token>
+                <value>jakarta.el</value>
+              </replacement>
+              <replacement>
+                <token>javax.jws</token>
+                <value>jakarta.jws</value>
+              </replacement>
+              <replacement>
+                <token>javax.json</token>
+                <value>jakarta.json</value>
+              </replacement>
+              <replacement>
+                <token>javax.batch</token>
+                <value>jakarta.batch</value>
+              </replacement>
+              <replacement>
+                <token>http://java.sun.com/xml/ns/javaee</token>
+                <value>https://jakarta.ee/xml/ns/jakartaee</value>
+              </replacement>
+              <replacement>
+                <token>http://xmlns.jcp.org/xml/ns/javaee</token>
+                <value>https://jakarta.ee/xml/ns/jakartaee</value>
+              </replacement>
+              <replacement>
+                <token>web-facesconfig_2_0.xsd</token>
+                <value>web-facesconfig_4_0.xsd</value>
+              </replacement>
+              <replacement>
+                <token>web-facesconfig_2_3.xsd</token>
+                <value>web-facesconfig_4_0.xsd</value>
+              </replacement>
+              <replacement>
+                <token>&lt;faces-config version="2.0"</token>
+                <value>&lt;faces-config version="4.0"</value>
+              </replacement>
+              <replacement>
+                <token>&lt;faces-config version="2.3"</token>
+                <value>&lt;faces-config version="4.0"</value>
+              </replacement>
+            </replacements>
           </configuration>
         </plugin>
         <plugin>
