@@ -7,6 +7,11 @@ on:
         description: 'Release version (e.g., 2.4.1.bravura.1)'
         required: true
         type: string
+      run_integration_tests:
+        description: 'Run Seam WildFly integration tests'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -86,28 +91,21 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     
-    - name: Configure Maven for GitHub Packages
-      run: |
-        mkdir -p ~/.m2
-        cat > ~/.m2/settings.xml << EOF
-        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-                                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
-          <servers>
-            <server>
-              <id>github-packages</id>
-              <username>${{ github.actor }}</username>
-              <password>${{ secrets.GITHUB_TOKEN }}</password>
-            </server>
-          </servers>
-        </settings>
-        EOF
-    
     - name: Build all modules
-      run: mvn clean install -ntp -DskipTests
+      run: ./build/bravura-mvn.sh clean install -ntp -DskipTests
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_ACTOR: ${{ github.actor }}
+
+    - name: Run integration tests
+      if: ${{ github.event.inputs.run_integration_tests == 'true' }}
+      run: |
+        ./build/bravura-mvn.sh -pl seam-integration-tests -ntp test \
+          -Darquillian=wildfly-managed-36 \
+          -DfailIfNoTests=false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_ACTOR: ${{ github.actor }}
     
     - name: Create and push tag
       run: |
@@ -118,10 +116,11 @@ jobs:
       run: |
         # Deploy all modules to GitHub Packages
         # Using altDeploymentRepository to override distributionManagement in pom.xml
-        mvn deploy -ntp -DskipTests \
+        ./build/bravura-mvn.sh deploy -ntp -DskipTests \
           -DaltDeploymentRepository=github-packages::default::https://maven.pkg.github.com/${{ github.repository }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_ACTOR: ${{ github.actor }}
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v4

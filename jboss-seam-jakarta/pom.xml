@@ -713,15 +713,15 @@
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId>org.openrewrite.maven</groupId>
-                    <artifactId>rewrite-maven-plugin</artifactId>
-                    <versionRange>[6.13.0,)</versionRange>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>replacer</artifactId>
+                    <versionRange>[1.5.3,)</versionRange>
                     <goals>
-                      <goal>runNoFork</goal>
+                      <goal>replace</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute></execute>
+                    <ignore></ignore>
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -939,160 +939,48 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>io.github.floverfelt</groupId>
-        <artifactId>find-and-replace-maven-plugin</artifactId>
-        <version>1.2.0</version>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
         <executions>
           <execution>
-            <id>replace</id>
+            <id>jakarta-migration-sources</id>
             <goals>
-              <goal>find-and-replace</goal>
+              <goal>replace</goal>
             </goals>
             <phase>generate-sources</phase>
             <configuration>
-              <replacementType>file-contents</replacementType>
-              <baseDir>src/generated/jakarta</baseDir>
-              <findRegex>javax.interceptor</findRegex>
-              <replaceValue>jakarta.interceptor</replaceValue>
-              <recursive>true</recursive>
+              <basedir>${project.basedir}/src/generated/jakarta</basedir>
             </configuration>
           </execution>
           <execution>
-            <id>replace2</id>
+            <id>jakarta-migration-resources</id>
             <goals>
-              <goal>find-and-replace</goal>
+              <goal>replace</goal>
             </goals>
             <phase>generate-sources</phase>
             <configuration>
-              <replacementType>file-contents</replacementType>
-              <baseDir>src/generated/jakarta</baseDir>
-              <findRegex>javax.faces</findRegex>
-              <replaceValue>jakarta.faces</replaceValue>
-              <recursive>true</recursive>
+              <basedir>${project.basedir}/target/generated/resources</basedir>
             </configuration>
           </execution>
           <execution>
-            <id>replace2-resources</id>
+            <id>replace-exception-handler-factory</id>
             <goals>
-              <goal>find-and-replace</goal>
+              <goal>replace</goal>
             </goals>
             <phase>generate-sources</phase>
             <configuration>
-              <replacementType>file-contents</replacementType>
-              <baseDir>target/generated/resources</baseDir>
-              <findRegex>javax.faces</findRegex>
-              <replaceValue>jakarta.faces</replaceValue>
-              <recursive>true</recursive>
+              <basedir>${project.basedir}/target/generated/resources</basedir>
+              <includes>
+                <include>**/*.xml</include>
+              </includes>
+              <regex>true</regex>
+              <replacements>
+                <replacement>
+                  <token>\s*&lt;exception-handler-factory&gt;(?:jakarta\.faces\.webapp\.PreJsf2ExceptionHandlerFactory|com\.sun\.faces\.context\.ExceptionHandlerFactoryImpl)&lt;/exception-handler-factory&gt;\s*</token>
+                  <value>&lt;exception-handler-factory&gt;org.jboss.seam.jsf.SeamExceptionHandlerFactory&lt;/exception-handler-factory&gt;</value>
+                </replacement>
+              </replacements>
             </configuration>
-          </execution>
-          <execution>
-            <id>remove-prejsf2-factory-resources</id>
-            <goals>
-              <goal>find-and-replace</goal>
-            </goals>
-            <phase>generate-sources</phase>
-            <configuration>
-              <replacementType>file-contents</replacementType>
-              <baseDir>target/generated/resources</baseDir>
-              <findRegex><![CDATA[\s*<exception-handler-factory>(?:jakarta\.faces\.webapp\.PreJsf2ExceptionHandlerFactory|com\.sun\.faces\.context\.ExceptionHandlerFactoryImpl)</exception-handler-factory>\s*]]></findRegex>
-              <replaceValue><![CDATA[<exception-handler-factory>org.jboss.seam.jsf.SeamExceptionHandlerFactory</exception-handler-factory>]]></replaceValue>
-              <recursive>true</recursive>
-            </configuration>
-          </execution>
-          <execution>
-            <id>replace3</id>
-            <goals>
-              <goal>find-and-replace</goal>
-            </goals>
-            <phase>generate-sources</phase>
-            <configuration>
-              <replacementType>file-contents</replacementType>
-              <baseDir>src/generated/jakarta</baseDir>
-              <findRegex>javax.transaction</findRegex>
-              <replaceValue>jakarta.transaction</replaceValue>
-              <recursive>true</recursive>
-            </configuration>
-          </execution>
-          <execution>
-            <id>replace-persistence</id>
-            <goals>
-              <goal>find-and-replace</goal>
-            </goals>
-            <phase>generate-sources</phase>
-            <configuration>
-              <replacementType>file-contents</replacementType>
-              <baseDir>src/generated/jakarta</baseDir>
-              <findRegex>javax.persistence</findRegex>
-              <replaceValue>jakarta.persistence</replaceValue>
-              <recursive>true</recursive>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- OpenRewrite Maven Plugin for Jakarta EE 10 migration -->
-      <plugin>
-        <groupId>org.openrewrite.maven</groupId>
-        <artifactId>rewrite-maven-plugin</artifactId>
-        <version>6.13.0</version>
-        <configuration>
-          <runPerSubmodule>true</runPerSubmodule>
-          <activeRecipes>
-            <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
-            <recipe>org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta</recipe>
-            <recipe>org.openrewrite.java.migrate.jakarta.Faces2xMigrationToJakartaFaces3x</recipe>
-            <recipe>org.openrewrite.java.migrate.jakarta.JavaxInterceptorToJakartaInterceptor</recipe>
-            <recipe>org.openrewrite.java.migrate.jakarta.JavaxElToJakartaEl</recipe>
-          </activeRecipes>
-          <inclusions>
-            <inclusion>**/src/generated/jakarta/**/*.java</inclusion>
-          </inclusions>
-          <exclusions>
-            <exclusion>**/src/main/**/*.java</exclusion>
-            <exclusion>**/org/jboss/seam/Model.java</exclusion>
-            <exclusion>**/org/jboss/seam/bpm/ProcessInstanceFinder.java</exclusion>
-            <exclusion>**/org/jboss/seam/bpm/TaskInstancePriorityList.java</exclusion>
-            <exclusion>**/org/jboss/seam/cache/JbossCacheProvider.java</exclusion>
-            <exclusion>**/org/jboss/seam/cache/JbossPojoCacheProvider.java</exclusion>
-            <exclusion>**/org/jboss/seam/core/Validators.java</exclusion>
-            <exclusion>**/org/jboss/seam/framework/HibernateEntityController.java</exclusion>
-            <exclusion>**/org/jboss/seam/framework/HibernateEntityHome.java</exclusion>
-            <exclusion>**/org/jboss/seam/framework/HibernateEntityQuery.java</exclusion>
-            <exclusion>**/org/jboss/seam/jsf/DelegatingFacesContext.java</exclusion>
-            <exclusion>**/org/jboss/seam/jsf/SeamApplication.java</exclusion>
-            <exclusion>**/org/jboss/seam/jsf/SeamStateManagementStrategy.java</exclusion>
-            <exclusion>**/org/jboss/seam/jsf/SeamStateManager.java</exclusion>
-            <exclusion>**/org/jboss/seam/jsf/UnifiedELMethodBinding.java</exclusion>
-            <exclusion>**/org/jboss/seam/jsf/UnifiedELValueBinding.java</exclusion>
-            <exclusion>**/org/jboss/seam/mock/AbstractSeamTest.java</exclusion>
-            <exclusion>**/org/jboss/seam/mock/MockApplication.java</exclusion>
-            <exclusion>**/org/jboss/seam/mock/MockExternalContext.java</exclusion>
-            <exclusion>**/org/jboss/seam/mock/MockFacesContext.java</exclusion>
-            <exclusion>**/org/jboss/seam/mock/MockHttpServletRequest.java</exclusion>
-            <exclusion>**/org/jboss/seam/mock/MockStateManager.java</exclusion>
-            <exclusion>**/org/jboss/seam/navigation/Param.java</exclusion>
-            <exclusion>**/org/jboss/seam/deployment/URLScanner.java</exclusion>
-            <exclusion>**/org/jboss/seam/persistence/FullTextEntityManagerProxy.java</exclusion>
-            <exclusion>**/org/jboss/seam/persistence/FullTextHibernateSessionProxy.java</exclusion>
-            <exclusion>**/org/jboss/seam/persistence/HibernatePersistenceProvider.java</exclusion>
-            <exclusion>**/org/jboss/seam/persistence/HibernateSessionFactory.java</exclusion>
-            <exclusion>**/org/jboss/seam/persistence/HibernateSessionInvocationHandler.java</exclusion>
-            <exclusion>**/org/jboss/seam/persistence/ManagedHibernateSession.java</exclusion>
-          </exclusions>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.openrewrite.recipe</groupId>
-            <artifactId>rewrite-migrate-java</artifactId>
-            <version>3.13.0</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>jakarta-migration</id>
-            <goals>
-              <goal>runNoFork</goal>
-            </goals>
-            <phase>generate-sources</phase>
           </execution>
         </executions>
       </plugin>
@@ -1109,7 +997,7 @@
             <phase>generate-sources</phase>
             <configuration>
               <sources>
-                <!-- src/generated since OpenRewrite unconditionally skips target/generated -->
+                <!-- src/generated/jakarta after javax → jakarta replacer -->
                 <source>${project.basedir}/src/generated/jakarta</source>
                 <source>${project.basedir}/target/generated-sources/antlr</source>
               </sources>

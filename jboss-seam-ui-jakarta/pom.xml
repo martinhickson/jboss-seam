@@ -48,13 +48,11 @@
     <dependency>
       <groupId>org.richfaces.core</groupId>
       <artifactId>richfaces-core-api</artifactId>
-      <version>4.2.2.Final</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.richfaces.core</groupId>
       <artifactId>richfaces-core-impl</artifactId>
-      <version>4.2.2.Final</version>
       <scope>provided</scope>
     </dependency>
 
@@ -98,7 +96,6 @@
     <dependency>
       <groupId>org.richfaces.cdk</groupId>
       <artifactId>annotations</artifactId>
-      <version>4.2.2.Final</version>
       <scope>provided</scope>
     </dependency>
 
@@ -124,11 +121,11 @@
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId>org.openrewrite.maven</groupId>
-                    <artifactId>rewrite-maven-plugin</artifactId>
-                    <versionRange>[6.13.0,)</versionRange>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>replacer</artifactId>
+                    <versionRange>[1.5.3,)</versionRange>
                     <goals>
-                      <goal>runNoFork</goal>
+                      <goal>replace</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>
@@ -139,7 +136,7 @@
                   <pluginExecutionFilter>
                     <groupId>org.richfaces.cdk</groupId>
                     <artifactId>maven-cdk-plugin</artifactId>
-                    <versionRange>[4.2.2.Final,)</versionRange>
+                    <versionRange>[4.2.2-bravura-20,)</versionRange>
                     <goals>
                       <goal>generate</goal>
                     </goals>
@@ -214,49 +211,30 @@
         </executions>
       </plugin>
 
-      <!-- Phase 2: OpenRewrite transformation -->
+      <!-- Phase 2: javax → jakarta transformation -->
       <plugin>
-        <groupId>org.openrewrite.maven</groupId>
-        <artifactId>rewrite-maven-plugin</artifactId>
-        <version>6.13.0</version>
-        <configuration>
-          <logLevel>DEBUG</logLevel>
-          <runPerSubmodule>true</runPerSubmodule>
-          <activeRecipes>
-            <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
-          </activeRecipes>
-          <sourceDirectory>${project.basedir}/src/generated/jakarta</sourceDirectory>
-          <exclusions>
-            <!-- Exclude complex UI components from automated transformation -->
-            <exclusion>**/richfaces-cdk/**</exclusion>
-            <exclusion>**/src/main/java/**</exclusion>
-            <exclusion>**/org/jboss/seam/ui/facelet/RendererRequest.java</exclusion>
-            <exclusion>**/org/jboss/seam/ui/validator/ModelValidator.java</exclusion>
-            <!--exclusion>**/component/**</!-exclusion>
-                        <exclusion>**/facelet/**</exclusion>
-                        <exclusion>**/renderkit/**</exclusion>
-                        <exclusion>**/handler/**</exclusion>
-                        <exclusion>**/converter/**</exclusion>
-                        <exclusion>**/validator/**</exclusion>
-                        <exclusion>**/graphicImage/**</exclusion>
-                        <exclusion>**/resource/**</exclusion>
-                        <exclusion>**/util/**</exclusion-->
-          </exclusions>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.openrewrite.recipe</groupId>
-            <artifactId>rewrite-migrate-java</artifactId>
-            <version>3.13.0</version>
-          </dependency>
-        </dependencies>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
         <executions>
           <execution>
-            <id>jakarta-migration</id>
+            <id>jakarta-migration-sources</id>
             <goals>
-              <goal>runNoFork</goal>
+              <goal>replace</goal>
             </goals>
             <phase>generate-sources</phase>
+            <configuration>
+              <basedir>${project.basedir}/src/generated/jakarta</basedir>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jakarta-migration-cdk-generated</id>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <basedir>${project.build.directory}/generated-sources/main</basedir>
+            </configuration>
           </execution>
         </executions>
       </plugin>
