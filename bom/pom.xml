@@ -4,7 +4,7 @@
 
   <groupId>org.jboss.seam</groupId>
   <artifactId>bom</artifactId>
-  <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+  <version>2.4.1-bravura-16</version>
   <packaging>pom</packaging>
   <name>Seam 2 Bill Of Materials</name>
   <description>Seam 2 BOM file for importing dependency management for Seam 2 applications</description>
