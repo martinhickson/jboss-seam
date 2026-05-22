@@ -2,11 +2,15 @@ package org.jboss.seam.test.integration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 
 import org.apache.cxf.common.security.GroupPrincipal;
 import org.dom4j.DocumentException;
@@ -14,9 +18,10 @@ import org.jboss.el.util.ReflectionUtil;
 import org.jboss.jandex.Index;
 import org.jboss.jandex.Indexer;
 import org.jboss.jandex.IndexWriter;
-import org.jboss.seam.Seam;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.deployment.AbstractScanner;
+import org.jboss.seam.mock.MockSeamListener;
+import org.jboss.seam.ui.resource.WebResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -139,7 +144,7 @@ public final class Deployments {
     private static WebArchive baseArchive(boolean includeSeamUi, boolean includeJbpm, String archiveName) {
         WebArchive war = ShrinkWrap.create(WebArchive.class, archiveName)
                 .addAsLibraries(
-                        jarFor(Seam.class),
+                        seamJakartaJar(),
                         jarFor(MethodFilter.class),
                         jarFor(Indexer.class),
                         jarFor(GroupPrincipal.class),
@@ -163,7 +168,7 @@ public final class Deployments {
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         if (includeSeamUi) {
-            war.addAsLibraries(jarFor(org.jboss.seam.ui.facelet.RendererRequest.class));
+            war.addAsLibraries(seamUiJakartaJar());
         }
 
         if (includeJbpm) {
@@ -175,6 +180,50 @@ public final class Deployments {
         }
 
         return war;
+    }
+
+    private static File seamJakartaJar() {
+        return asLibraryJar(jarFor(MockSeamListener.class), "jboss-seam-jakarta.jar");
+    }
+
+    private static File seamUiJakartaJar() {
+        return asLibraryJar(jarFor(WebResource.class), "jboss-seam-ui-jakarta.jar");
+    }
+
+    private static File asLibraryJar(File location, String jarName) {
+        if (location.isFile()) {
+            return location;
+        }
+        try {
+            File jarFile = File.createTempFile(jarName.replace(".jar", "-"), ".jar");
+            jarFile.deleteOnExit();
+            int prefixLength = location.getAbsolutePath().length() + 1;
+            try (JarOutputStream out = new JarOutputStream(new FileOutputStream(jarFile))) {
+                addDirectoryToJar(out, location, prefixLength);
+            }
+            return jarFile;
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot package " + location + " for deployment", e);
+        }
+    }
+
+    private static void addDirectoryToJar(JarOutputStream out, File source, int prefixLength) throws IOException {
+        File[] files = source.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            if (file.isDirectory()) {
+                addDirectoryToJar(out, file, prefixLength);
+            } else {
+                String entryName = file.getAbsolutePath().substring(prefixLength).replace('\\', '/');
+                out.putNextEntry(new JarEntry(entryName));
+                try (InputStream in = new FileInputStream(file)) {
+                    in.transferTo(out);
+                }
+                out.closeEntry();
+            }
+        }
     }
 
     private static File jarFor(Class<?> anchor) {

@@ -1,6 +1,8 @@
 package org.jboss.seam.el;
 
+import java.beans.FeatureDescriptor;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 
 import javax.el.BeanELResolver;
 import javax.el.ELContext;
@@ -106,6 +108,11 @@ public class SeamBeanELResolver extends ELResolver
    public Class<?> getCommonPropertyType(ELContext context, Object base)
    {
       return delegate.getCommonPropertyType(context, base);
+   }
+
+   public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base)
+   {
+      return null;
    }
 
    private static Method findZeroArgMethod(Class<?> type, String name)

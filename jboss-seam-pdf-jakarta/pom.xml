@@ -139,38 +139,22 @@
                 </executions>
             </plugin>
             
-            <!-- Phase 2: OpenRewrite transformation for Jakarta migration -->
+            <!-- Phase 2: javax → jakarta transformation -->
             <plugin>
-                <groupId>org.openrewrite.maven</groupId>
-                <artifactId>rewrite-maven-plugin</artifactId>
-                <version>6.13.0</version>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
                 <executions>
                     <execution>
                         <id>jakarta-migration</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>runNoFork</goal>
+                            <goal>replace</goal>
                         </goals>
+                        <configuration>
+                            <basedir>${project.basedir}/src/generated/jakarta</basedir>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <logLevel>DEBUG</logLevel>
-                    <activeRecipes>
-                        <recipe>org.openrewrite.java.migrate.jakarta.JakartaEE10</recipe>
-                    </activeRecipes>
-                    <sourceDirectory>${project.basedir}/src/generated/jakarta</sourceDirectory>
-                    <exclusions>
-                        <!-- Exclude main source directory from transformation -->
-                        <exclusion>**/src/main/java/**</exclusion>
-                    </exclusions>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.openrewrite.recipe</groupId>
-                        <artifactId>rewrite-migrate-java</artifactId>
-                        <version>3.13.0</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             
             <!-- Phase 3: Add generated sources to compilation -->
@@ -207,11 +191,11 @@
                             <pluginExecutions>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>org.openrewrite.maven</groupId>
-                                        <artifactId>rewrite-maven-plugin</artifactId>
-                                        <versionRange>[6.13.0,)</versionRange>
+                                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                                        <artifactId>replacer</artifactId>
+                                        <versionRange>[1.5.3,)</versionRange>
                                         <goals>
-                                            <goal>runNoFork</goal>
+                                            <goal>replace</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
