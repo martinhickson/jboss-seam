@@ -8,7 +8,7 @@
     </engine>
 
     <!-- WildFly 36 Managed Container Configuration -->
-    <container qualifier="wildfly-managed" default="true">
+    <container qualifier="wildfly-managed-36" default="true">
         <configuration>
             <property name="javaVmArguments">-Xmx1024m -Djboss.socket.binding.port-offset=100</property>
             <property name="jbossHome">target/wildfly-36.0.0.Final</property>
@@ -21,7 +21,7 @@
     </container>
 
     <!-- WildFly 36 Remote Container Configuration -->
-    <container qualifier="wildfly-remote">
+    <container qualifier="wildfly-remote-36">
         <configuration>
             <property name="managementAddress">127.0.0.1</property>
             <property name="managementPort">9990</property>
