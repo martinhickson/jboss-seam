@@ -46,7 +46,11 @@ public class Booking implements Serializable {
     
     @Size(min = 1, max = 70)
     private String creditCardName;
-    
+
+    private int creditCardExpiryMonth;
+
+    private int creditCardExpiryYear;
+
     private int beds;
     
     private boolean smoking;
@@ -117,7 +121,23 @@ public class Booking implements Serializable {
     public void setCreditCardName(String creditCardName) {
         this.creditCardName = creditCardName;
     }
-    
+
+    public int getCreditCardExpiryMonth() {
+        return creditCardExpiryMonth;
+    }
+
+    public void setCreditCardExpiryMonth(int creditCardExpiryMonth) {
+        this.creditCardExpiryMonth = creditCardExpiryMonth;
+    }
+
+    public int getCreditCardExpiryYear() {
+        return creditCardExpiryYear;
+    }
+
+    public void setCreditCardExpiryYear(int creditCardExpiryYear) {
+        this.creditCardExpiryYear = creditCardExpiryYear;
+    }
+
     public int getBeds() {
         return beds;
     }

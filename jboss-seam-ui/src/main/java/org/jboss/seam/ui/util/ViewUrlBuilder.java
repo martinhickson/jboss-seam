@@ -26,14 +26,11 @@ public class ViewUrlBuilder extends UrlBuilder
       {
          throw new NullPointerException("viewId must not be null");
       }
-      FacesContext facesContext = FacesContext.getCurrentInstance();
-      // will use bookmarkable URL later in getEncodeUrl() method which already knows all added Parameters
-      //String url = facesContext.getApplication().getViewHandler().getBookmarkableURL(facesContext, viewId, null, false);
-      String url = facesContext.getApplication().getViewHandler().getActionURL(facesContext, viewId);
-      url = Pages.instance().encodeScheme(viewId, facesContext, url);      
-      setUrl(url);
       this.page = Pages.instance().getPage(viewId);
       this.viewId = viewId;
+      // s:link/s:button encode via getBookmarkableURL() in getEncodedUrl(); no need to
+      // call getActionURL here (which would also invoke Weld's conversation handler).
+      setUrl("");
    }
    
    public ViewUrlBuilder(String viewId, String fragment)

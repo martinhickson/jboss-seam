@@ -1,0 +1,74 @@
+/* Seam UI showcase — layered on top of the classic booking theme */
+.showcase-hero {
+    background: linear-gradient(135deg, #1f3b57 0%, #2d6a4f 55%, #40916c 100%);
+    color: #f8faf9;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 32px rgba(31, 59, 87, 0.25);
+}
+.showcase-hero h1 {
+    font-size: 1.75rem;
+    margin: 0 0 8px 0;
+    letter-spacing: 0.02em;
+}
+.showcase-hero p {
+    margin: 0;
+    opacity: 0.92;
+    max-width: 52em;
+}
+.showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+.showcase-card {
+    background: #fff;
+    border: 1px solid #d8d0c8;
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 14px rgba(54, 47, 45, 0.08);
+}
+.showcase-card h2 {
+    font-size: 1.05rem;
+    margin: 0 0 4px 0;
+    color: #1f3b57;
+}
+.showcase-card .tag-list {
+    font-size: 0.75rem;
+    color: #6b5e54;
+    margin-bottom: 12px;
+}
+.showcase-card .tag-list code {
+    background: #f3efe9;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+.showcase-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+.showcase-pill {
+    display: inline-block;
+    background: #e8f5e9;
+    color: #1b4332;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+}
+.showcase-muted {
+    color: #6b5e54;
+    font-size: 0.85rem;
+}
+.showcase-actions {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed #d8d0c8;
+}
+.showcase-actions .buttonBox {
+    margin-top: 8px;
+}

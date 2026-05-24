@@ -63,16 +63,49 @@ public class ConverterGenerator
       List<Element> tagsToAdd = new ArrayList<Element>();
       for (File source : converterSources)
       {
-         String classFromSource = source.getAbsolutePath().replace(sourceDirectory, "").replace(File.separatorChar, '.').replace(".java", "").substring(1);
+         String classFromSource = getClassNameFromSource(source);
          File facesConfigXML = findCorrespondentConfig(classFromSource);
          if (facesConfigXML != null)
          {
             Element tag = xmlGenerator.getFaceletsTagElementFromFacesconfig(facesConfigXML, facesConfigXML.getName().replace(".xml", ""), "converter");
             tagsToAdd.add(tag);
          }
+         else
+         {
+            log.debug("No component config found for converter " + classFromSource);
+         }
       }
       xmlGenerator.updateFile(outXML, tagsToAdd);
 
+   }
+
+   private String getClassNameFromSource(File source) throws FileNotFoundException
+   {
+      String simpleName = source.getName().replace(".java", "");
+      Scanner scanner = new Scanner(source);
+      try
+      {
+         while (scanner.hasNextLine())
+         {
+            String line = scanner.nextLine().trim();
+            if (line.startsWith("package "))
+            {
+               String pkg = line.substring("package ".length()).replace(";", "").trim();
+               return pkg + "." + simpleName;
+            }
+         }
+      }
+      finally
+      {
+         scanner.close();
+      }
+
+      String relativePath = source.getAbsolutePath().replace(sourceDirectory, "").replace(File.separatorChar, '.').replace(".java", "");
+      if (relativePath.startsWith("."))
+      {
+         relativePath = relativePath.substring(1);
+      }
+      return relativePath;
    }
 
    private File findCorrespondentConfig(String classFromSource) throws FileNotFoundException

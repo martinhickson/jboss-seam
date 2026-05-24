@@ -3,7 +3,6 @@ package org.jboss.seam.example.booking;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import jakarta.ejb.Stateful;
 import jakarta.persistence.EntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
@@ -13,13 +12,13 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Out;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.core.Events;
 import org.jboss.seam.core.Manager;
 // import org.jboss.seam.faces.FacesMessages;
 
 /**
  * Seam component for hotel booking functionality
  */
-@Stateful
 @Name("hotelBooking")
 @Scope(ScopeType.CONVERSATION)
 @Transactional
@@ -32,6 +31,9 @@ public class HotelBooking implements Serializable {
     
     @In
     private User user;
+    
+    @In
+    private Events events;
     
     @In(required = false)
     @Out
@@ -54,6 +56,11 @@ public class HotelBooking implements Serializable {
         booking.setCheckinDate(calendar.getTime());
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         booking.setCheckoutDate(calendar.getTime());
+        booking.setBeds(1);
+        booking.setSmoking(false);
+        Calendar expiry = Calendar.getInstance();
+        booking.setCreditCardExpiryMonth(expiry.get(Calendar.MONTH) + 1);
+        booking.setCreditCardExpiryYear(expiry.get(Calendar.YEAR) + 1);
     }
     
     public void setBookingDetails() {
@@ -80,7 +87,7 @@ public class HotelBooking implements Serializable {
     @End
     public void confirm() {
         entityManager.persist(booking);
-        // FacesMessages.instance().add("Thank you, #{user.name}, your confimation number for #{hotel.name} is #{booking.id}");
+        events.raiseTransactionSuccessEvent("bookingConfirmed");
         System.out.println("Booking confirmed for " + user.getName() + " at " + hotel.getName());
         Manager.instance().endConversation(false);
     }
@@ -88,9 +95,5 @@ public class HotelBooking implements Serializable {
     @End
     public void cancel() {
         Manager.instance().endConversation(false);
-    }
-    
-    public void destroy() {
-        // Clean up
     }
 }

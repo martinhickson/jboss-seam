@@ -5,6 +5,10 @@
        no-conversation-view-id="/home.xhtml"
        login-view-id="/login.xhtml">
 
+    <conversation name="tagsConv"
+                  parameter-name="tagKey"
+                  parameter-value="#{seamUiTagsBean.name}"/>
+
     <page view-id="/pageWithDescription.xhtml">
     	<description>page description</description>
     </page>

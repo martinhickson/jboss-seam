@@ -668,8 +668,16 @@ public class Manager
       {
          initializeTemporaryConversation();
       }
-      ConversationEntry entry = ConversationEntries.instance()
-            .createConversationEntry( getCurrentConversationId(), getCurrentConversationIdStack() );
+      ConversationEntries entries = ConversationEntries.instance();
+      String id = getCurrentConversationId();
+      ConversationEntry existing = entries.getConversationEntry(id);
+      if ( existing != null )
+      {
+         currentConversationEntry = existing;
+         return existing;
+      }
+      ConversationEntry entry = entries
+            .createConversationEntry( id, getCurrentConversationIdStack() );
       if ( !entry.isNested() ) 
       {
          //if it is a newly created nested 
@@ -677,6 +685,7 @@ public class Manager
          //lock
          entry.lock();
       }
+      currentConversationEntry = entry;
       return entry;
    }
 
@@ -689,7 +698,8 @@ public class Manager
       {
          log.debug("Beginning long-running conversation");
          setLongRunningConversation(true);
-         createConversationEntry();
+         ConversationEntry entry = createConversationEntry();
+         entry.setRemoveAfterRedirect(false);
          Conversation.instance(); //force instantiation of the Conversation in the outer (non-nested) conversation
          storeConversationToViewRootIfNecessary();
          if ( Events.exists() ) Events.instance().raiseEvent(EVENT_CONVERSATION_BEGIN);
@@ -839,12 +849,33 @@ public class Manager
       if (!destroyBeforeRedirect)
       {
          ConversationEntry ce = getCurrentConversationEntry();
-         if (ce==null)
+         if ( ce == null )
+         {
+            String conversationId = getCurrentConversationId();
+            ConversationEntries conversationEntries = ConversationEntries.instance();
+            if ( conversationId != null && conversationEntries != null )
+            {
+               ce = conversationEntries.getConversationEntry(conversationId);
+               if ( ce != null )
+               {
+                  currentConversationEntry = ce;
+               }
+            }
+         }
+         if ( ce == null )
          {
             ce = createConversationEntry();
+            ce.setRemoveAfterRedirect(true);
          }
-         //ups, we don't really want to destroy it on this request after all!
-         ce.setRemoveAfterRedirect( !isLongRunningConversation() );
+         else if ( isLongRunningConversation() )
+         {
+            // @Begin and other long-running conversations must survive JSF postbacks
+            ce.setRemoveAfterRedirect(false);
+         }
+         else
+         {
+            ce.setRemoveAfterRedirect(true);
+         }
          setLongRunningConversation(true);
       }
    }

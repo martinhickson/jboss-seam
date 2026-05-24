@@ -34,6 +34,13 @@
 
     <repositories>
         <repository>
+            <id>jboss-public</id>
+            <name>JBoss Public Repository Group</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
             <id>github-packages</id>
             <name>GitHub Packages (jboss-el)</name>
             <url>https://maven.pkg.github.com/martinhickson/jboss-el</url>
@@ -212,6 +219,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.jbpm.jbpm3</groupId>
+            <artifactId>jbpm-jpdl</artifactId>
+            <version>3.2.10.SP3_seam2</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -251,6 +265,16 @@
                 </configuration>
             </plugin>
             
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>org.jboss.seam.example.booking.demo.DemoWarExporter</mainClass>
+                    <classpathScope>test</classpathScope>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
