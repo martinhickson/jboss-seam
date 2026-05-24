@@ -10,7 +10,8 @@
                                 http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">
 
     <core:init debug="true"/>
-    <core:manager conversation-timeout="120000" concurrent-request-timeout="500" conversation-id-parameter="cid"/>
+    <!-- Seam default scid keeps Seam conversations separate from Weld/CDI cid -->
+    <core:manager conversation-timeout="120000" concurrent-request-timeout="500"/>
 
     <persistence:managed-persistence-context name="entityManager" auto-create="true"
                 persistence-unit-jndi-name="java:jboss/EntityManagerFactory/testPU"/>
@@ -22,5 +23,6 @@
     <component name="hotelBooking" class="org.jboss.seam.example.booking.HotelBooking" scope="conversation"/>
     <component name="bookingList" class="org.jboss.seam.example.booking.BookingList" scope="session"/>
     <component name="changePassword" class="org.jboss.seam.example.booking.test.SimpleChangePassword" scope="event"/>
+    <component name="org.jboss.seam.cache.cacheProvider" class="org.jboss.seam.example.booking.demo.MapCacheProvider"/>
 
 </components>

@@ -17,6 +17,8 @@ import org.jboss.seam.example.booking.Hotel;
 import org.jboss.seam.example.booking.HotelBooking;
 import org.jboss.seam.example.booking.HotelSearching;
 import org.jboss.seam.example.booking.User;
+import org.jboss.seam.example.booking.demo.MapCacheProvider;
+import org.jboss.seam.example.booking.demo.SeamUiShowcaseBean;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -46,7 +48,9 @@ public final class BookingWildFly36Deployment {
                         SimpleChangePassword.class,
                         BookingSessionComponentProbe.class,
                         BookingSeamSessionProbeServlet.class,
-                        BookingLoginProbeServlet.class)
+                        BookingLoginProbeServlet.class,
+                        SeamUiShowcaseBean.class,
+                        MapCacheProvider.class)
                 .addAsLibraries(Maven.resolver()
                         .loadPomFromFile("pom.xml")
                         .resolve(
@@ -56,7 +60,8 @@ public final class BookingWildFly36Deployment {
                                 "io.smallrye:jandex:3.2.7",
                                 "org.apache.cxf:cxf-core:3.5.5",
                                 "org.dom4j:dom4j:2.1.3",
-                                "org.jboss.el:jboss-el:1.0_02.jakarta.bravura.2")
+                                "org.jboss.el:jboss-el:1.0_02.jakarta.bravura.2",
+                                "org.jbpm.jbpm3:jbpm-jpdl:3.2.10.SP3_seam2")
                         .withTransitivity()
                         .asFile())
                 .addAsResource("META-INF/persistence.xml")
@@ -67,6 +72,8 @@ public final class BookingWildFly36Deployment {
                 .addAsWebInfResource("WEB-INF/components.xml", "components.xml")
                 .addAsWebInfResource("WEB-INF/web.xml", "web.xml")
                 .addAsWebInfResource("WEB-INF/faces-config.xml", "faces-config.xml")
+                .addAsWebInfResource("WEB-INF/jboss-web.xml", "jboss-web.xml")
+                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         addWebappResources(archive);
@@ -81,7 +88,9 @@ public final class BookingWildFly36Deployment {
                     String relative = webapp.relativize(path).toString().replace('\\', '/');
                     if (relative.equals("WEB-INF/web.xml")
                             || relative.equals("WEB-INF/components.xml")
-                            || relative.equals("WEB-INF/faces-config.xml")) {
+                            || relative.equals("WEB-INF/faces-config.xml")
+                            || relative.equals("WEB-INF/jboss-web.xml")
+                            || relative.equals("WEB-INF/jboss-deployment-structure.xml")) {
                         return;
                     }
                     if (relative.startsWith("WEB-INF/")) {
@@ -105,6 +114,8 @@ public final class BookingWildFly36Deployment {
         indexClass(indexer, BookingSessionComponentProbe.class);
         indexClass(indexer, BookingSeamSessionProbeServlet.class);
         indexClass(indexer, BookingLoginProbeServlet.class);
+        indexClass(indexer, SeamUiShowcaseBean.class);
+        indexClass(indexer, MapCacheProvider.class);
         indexClass(indexer, AbstractScanner.class);
         Index index = indexer.complete();
         ByteArrayOutputStream output = new ByteArrayOutputStream();

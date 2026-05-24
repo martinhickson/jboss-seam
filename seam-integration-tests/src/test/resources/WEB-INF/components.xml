@@ -27,4 +27,7 @@
                                              auto-create="true"
                                              persistence-unit-jndi-name="java:jboss/EntityManagerFactory/integration"/>
 
+    <component name="org.jboss.seam.cache.cacheProvider"
+               class="org.jboss.seam.test.integration.cache.MapCacheProvider"/>
+
 </components>

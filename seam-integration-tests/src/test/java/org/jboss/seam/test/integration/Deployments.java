@@ -21,6 +21,7 @@ import org.jboss.jandex.IndexWriter;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.deployment.AbstractScanner;
 import org.jboss.seam.mock.MockSeamListener;
+import org.jboss.seam.test.integration.cache.MapCacheProvider;
 import org.jboss.seam.ui.resource.WebResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
@@ -168,7 +169,10 @@ public final class Deployments {
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         if (includeSeamUi) {
-            war.addAsLibraries(seamUiJakartaJar());
+            war.addClass(MapCacheProvider.class)
+               .addAsLibraries(
+                    seamUiJakartaJar(),
+                    jarFor(antlr.RecognitionException.class));
         }
 
         if (includeJbpm) {
@@ -226,7 +230,7 @@ public final class Deployments {
         }
     }
 
-    private static File jarFor(Class<?> anchor) {
+    public static File jarFor(Class<?> anchor) {
         try {
             return new File(anchor.getProtectionDomain().getCodeSource().getLocation().toURI());
         } catch (Exception e) {

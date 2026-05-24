@@ -298,6 +298,9 @@
           </library>
           <jvmArgs>
             <jvmArg>--add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
+            <jvmArg>--add-opens=java.base/java.lang.reflect=ALL-UNNAMED</jvmArg>
+            <jvmArg>--add-opens=java.base/java.io=ALL-UNNAMED</jvmArg>
+            <jvmArg>--add-opens=java.base/java.security=ALL-UNNAMED</jvmArg>
           </jvmArgs>
         </configuration>
         <executions>

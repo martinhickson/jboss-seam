@@ -6,6 +6,12 @@
        no-conversation-view-id="/main.xhtml"
                  login-view-id="/home.xhtml">
 
+    <conversation name="bookingShowcase"
+                  parameter-name="guestKey"
+                  parameter-value="#{seamUiShowcase.guestName}"/>
+
+    <page view-id="/seam-ui-showcase.xhtml"/>
+
     <page view-id="/register.xhtml">
     
         <action if="#{validation.failed}" execute="#{register.invalid}"/>

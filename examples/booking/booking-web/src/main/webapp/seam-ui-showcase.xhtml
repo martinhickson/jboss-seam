@@ -1,0 +1,167 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:s="http://jboss.org/schema/seam/taglib"
+                template="template.xhtml">
+
+<ui:define name="head">
+    <link href="css/showcase.css" rel="stylesheet" type="text/css"/>
+</ui:define>
+
+<ui:define name="content">
+
+<div class="showcase-hero">
+    <h1>Seam UI Component Gallery</h1>
+    <p>
+        Every live <code>s:</code> Facelets tag from <code>META-INF/s.taglib.xml</code>, wired into the
+        Jakarta booking demo on WildFly 36. Explore layout, validation, media, and conversation-aware
+        navigation components below.
+    </p>
+    <p style="margin-top:10px;">
+        <s:span styleClass="showcase-pill">31 tags</s:span>
+        <s:span styleClass="showcase-pill">Jakarta Faces 4</s:span>
+        <s:span styleClass="showcase-pill">JBoss Seam UI</s:span>
+    </p>
+</div>
+
+<div class="showcase-grid">
+
+    <div class="showcase-card">
+        <h2>Layout &amp; text</h2>
+        <div class="tag-list"><code>s:span</code> <code>s:div</code> <code>s:fragment</code> <code>s:cache</code> <code>s:formattedText</code> <code>s:remote</code></div>
+        <s:div styleClass="showcase-inline">
+            <s:span styleClass="showcase-pill">Concierge desk</s:span>
+            <s:cache key="booking-showcase-blurb">Cached VIP welcome copy</s:cache>
+        </s:div>
+        <p style="margin-top:10px;"><s:formattedText value="#{seamUiShowcase.welcomeMessage}"/></p>
+        <s:remote include="seamUiShowcase"/>
+        <s:fragment rendered="true">
+            <span class="showcase-muted">Fragment: late-arrival desk open 24h</span>
+        </s:fragment>
+    </div>
+
+    <div class="showcase-card">
+        <h2>Guest preferences</h2>
+        <div class="tag-list"><code>s:decorate</code> <code>s:label</code> <code>s:message</code> <code>s:enumItem</code> <code>s:selectItems</code></div>
+        <h:form id="prefsForm">
+            <s:token/>
+            <s:defaultAction target="prefsForm:saveBtn"/>
+
+            <s:decorate id="guestDecorate">
+                <s:label value="Guest name"/>
+                <h:inputText id="guestName" value="#{seamUiShowcase.guestName}" required="true"/>
+                <s:message for="guestName"/>
+            </s:decorate>
+
+            <h:outputLabel value="Room tier"/>
+            <h:selectOneMenu id="tierMenu" value="#{seamUiShowcase.tier}">
+                <s:enumItem enumValue="STANDARD" label="Standard"/>
+                <s:enumItem enumValue="DELUXE" label="Deluxe"/>
+                <s:enumItem enumValue="SUITE" label="Suite"/>
+            </h:selectOneMenu>
+
+            <h:outputLabel value="Amenity"/>
+            <h:selectOneMenu id="amenityMenu" value="#{seamUiShowcase.selectedAmenity}">
+                <s:selectItems value="#{seamUiShowcase.amenities}" var="amenity" label="#{amenity}"/>
+            </h:selectOneMenu>
+
+            <div class="buttonBox" style="margin-top:12px;">
+                <h:commandButton id="saveBtn" value="Save showcase preferences" action="#{seamUiShowcase.savePreferences}"/>
+            </div>
+        </h:form>
+    </div>
+
+    <div class="showcase-card">
+        <h2>Validation</h2>
+        <div class="tag-list"><code>s:validate</code> <code>s:validateFormattedText</code> <code>s:validateAll</code> <code>s:validateEquality</code></div>
+        <h:form id="validateForm">
+            <h:outputLabel value="Travel notes"/>
+            <h:inputText id="notesInput" value="#{seamUiShowcase.travelNotes}" style="width:95%;">
+                <s:validate/>
+            </h:inputText>
+
+            <h:outputLabel value="Formatted notes"/>
+            <h:inputText id="formattedNotes" value="#{seamUiShowcase.travelNotes}" style="width:95%;">
+                <s:validateFormattedText/>
+            </h:inputText>
+
+            <s:validateAll id="confirmAll">
+                <h:outputLabel value="Portal password"/>
+                <h:inputSecret id="pwd1" value="#{seamUiShowcase.confirmPassword}"/>
+                <h:outputLabel value="Confirm password"/>
+                <h:inputSecret id="pwd2" value="#{seamUiShowcase.confirmPasswordVerify}">
+                    <s:validateEquality for="pwd1" message="Passwords must match"/>
+                </h:inputSecret>
+            </s:validateAll>
+        </h:form>
+    </div>
+
+    <div class="showcase-card">
+        <h2>Media &amp; uploads</h2>
+        <div class="tag-list"><code>s:graphicImage</code> <code>s:transformImage*</code> <code>s:fileUpload</code> <code>s:download</code> <code>s:resource</code></div>
+        <h:form id="mediaForm" enctype="multipart/form-data">
+            <s:graphicImage id="badgeImage" value="#{seamUiShowcase.badgeImage}" cache="false" alt="Hotel badge">
+                <s:transformImageSize width="24" height="24"/>
+                <s:transformImageType type="image/png"/>
+                <s:transformImageBlur radius="1"/>
+            </s:graphicImage>
+            <p class="showcase-muted">Upload a travel document (demo only):</p>
+            <s:fileUpload id="travelUpload"
+                          data="#{seamUiShowcase.uploadData}"
+                          contentType="#{seamUiShowcase.uploadContentType}"
+                          fileName="#{seamUiShowcase.uploadFileName}"/>
+            <div class="showcase-actions">
+                <s:download id="brochureDownload" src="/seam-ui-resource.xhtml">
+                    <h:outputText value="Download sample brochure"/>
+                </s:download>
+            </div>
+        </h:form>
+    </div>
+
+    <div class="showcase-card">
+        <h2>Navigation &amp; conversations</h2>
+        <div class="tag-list"><code>s:link</code> <code>s:button</code> <code>s:conversation*</code> <code>s:selection</code> <code>s:taskid</code></div>
+        <h:form id="navForm">
+            <s:link id="galleryLink" view="/seam-ui-showcase.xhtml" value="Refresh gallery" propagation="none">
+                <s:conversationPropagation type="none"/>
+                <s:conversationId/>
+                <s:conversationName value="bookingShowcase"/>
+                <s:selection dataModel="#{seamUiShowcase.selectionModel}" var="view"/>
+                <s:taskid/>
+            </s:link>
+            &#160;
+            <s:button id="noopBtn" value="Preview hold" action="#{seamUiShowcase.savePreferences}" propagation="none">
+                <s:conversationPropagation type="none"/>
+            </s:button>
+            &#160;
+            <s:link id="backSearch" view="/main.xhtml" value="Back to hotel search" propagation="none"/>
+        </h:form>
+    </div>
+
+</div>
+
+<div class="section">
+    <p>
+        <s:link id="openBooking" view="/home.xhtml" value="Open booking login" propagation="none"/>
+        &#160;|&#160;
+        <s:link id="backSearchBottom" view="/main.xhtml" value="Hotel search" propagation="none"/>
+    </p>
+</div>
+
+</ui:define>
+
+<ui:define name="sidebar">
+<h1>Try the full booking flow</h1>
+<p>
+    Log in with <strong>demo / demo</strong> or <strong>gavin / foobar</strong>, search hotels,
+    and start a conversation-backed reservation. This gallery complements the classic Seam booking
+    walkthrough with every UI tag rendered on a single page.
+</p>
+<p>
+    <s:link view="/main.xhtml" value="Go to hotel search" propagation="none"/>
+</p>
+</ui:define>
+
+</ui:composition>

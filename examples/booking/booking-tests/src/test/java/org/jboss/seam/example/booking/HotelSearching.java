@@ -3,7 +3,6 @@ package org.jboss.seam.example.booking;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
-import jakarta.ejb.Stateful;
 import jakarta.persistence.EntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
@@ -16,7 +15,6 @@ import org.jboss.seam.annotations.datamodel.DataModel;
 /**
  * Seam component for hotel searching functionality
  */
-@Stateful
 @Name("hotelSearch")
 @Scope(ScopeType.SESSION)
 @Transactional

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="https://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:s="http://jboss.org/schema/seam/taglib">
+<h:head>
+    <title>Seam UI Tags</title>
+</h:head>
+<h:body>
+    <s:span id="tag-span" styleClass="tag-span">span</s:span>
+    <s:div id="tag-div" styleClass="tag-div">div</s:div>
+    <s:cache id="tag-cache" key="seam-ui-tags-test">cached-content</s:cache>
+    <s:formattedText id="tag-formatted" value="#{seamUiTagsBean.formattedText}"/>
+    <s:remote id="tag-remote" include="seamUiTagsBean"/>
+    <h:outputText id="tag-convertDateTime" value="#{seamUiTagsBean.sampleTime}">
+        <s:convertDateTime type="time" pattern="HH:mm:ss"/>
+    </h:outputText>
+
+    <h:form id="mainForm" enctype="multipart/form-data">
+        <s:token/>
+        <s:defaultAction target="mainForm:submitBtn"/>
+
+        <s:decorate id="tag-decorate">
+            <s:label id="tag-label" value="Name"/>
+            <h:inputText id="nameInput" value="#{seamUiTagsBean.name}" required="true"/>
+            <s:message id="tag-message" for="nameInput"/>
+        </s:decorate>
+
+        <h:selectOneMenu id="colorMenu" value="#{seamUiTagsBean.color}">
+            <s:enumItem enumValue="RED" label="Red"/>
+            <s:enumItem enumValue="BLUE" label="Blue"/>
+            <s:enumItem enumValue="GREEN" label="Green"/>
+        </h:selectOneMenu>
+
+        <h:selectOneMenu id="itemsMenu" value="#{seamUiTagsBean.selectedItem}">
+            <s:selectItems value="#{seamUiTagsBean.items}" var="item" label="#{item}"/>
+        </h:selectOneMenu>
+
+        <h:selectOneMenu id="tag-convertEnum" value="#{seamUiTagsBean.status}">
+            <s:selectItems value="#{seamUiTagsBean.statuses}" var="statusItem" label="#{statusItem.name()}"/>
+            <s:convertEnum/>
+        </h:selectOneMenu>
+
+        <h:selectOneMenu id="tag-convertEntity" value="#{seamUiTagsBean.selectedCountry}">
+            <s:selectItems value="#{seamUiTagsBean.countries}" var="country" label="#{country.name}"/>
+            <s:convertEntity/>
+        </h:selectOneMenu>
+
+        <h:inputText id="bioInput" value="#{seamUiTagsBean.bio}">
+            <s:validate/>
+        </h:inputText>
+
+        <h:inputText id="formattedInput" value="#{seamUiTagsBean.bio}">
+            <s:validateFormattedText/>
+        </h:inputText>
+
+        <s:validateAll id="tag-validateAll">
+            <h:inputText id="pwd1" value="#{seamUiTagsBean.password}"/>
+            <h:inputText id="pwd2" value="#{seamUiTagsBean.passwordVerify}">
+                <s:validateEquality for="pwd1" message="Passwords must match"/>
+            </h:inputText>
+        </s:validateAll>
+
+        <s:fragment id="tag-fragment" rendered="true">
+            <span id="fragment-inner">fragment-inner</span>
+        </s:fragment>
+
+        <s:graphicImage id="tag-image" value="#{seamUiTagsBean.imageData}" cache="false">
+            <s:transformImageSize width="16" height="16"/>
+            <s:transformImageType type="image/png"/>
+            <s:transformImageBlur radius="1"/>
+        </s:graphicImage>
+
+        <s:fileUpload id="tag-upload"
+                      data="#{seamUiTagsBean.uploadData}"
+                      contentType="#{seamUiTagsBean.uploadContentType}"
+                      fileName="#{seamUiTagsBean.uploadFileName}"/>
+
+        <s:link id="tag-link" view="/seam-ui-tags.xhtml" value="Seam link" propagation="none">
+            <s:conversationPropagation type="none"/>
+            <s:conversationId/>
+            <s:conversationName value="tagsConv"/>
+            <s:selection dataModel="#{seamUiTagsBean.selectionModel}" var="item"/>
+            <s:taskid/>
+        </s:link>
+
+        <s:button id="tag-button" value="Seam button" action="#{seamUiTagsBean.noop}" propagation="none">
+            <s:conversationPropagation type="none"/>
+        </s:button>
+
+        <s:download id="tag-download" src="/seam-ui-resource.xhtml">
+            <h:outputText value="Download text"/>
+        </s:download>
+
+        <h:commandButton id="submitBtn" value="Submit" action="#{seamUiTagsBean.noop}"/>
+    </h:form>
+</h:body>
+</html>

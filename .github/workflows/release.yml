@@ -21,8 +21,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      # Suppress Maven transfer logs
-      MAVEN_OPTS: -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+      # Suppress Maven transfer logs; CDK plugin needs JDK module opens on Java 17+
+      MAVEN_OPTS: >-
+        -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        --add-opens=java.base/java.lang=ALL-UNNAMED
+        --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+        --add-opens=java.base/java.io=ALL-UNNAMED
+        --add-opens=java.base/java.security=ALL-UNNAMED
       RELEASE_VERSION: ${{ github.event.inputs.release_version }}
       BRANCH_NAME: v${{ github.event.inputs.release_version }}
       TAG_NAME: v${{ github.event.inputs.release_version }}-release
