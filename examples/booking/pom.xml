@@ -21,6 +21,7 @@
     	<module>booking-ejb</module>
     	<module>booking-web</module>
     	<module>booking-tests</module>
+    	<module>booking-ejb-tests</module>
     </modules>
     
     <dependencyManagement>

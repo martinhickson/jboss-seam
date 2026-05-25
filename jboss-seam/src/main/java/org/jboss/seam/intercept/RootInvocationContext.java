@@ -27,9 +27,25 @@ class RootInvocationContext implements InvocationContext
    }
    
    public Object proceed() throws Exception
-   {     
-      method.setAccessible(true);
-      return Reflections.invoke(method, bean, params);
+   {
+      Method targetMethod = resolveMethodForTarget(method, bean);
+      targetMethod.setAccessible(true);
+      return Reflections.invoke(targetMethod, bean, params);
+   }
+
+   private static Method resolveMethodForTarget(Method method, Object target)
+   {
+      for (Class<?> iface : target.getClass().getInterfaces())
+      {
+         try
+         {
+            return iface.getMethod(method.getName(), method.getParameterTypes());
+         }
+         catch (NoSuchMethodException ignored)
+         {
+         }
+      }
+      return method;
    }
 
    public Object getTarget()

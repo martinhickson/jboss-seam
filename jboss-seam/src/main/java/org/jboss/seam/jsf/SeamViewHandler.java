@@ -93,6 +93,10 @@ public class SeamViewHandler extends ViewHandlerWrapper
    @Override
    public String getActionURL(FacesContext facesContext, String viewId) {
        String actionUrl = super.getActionURL(facesContext, viewId);
+       if ( !Contexts.isConversationContextActive() )
+       {
+          return actionUrl;
+       }
        Conversation conversation = Conversation.instance();
        Manager manager = Manager.instance();
        String conversationIdParameter = manager.getConversationIdParameter();

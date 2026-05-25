@@ -194,6 +194,8 @@ jobs:
       run: |
         cd examples/booking/booking-tests
         mvn clean test -ntp
+        cd ../booking-ejb-tests
+        mvn clean test -ntp
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
