@@ -4,7 +4,7 @@
 
     <groupId>org.jboss.seam.examples.booking</groupId>
     <artifactId>booking-ejb-tests-standalone</artifactId>
-    <version>2.3.1.Final</version>
+    <version>2.4.1-bravura-27</version>
     <packaging>jar</packaging>
 
     <name>Booking EJB/EAR Integration Tests - WildFly 36</name>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>org.jboss.seam</groupId>
             <artifactId>jboss-seam-jakarta</artifactId>
-            <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+            <version>2.4.1-bravura-27</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.testng</groupId>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>org.jboss.seam</groupId>
             <artifactId>jboss-seam-ui-jakarta</artifactId>
-            <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+            <version>2.4.1-bravura-27</version>
         </dependency>
 
         <dependency>
