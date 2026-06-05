@@ -31,6 +31,7 @@ import jakarta.faces.event.SystemEventListener;
 import jakarta.faces.validator.Validator;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Init;
 import org.jboss.seam.el.SeamExpressionFactory;
 
@@ -95,22 +96,39 @@ public class SeamApplication extends Application {
 
     @Override
     public Converter createConverter(String converterId) {
+        if (Contexts.isApplicationContextActive()) {
+            String name = Init.instance().getConverters().get(converterId);
+            if (name != null) {
+                return (Converter) Component.getInstance(name);
+            }
+        }
         return delegate.createConverter(converterId);
     }
 
     @Override
     public Converter createConverter(Class<?> targetClass) {
-        return delegate.createConverter(targetClass);
+        Converter converter = null;
+        if (Contexts.isApplicationContextActive()) {
+            converter = new ConverterLocator(targetClass).getConverter();
+        }
+        if (converter == null) {
+            converter = delegate.createConverter(targetClass);
+        }
+        if (converter == null && targetClass != null && java.util.Date.class.isAssignableFrom(targetClass)) {
+            converter = delegate.createConverter("jakarta.faces.DateTime");
+        }
+        return converter;
     }
 
     private class ConverterLocator {
-        private final Map<String, String> converters;
-        private final Class<?> targetClass;
+
+        private Map<Class, String> converters;
+        private Class targetClass;
         private Converter converter;
 
-        public ConverterLocator(Class<?> targetClass) {
+        public ConverterLocator(Class targetClass) {
+            converters = Init.instance().getConvertersByClass();
             this.targetClass = targetClass;
-            this.converters = Init.instance().getConverters();
         }
 
         public Converter getConverter() {
@@ -120,33 +138,46 @@ public class SeamApplication extends Application {
             return converter;
         }
 
-        private Converter createConverter(String converterClassName) {
-            return (Converter) Component.getInstance(converterClassName, true);
+        private Converter createConverter(Class clazz) {
+            return (Converter) Component.getInstance(converters.get(clazz));
         }
 
-        private void locateConverter(Class<?> clazz) {
-            if (clazz == null) {
+        private void locateConverter(Class clazz) {
+            if (converters.containsKey(clazz)) {
+                converter = createConverter(clazz);
                 return;
             }
-            String converterName = converters.get(clazz);
-            if (converterName != null) {
-                converter = createConverter(converterName);
-                return;
-            }
-            // Try interfaces
-            for (Class<?> iface : clazz.getInterfaces()) {
-                locateConverter(iface);
-                if (converter != null) {
+
+            for (Class iface : clazz.getInterfaces()) {
+                if (converters.containsKey(iface)) {
+                    converter = createConverter(iface);
                     return;
+                } else {
+                    locateConverter(iface);
+                    if (converter != null) {
+                        return;
+                    }
                 }
             }
-            // Try superclass
-            locateConverter(clazz.getSuperclass());
+
+            Class superClass = clazz.getSuperclass();
+            if (converters.containsKey(superClass)) {
+                converter = createConverter(superClass);
+                return;
+            } else if (superClass != null) {
+                locateConverter(superClass);
+            }
         }
     }
 
     @Override
     public Validator createValidator(String validatorId) throws FacesException {
+        if (Contexts.isApplicationContextActive()) {
+            String name = Init.instance().getValidators().get(validatorId);
+            if (name != null) {
+                return (Validator) Component.getInstance(name);
+            }
+        }
         return delegate.createValidator(validatorId);
     }
 
