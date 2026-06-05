@@ -98,6 +98,9 @@
                                     <includes>
                                         <include>**/*.java</include>
                                     </includes>
+                                    <excludes>
+                                        <exclude>**/org/jboss/seam/pdf/ui/UITable.java</exclude>
+                                    </excludes>
                                 </resource>
                             </resources>
                         </configuration>
