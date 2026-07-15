@@ -860,6 +860,7 @@
                     <exclude>**/org/jboss/seam/security/Identity.java</exclude>
                     <exclude>**/org/jboss/seam/security/SecurityFunctions.java</exclude>
                     <exclude>**/org/jboss/seam/el/SeamFunctionMapper.java</exclude>
+                    <exclude>**/org/jboss/seam/el/SeamBeanELResolver.java</exclude>
                   </excludes>
                 </resource>
               </resources>
