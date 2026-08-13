@@ -307,10 +307,12 @@ jobs:
       if: ${{ github.event.inputs.deploy_to_maven_central == 'true' }}
       run: |
         # Publish only the library modules consumers need (skip ITs / examples reactor noise)
-        # seam-cdk-helper uses jboss-parent (not seam-parent) — publish separately later
+        # Quote -pl so bash does not treat ! as history expansion. Exclude reactor
+        # siblings pulled in via -am (cdk plugin / legacy javax modules).
         mvn deploy -ntp -Pcentral-release -DskipTests \
-          -pl jboss-seam-jakarta,jboss-seam-ui-jakarta,jboss-seam-pdf-jakarta,jboss-seam-rss-jakarta,bom \
+          -pl 'bom,jboss-seam-jakarta,jboss-seam-ui-jakarta,jboss-seam-pdf-jakarta,jboss-seam-rss-jakarta,!seam-cdk-helper,!jboss-seam,!jboss-seam-ui,!jboss-seam-pdf,!jboss-seam-rss,!jboss-seam-debug,!jboss-seam-gen,!jboss-seam-ioc,!jboss-seam-mail,!jboss-seam-remoting,!jboss-seam-resteasy,!jboss-seam-excel,!jboss-seam-flex,!jboss-seam-wicket,!seam-integration-tests' \
           -am \
+          -Dsortpom.skip=true \
           -Dgpg.passphrase="${MAVEN_CENTRAL_GPG_PASSPHRASE}"
       env:
         MAVEN_CENTRAL_GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_GPG_PASSPHRASE }}
