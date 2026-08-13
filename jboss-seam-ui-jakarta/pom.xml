@@ -372,19 +372,17 @@
         </executions>
       </plugin>
 
-      <!-- Javadoc Plugin -->
+      <!-- Javadoc Plugin (required for Maven Central jar publishing) -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <skip>true</skip>
-          <links>
-            <link>http://docs.oracle.com/javase/17/docs/api/</link>
-          </links>
-          <keywords>true</keywords>
-          <author>true</author>
-          <stylesheetfile>jdstyle.css</stylesheetfile>
-          <doctitle>JBoss Seam Jakarta ${project.name} API ${project.version}</doctitle>
+          <skip>false</skip>
+          <doclint>none</doclint>
+          <failOnError>false</failOnError>
+          <quiet>true</quiet>
           <detectOfflineLinks>false</detectOfflineLinks>
+          <doctitle>JBoss Seam Jakarta ${project.name} API ${project.version}</doctitle>
         </configuration>
         <executions>
           <execution>
