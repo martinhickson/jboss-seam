@@ -120,7 +120,9 @@ public final class Deployments {
             collectNamedComponents(testClass, classes);
         }
         for (Class<?> clazz : additionalClasses) {
-            if (clazz.isAnnotationPresent(Name.class) && !classes.contains(clazz)) {
+            // Include all additional classes in jandex (not only @Name) so WildFly
+            // annotation scanning still discovers @Stateless / other EE types.
+            if (!classes.contains(clazz)) {
                 classes.add(clazz);
             }
             collectNamedComponents(clazz, classes);
