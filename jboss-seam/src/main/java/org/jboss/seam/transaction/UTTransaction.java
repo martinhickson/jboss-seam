@@ -73,6 +73,13 @@ public class UTTransaction extends AbstractUserTransaction
 
    public int getStatus() throws SystemException
    {
+      // Always use TSR for status — portable for CMT and BMT, avoids
+      // IllegalStateException from UserTransaction under CMT.
+      Integer tsrStatus = TransactionSynchronizationRegistryStatus.getStatusOrNull();
+      if (tsrStatus != null)
+      {
+         return tsrStatus;
+      }
       return delegate.getStatus();
    }
 

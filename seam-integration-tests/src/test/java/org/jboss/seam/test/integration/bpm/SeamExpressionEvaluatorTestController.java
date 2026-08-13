@@ -33,7 +33,6 @@ public class SeamExpressionEvaluatorTestController {
    
    public void logTrue()
    {
-      System.out.println("true");
    }
    
    public String getName()

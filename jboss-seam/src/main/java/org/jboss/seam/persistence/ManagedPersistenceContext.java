@@ -76,58 +76,18 @@ public class ManagedPersistenceContext
    
    private void initEntityManager()
    {
-      System.err.println("[SEAM-ENTITY-DEBUG] initEntityManager() called");
-      System.err.println("[SEAM-ENTITY-DEBUG] this = " + this);
-      System.err.println("[SEAM-ENTITY-DEBUG] persistenceUnitJndiName = '" + persistenceUnitJndiName + "'");
-      System.err.println("[SEAM-ENTITY-DEBUG] componentName = '" + componentName + "'");
-      System.err.println("[SEAM-ENTITY-DEBUG] entityManagerFactory = " + entityManagerFactory);
-      System.err.println("[SEAM-ENTITY-DEBUG] filters.size() = " + filters.size());
-      
-      System.err.println("[SEAM-ENTITY-DEBUG] Getting EntityManagerFactory...");
-      EntityManagerFactory emf = getEntityManagerFactoryFromJndiOrValueBinding();
-      System.err.println("[SEAM-ENTITY-DEBUG] EntityManagerFactory obtained: " + emf);
-      System.err.println("[SEAM-ENTITY-DEBUG] emf.getClass() = " + (emf != null ? emf.getClass().getName() : "null"));
-      System.err.println("[SEAM-ENTITY-DEBUG] emf.isOpen() = " + (emf != null ? emf.isOpen() : "null"));
-      
-      System.err.println("[SEAM-ENTITY-DEBUG] Creating EntityManager from factory...");
-      entityManager = emf.createEntityManager();
-      System.err.println("[SEAM-ENTITY-DEBUG] EntityManager created: " + entityManager);
-      System.err.println("[SEAM-ENTITY-DEBUG] entityManager.getClass() = " + (entityManager != null ? entityManager.getClass().getName() : "null"));
-      System.err.println("[SEAM-ENTITY-DEBUG] entityManager.isOpen() = " + (entityManager != null ? entityManager.isOpen() : "null"));
-      
-      System.err.println("[SEAM-ENTITY-DEBUG] Getting PersistenceProvider...");
+      entityManager = getEntityManagerFactoryFromJndiOrValueBinding().createEntityManager();
       PersistenceProvider persistenceProvider = PersistenceProvider.instance();
-      System.err.println("[SEAM-ENTITY-DEBUG] PersistenceProvider obtained: " + persistenceProvider);
-      System.err.println("[SEAM-ENTITY-DEBUG] persistenceProvider.getClass() = " + (persistenceProvider != null ? persistenceProvider.getClass().getName() : "null"));
-      
-      System.err.println("[SEAM-ENTITY-DEBUG] Proxying EntityManager...");
       entityManager = persistenceProvider.proxyEntityManager(entityManager);
-      System.err.println("[SEAM-ENTITY-DEBUG] Proxied EntityManager: " + entityManager);
-      System.err.println("[SEAM-ENTITY-DEBUG] proxied entityManager.getClass() = " + (entityManager != null ? entityManager.getClass().getName() : "null"));
-      
-      System.err.println("[SEAM-ENTITY-DEBUG] Getting PersistenceContexts...");
-      PersistenceContexts persistenceContexts = PersistenceContexts.instance();
-      System.err.println("[SEAM-ENTITY-DEBUG] PersistenceContexts obtained: " + persistenceContexts);
-      System.err.println("[SEAM-ENTITY-DEBUG] persistenceContexts.getFlushMode() = " + (persistenceContexts != null ? persistenceContexts.getFlushMode() : "null"));
-      
-      System.err.println("[SEAM-ENTITY-DEBUG] Setting flush mode...");
-      setEntityManagerFlushMode( persistenceContexts.getFlushMode() );
-      System.err.println("[SEAM-ENTITY-DEBUG] Flush mode set successfully");
+      setEntityManagerFlushMode( PersistenceContexts.instance().getFlushMode() );
 
-      System.err.println("[SEAM-ENTITY-DEBUG] Processing filters (" + filters.size() + " filters)...");
       for (Filter f: filters)
       {
-         System.err.println("[SEAM-ENTITY-DEBUG] Processing filter: " + f + ", enabled: " + f.isFilterEnabled());
          if ( f.isFilterEnabled() )
          {
             persistenceProvider.enableFilter(f, entityManager);
-            System.err.println("[SEAM-ENTITY-DEBUG] Filter enabled: " + f);
          }
       }
-
-      System.err.println("[SEAM-ENTITY-DEBUG] initEntityManager() completed successfully");
-      System.err.println("[SEAM-ENTITY-DEBUG] Final entityManager: " + entityManager);
-      System.err.println("[SEAM-ENTITY-DEBUG] Final entityManager.isOpen(): " + (entityManager != null ? entityManager.isOpen() : "null"));
 
       if ( log.isDebugEnabled() )
       {
@@ -283,78 +243,24 @@ public class ManagedPersistenceContext
    
    public EntityManagerFactory getEntityManagerFactoryFromJndiOrValueBinding()
    {
-      System.err.println("[SEAM-ENTITY-DEBUG] getEntityManagerFactoryFromJndiOrValueBinding() called");
-      System.err.println("[SEAM-ENTITY-DEBUG] this = " + this);
-      System.err.println("[SEAM-ENTITY-DEBUG] this.getClass() = " + this.getClass().getName());
-      System.err.println("[SEAM-ENTITY-DEBUG] entityManagerFactory value binding = " + entityManagerFactory);
-      System.err.println("[SEAM-ENTITY-DEBUG] persistenceUnitJndiName = '" + persistenceUnitJndiName + "'");
-      System.err.println("[SEAM-ENTITY-DEBUG] componentName = '" + componentName + "'");
-      
       EntityManagerFactory result = null;
       //first try to find it via the value binding
       if (entityManagerFactory!=null)
       {
-         System.err.println("[SEAM-ENTITY-DEBUG] Trying to get EntityManagerFactory from value binding");
-         System.err.println("[SEAM-ENTITY-DEBUG] entityManagerFactory.getExpressionString() = " + entityManagerFactory.getExpressionString());
-         try {
-            result = entityManagerFactory.getValue();
-            System.err.println("[SEAM-ENTITY-DEBUG] entityManagerFactory.getValue() returned: " + result);
-            System.err.println("[SEAM-ENTITY-DEBUG] result.getClass() = " + (result != null ? result.getClass().getName() : "null"));
-         } catch (Exception e) {
-            System.err.println("[SEAM-ENTITY-ERROR] Exception getting value from entityManagerFactory: " + e.getClass().getSimpleName() + ": " + e.getMessage());
-            e.printStackTrace();
-         }
+         result = entityManagerFactory.getValue();
       }
-      else
-      {
-         System.err.println("[SEAM-ENTITY-DEBUG] No entityManagerFactory value binding configured - entityManagerFactory is null");
-      }
-      
       //if its not there, try JNDI
       if (result==null)
       {
-         System.err.println("[SEAM-ENTITY-DEBUG] EntityManagerFactory not found via value binding, trying JNDI lookup");
-         System.err.println("[SEAM-ENTITY-DEBUG] JNDI lookup target: '" + persistenceUnitJndiName + "'");
-         
-         Object lookedUp = null;
          try
          {
-            System.err.println("[SEAM-ENTITY-DEBUG] Getting InitialContext...");
-            javax.naming.InitialContext ctx = Naming.getInitialContext();
-            System.err.println("[SEAM-ENTITY-DEBUG] InitialContext obtained: " + ctx);
-            
-            System.err.println("[SEAM-ENTITY-DEBUG] Performing JNDI lookup for: " + persistenceUnitJndiName);
-            lookedUp = ctx.lookup(persistenceUnitJndiName);
-            System.err.println("[SEAM-ENTITY-DEBUG] JNDI lookup returned: " + lookedUp);
-            System.err.println("[SEAM-ENTITY-DEBUG] lookedUp.getClass() = " + (lookedUp != null ? lookedUp.getClass().getName() : "null"));
-            
-            result = (EntityManagerFactory) lookedUp;
-            System.err.println("[SEAM-ENTITY-DEBUG] Cast to EntityManagerFactory successful: " + result);
-            
+            result = (EntityManagerFactory) Naming.getInitialContext().lookup(persistenceUnitJndiName);
          }
          catch (NamingException ne)
          {
-            System.err.println("[SEAM-ENTITY-ERROR] NamingException during JNDI lookup: " + ne.getClass().getSimpleName() + ": " + ne.getMessage());
-            System.err.println("[SEAM-ENTITY-ERROR] JNDI name attempted: '" + persistenceUnitJndiName + "'");
-            System.err.println("[SEAM-ENTITY-ERROR] Full exception details:");
-            ne.printStackTrace();
             throw new IllegalArgumentException("EntityManagerFactory not found in JNDI : " + persistenceUnitJndiName, ne);
          }
-         catch (ClassCastException cce) {
-            System.err.println("[SEAM-ENTITY-ERROR] ClassCastException - object found in JNDI is not an EntityManagerFactory");
-            System.err.println("[SEAM-ENTITY-ERROR] Expected: EntityManagerFactory, Found: " + (lookedUp != null ? lookedUp.getClass().getName() : "null"));
-            cce.printStackTrace();
-            throw cce;
-         }
-         catch (Exception e) {
-            System.err.println("[SEAM-ENTITY-ERROR] Unexpected exception during JNDI lookup: " + e.getClass().getSimpleName() + ": " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Failed to lookup EntityManagerFactory from JNDI", e);
-         }
       }
-      
-      System.err.println("[SEAM-ENTITY-DEBUG] Returning EntityManagerFactory: " + result);
-      System.err.println("[SEAM-ENTITY-DEBUG] result.isOpen() = " + (result != null ? result.isOpen() : "null"));
       return result;
    }
    

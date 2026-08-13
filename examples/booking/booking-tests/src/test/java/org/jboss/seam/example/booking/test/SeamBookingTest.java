@@ -65,8 +65,6 @@ public class SeamBookingTest {
 
     @Test
     public void testSeamBookingWorkflow() throws Exception {
-        System.out.println("=== Starting Seam Booking Workflow Test ===");
-        
         // Skip Manager.instance() for now due to component initialization issues
         // Manager manager = Manager.instance();
         Identity identity = Identity.instance();
@@ -93,8 +91,6 @@ public class SeamBookingTest {
         identity.login();
         assertTrue("User should be logged in", identity.isLoggedIn());
 
-        System.out.println("✓ User authentication successful");
-
         // Use pre-loaded test data from import.sql
         
         // Test hotel search
@@ -109,8 +105,6 @@ public class SeamBookingTest {
         assertEquals("Search string should be preserved", "Union Square", hotelSearch.getSearchString());
         //         // assertFalse("Should not be in long running conversation yet", manager.isLongRunningConversation());
 
-        System.out.println("✓ Hotel search successful: " + foundHotel.getName());
-
         // Test hotel selection (begins conversation)
         hotelBooking.selectHotel(foundHotel);
 
@@ -120,8 +114,6 @@ public class SeamBookingTest {
         assertEquals("Hotel city should be NY", "NY", selectedHotel.getCity());
         assertEquals("Hotel zip should be 10011", "10011", selectedHotel.getZip());
         //         assertTrue("Should now be in long running conversation", manager.isLongRunningConversation());
-
-        System.out.println("✓ Hotel selection successful, conversation started");
 
         // Test booking creation
         hotelBooking.bookHotel();
@@ -139,8 +131,6 @@ public class SeamBookingTest {
                     Contexts.getSessionContext().get("user"), booking.getUser());
         //         assertTrue("Should still be in long running conversation", manager.isLongRunningConversation());
 
-        System.out.println("✓ Booking creation successful");
-
         // Test booking validation - invalid dates
         booking.setCreditCard("1234567891021234");
         booking.setCreditCardName("GAVIN KING");
@@ -152,8 +142,6 @@ public class SeamBookingTest {
         hotelBooking.setBookingDetails();
         assertFalse("Booking should be invalid with same check-in/check-out dates", hotelBooking.isBookingValid());
 
-        System.out.println("✓ Booking validation working - rejected invalid dates");
-
         // Test booking validation - valid dates
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, 2);
@@ -162,8 +150,6 @@ public class SeamBookingTest {
         hotelBooking.setBookingDetails();
         assertTrue("Booking should be valid with proper dates", hotelBooking.isBookingValid());
         //         assertTrue("Should still be in long running conversation", manager.isLongRunningConversation());
-
-        System.out.println("✓ Booking validation working - accepted valid dates");
 
         // Test booking confirmation
         hotelBooking.confirm();
@@ -177,8 +163,6 @@ public class SeamBookingTest {
         assertEquals("Persisted booking user should be gavin", "gavin", persistedBooking.getUser().getUsername());
         //         assertFalse("Conversation should have ended", manager.isLongRunningConversation());
 
-        System.out.println("✓ Booking confirmation successful, booking persisted");
-
         // Test booking cancellation
         bookingList.setSelectedBooking(persistedBooking);
         bookingList.cancel();
@@ -188,14 +172,10 @@ public class SeamBookingTest {
         assertEquals("Should have no bookings after cancellation", 0, bookings.size());
         //         assertFalse("Should not be in long running conversation", manager.isLongRunningConversation());
 
-        System.out.println("✓ Booking cancellation successful");
-        System.out.println("=== Seam Booking Workflow Test Completed Successfully! ===");
     }
 
     @Test
     public void testSeamContexts() {
-        System.out.println("=== Testing Seam Contexts ===");
-        
         // Test that Seam contexts are working
         assertNotNull("Application context should be available", Contexts.getApplicationContext());
         assertNotNull("Session context should be available", Contexts.getSessionContext());
@@ -206,13 +186,10 @@ public class SeamBookingTest {
         assertEquals("Session context should store values", "Hello Seam!", 
                     Contexts.getSessionContext().get("testValue"));
         
-        System.out.println("✓ Seam contexts working properly");
     }
 
     @Test
     public void testSeamComponents() {
-        System.out.println("=== Testing Seam Component Injection ===");
-        
         // Test that Seam components can be looked up
         HotelSearching hotelSearch = (HotelSearching) Component.getInstance("hotelSearch");
         assertNotNull("HotelSearch component should be injectable", hotelSearch);
@@ -227,13 +204,10 @@ public class SeamBookingTest {
         HotelSearching hotelSearch2 = (HotelSearching) Component.getInstance("hotelSearch");
         assertSame("Session scoped components should be the same instance", hotelSearch, hotelSearch2);
         
-        System.out.println("✓ Seam component injection and scoping working");
     }
 
     @Test
     public void testEnhancedHotelSearch() throws Exception {
-        System.out.println("=== Testing Enhanced Hotel Search ===");
-        
         HotelSearching hotelSearch = (HotelSearching) Component.getInstance("hotelSearch");
         assertNotNull("HotelSearch component should be available", hotelSearch);
         
@@ -278,13 +252,10 @@ public class SeamBookingTest {
         hotels = hotelSearch.getHotels();
         assertTrue("Empty search should return all hotels", hotels.size() >= 3);
         
-        System.out.println("✓ Enhanced hotel search functionality working");
     }
 
     @Test
     public void testBookingValidation() throws Exception {
-        System.out.println("=== Testing Booking Validation ===");
-        
         // Set up components and user
         HotelSearching hotelSearch = (HotelSearching) Component.getInstance("hotelSearch");
         HotelBooking hotelBooking = (HotelBooking) Component.getInstance("hotelBooking");
@@ -348,13 +319,10 @@ public class SeamBookingTest {
         hotelBooking.setBookingDetails();
         assertTrue("Date-only validation still passes with missing card or beds", hotelBooking.isBookingValid());
         
-        System.out.println("✓ Booking validation scenarios working correctly");
     }
 
     @Test
     public void testMultipleBookingsWorkflow() throws Exception {
-        System.out.println("=== Testing Multiple Bookings Workflow ===");
-        
         // Set up components and user
         HotelSearching hotelSearch = (HotelSearching) Component.getInstance("hotelSearch");
         HotelBooking hotelBooking = (HotelBooking) Component.getInstance("hotelBooking");
@@ -437,6 +405,5 @@ public class SeamBookingTest {
         assertEquals("Remaining booking should be for the second hotel",
                 hotel2.getId(), bookings.get(0).getHotel().getId());
         
-        System.out.println("✓ Multiple bookings workflow working correctly");
     }
 }

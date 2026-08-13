@@ -81,8 +81,6 @@ public class SFSBSynchronizationTest
    public void synchronizationInterceptor() 
        throws Exception 
    {
-      System.out.println(deploymentUrl.toString());
-      
       // Initial request to get the session
       URL testUrl = new URL(deploymentUrl.toString() + "/test.seam");
       URLConnection urlConn = testUrl.openConnection();

@@ -102,6 +102,5 @@ public class WildFly36BookingTest {
     public void testWildFlyIsRunning() {
         // Simple test to verify WildFly container is running
         assertTrue("This test should run in WildFly container", true);
-        System.out.println("✓ WildFly 36 Arquillian test executed successfully!");
     }
 }

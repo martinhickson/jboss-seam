@@ -49,8 +49,6 @@ public class ConcurrentFactoryTest extends JUnitSeamTest
                 }
                 assert "TestString".equals(getValue("#{concurrentFactoryTest.dependentString}"));
              }
-             System.out.println(myTestSequence);
-
           }
       }.run();
     }

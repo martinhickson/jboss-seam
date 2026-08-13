@@ -5,7 +5,6 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
-import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
@@ -74,29 +73,7 @@ public class CMTTransaction extends AbstractUserTransaction
 
    public int getStatus() throws SystemException
    {
-      try
-      {
-         //TODO: not correct for SUPPORTS or NEVER!
-         if ( !ejbContext.getRollbackOnly() )
-         {
-            return Status.STATUS_ACTIVE;
-         }
-         else
-         {
-            return Status.STATUS_MARKED_ROLLBACK;
-         }
-      }
-      catch (IllegalStateException ise)
-      {
-         try
-         {
-            return ejbContext.getUserTransaction().getStatus();
-         }
-         catch (IllegalStateException is)
-         {
-            return Status.STATUS_NO_TRANSACTION;
-         }
-      }
+      return TransactionSynchronizationRegistryStatus.getStatus();
    }
 
    public void setRollbackOnly() throws IllegalStateException, SystemException

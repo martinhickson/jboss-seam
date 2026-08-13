@@ -69,11 +69,9 @@ public class HotelBooking implements Serializable {
         
         if (booking.getCheckinDate().before(calendar.getTime())) {
             // FacesMessages.instance().addToControl("checkinDate", "Check in date must be a future date");
-            System.out.println("Validation error: Check in date must be a future date");
             bookingValid = false;
         } else if (!booking.getCheckinDate().before(booking.getCheckoutDate())) {
             // FacesMessages.instance().addToControl("checkoutDate", "Check out date must be later than check in date");
-            System.out.println("Validation error: Check out date must be later than check in date");
             bookingValid = false;
         } else {
             bookingValid = true;
@@ -88,7 +86,6 @@ public class HotelBooking implements Serializable {
     public void confirm() {
         entityManager.persist(booking);
         events.raiseTransactionSuccessEvent("bookingConfirmed");
-        System.out.println("Booking confirmed for " + user.getName() + " at " + hotel.getName());
         Manager.instance().endConversation(false);
     }
     
