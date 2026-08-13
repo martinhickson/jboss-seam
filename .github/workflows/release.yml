@@ -64,11 +64,17 @@ jobs:
       run: |
         # Set the project version (updates root pom.xml and all parent references in child POMs)
         mvn versions:set -DnewVersion=${RELEASE_VERSION} -DprocessAllModules -DgenerateBackupPoms=false
+        # bom has no parent — set its project version explicitly
+        mvn -f bom/pom.xml versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
 
-        # Update the version.seam property in root pom.xml using sed (simple and reliable)
-        sed -i "s|<version.seam>.*</version.seam>|<version.seam>${RELEASE_VERSION}</version.seam>|" pom.xml
+        # Update version.seam everywhere (root + bom; Central rejects SNAPSHOT managed deps)
+        find . -name pom.xml -not -path './.git/*' -not -path './genericmessagingra/*' \
+          -not -path './richfaces/*' -not -path './richfaces4-core/*' -not -path './richfaces-cdk/*' \
+          -print0 | xargs -0 sed -i "s|<version.seam>.*</version.seam>|<version.seam>${RELEASE_VERSION}</version.seam>|"
 
         echo "Version update completed"
+        echo "Root version.seam: $(grep -m1 version.seam pom.xml || true)"
+        echo "BOM version.seam: $(grep -m1 version.seam bom/pom.xml || true)"
       env:
         RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
 
