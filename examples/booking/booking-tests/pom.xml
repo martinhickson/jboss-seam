@@ -5,7 +5,7 @@
     <!-- Standalone configuration - no parent dependency -->
     <groupId>org.jboss.seam.examples.booking</groupId>
     <artifactId>booking-tests-standalone</artifactId>
-    <version>2.3.1.Final</version>
+    <version>2.4.1-bravura-32</version>
     <packaging>jar</packaging>
     
     <name>Booking Integration Tests Module - Standalone WildFly 36</name>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>io.github.martinhickson</groupId>
             <artifactId>jboss-seam-jakarta</artifactId>
-            <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+            <version>2.4.1-bravura-32</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>io.github.martinhickson</groupId>
             <artifactId>jboss-seam-ui-jakarta</artifactId>
-            <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
+            <version>2.4.1-bravura-32</version>
             <scope>test</scope>
         </dependency>
 
