@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
   <name>Seam 2 Bill Of Materials</name>
   <description>Seam 2 BOM file for importing dependency management for Seam 2 applications</description>
-  <url>http://seamframework.org/Seam2</url>
+  <url>https://github.com/martinhickson/jboss-seam</url>
 
   <organization>
     <name>Seam Framework</name>
@@ -19,56 +19,47 @@
     <license>
       <name>LGPL</name>
       <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+      <distribution>repo</distribution>
     </license>
   </licenses>
 
   <developers>
     <developer>
-      <name>JBoss Seam committers</name>
+      <name>Martin Hickson</name>
+      <email>martinhickson@users.noreply.github.com</email>
+      <url>https://github.com/martinhickson</url>
     </developer>
   </developers>
 
-  <mailingLists>
-    <mailingList>
-      <name>Seam Developer List</name>
-      <archive>http://lists.jboss.org/pipermail/seam-dev/</archive>
-    </mailingList>
-  </mailingLists>
-
   <scm>
-    <connection>scm:svn:https://svn.jboss.org/repos/seam/branches/community/Seam_2_3</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/seam/branches/community/Seam_2_3</developerConnection>
+    <connection>scm:git:https://github.com/martinhickson/jboss-seam.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/martinhickson/jboss-seam.git</developerConnection>
     <tag>HEAD</tag>
-    <url>scm:svn:https://svn.jboss.org/repos/seam/branches/community/Seam_2_3</url>
+    <url>https://github.com/martinhickson/jboss-seam</url>
   </scm>
 
   <issueManagement>
-    <system>JIRA</system>
-    <url>http://issues.jboss.org/browse/JBSEAM</url>
+    <system>github</system>
+    <url>https://github.com/martinhickson/jboss-seam/issues</url>
   </issueManagement>
-
-  <ciManagement>
-    <system>Hudson</system>
-    <url>http://hudson.jboss.org/hudson/view/Seam/</url>
-  </ciManagement>
 
   <distributionManagement>
     <repository>
-      <id>central</id>
+      <id>bravura-releases</id>
       <name>Artifactory Releases</name>
       <url>https://repo.bravurasolutions.net:443/artifactory/ext-release-local</url>
     </repository>
     <snapshotRepository>
-      <id>snapshots</id>
+      <id>bravura-snapshots</id>
       <name>Artifactory Snapshots</name>
       <url>https://repo.bravurasolutions.net:443/artifactory/ext-snapshot-local</url>
     </snapshotRepository>
-
   </distributionManagement>
 
   <properties>
     <!-- Version string properties for integrations-->
     <version.seam>2.3.1.jakarta.bravura.1-SNAPSHOT</version.seam>
+    <central.publishing.plugin.version>0.9.0</central.publishing.plugin.version>
     <version.wicket>1.4.14</version.wicket>
     <version.drools>5.3.3.Final</version.drools>
     <version.resteasy>2.0.1.GA</version.resteasy>
@@ -1102,4 +1093,55 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>central-release</id>
+      <distributionManagement>
+        <repository>
+          <id>central</id>
+          <url>https://central.sonatype.com/</url>
+        </repository>
+        <snapshotRepository>
+          <id>central</id>
+          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+      </distributionManagement>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${central.publishing.plugin.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+              <waitUntil>published</waitUntil>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.7</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
