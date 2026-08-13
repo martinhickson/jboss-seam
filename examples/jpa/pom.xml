@@ -4,9 +4,9 @@
     <groupId>org.jboss.seam.examples</groupId>
     <artifactId>jpa</artifactId>
     <parent>
-        <groupId>org.jboss.seam</groupId>
+        <groupId>io.github.martinhickson</groupId>
         <artifactId>examples</artifactId>
-        <version>2.4.1-bravura-30</version>
+        <version>2.3.1.Final</version>
     </parent>
     <packaging>pom</packaging>
     <name>JPA Example (EE6)</name>

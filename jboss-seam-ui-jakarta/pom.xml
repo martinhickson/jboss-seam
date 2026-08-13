@@ -3,9 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.jboss.seam</groupId>
+    <groupId>io.github.martinhickson</groupId>
     <artifactId>seam-parent</artifactId>
-    <version>2.4.1-bravura-30</version>
+    <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -38,7 +38,7 @@
 
     <!-- JBoss Seam Jakarta Core -->
     <dependency>
-      <groupId>org.jboss.seam</groupId>
+      <groupId>io.github.martinhickson</groupId>
       <artifactId>jboss-seam-jakarta</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
@@ -314,9 +314,9 @@
       </plugin>
 
       <plugin>
-        <groupId>org.jboss.seam</groupId>
+        <groupId>io.github.martinhickson</groupId>
         <artifactId>seam-cdk-helper</artifactId>
-        <version>2.4.1-bravura-30</version>
+        <version>1.0.1</version>
         <executions>
           <execution>
             <goals>

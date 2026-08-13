@@ -2,8 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>seam-parent</artifactId>
-		<groupId>org.jboss.seam</groupId>
-		<version>2.4.1-bravura-30</version>
+		<groupId>io.github.martinhickson</groupId>
+		<version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
@@ -76,7 +76,7 @@
 				</executions>
 				<dependencies>
 					<dependency>
-						<groupId>org.jboss.seam</groupId>
+						<groupId>io.github.martinhickson</groupId>
 						<artifactId>seam-docbook-xslt</artifactId>
 						<version>${seam.docbook.version}</version>
 						<exclusions>
@@ -91,7 +91,7 @@
 						</exclusions>
 					</dependency>
 					<dependency>
-						<groupId>org.jboss.seam</groupId>
+						<groupId>io.github.martinhickson</groupId>
 						<artifactId>seam-jdocbook-style</artifactId>
 						<version>${seam.docbook.version}</version>
 						<type>jdocbook-style</type>
