@@ -652,7 +652,7 @@
       <dependency>
         <groupId>org.jboss.el</groupId>
         <artifactId>jboss-el</artifactId>
-        <version>1.0_02.jakarta.bravura.2-SNAPSHOT</version>
+        <version>1.0_02.jakarta.bravura.2</version>
       </dependency>
 
       <dependency>
