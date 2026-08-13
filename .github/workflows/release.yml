@@ -307,11 +307,9 @@ jobs:
       if: ${{ github.event.inputs.deploy_to_maven_central == 'true' }}
       run: |
         # Publish only the library modules consumers need (skip ITs / examples reactor noise)
-        # Quote -pl so bash does not treat ! as history expansion. Exclude reactor
-        # siblings pulled in via -am (cdk plugin / legacy javax modules).
+        # Select by artifactId only (no -am) so cdk-helper / legacy modules stay out.
         mvn deploy -ntp -Pcentral-release -DskipTests \
-          -pl 'bom,jboss-seam-jakarta,jboss-seam-ui-jakarta,jboss-seam-pdf-jakarta,jboss-seam-rss-jakarta,!seam-cdk-helper,!jboss-seam,!jboss-seam-ui,!jboss-seam-pdf,!jboss-seam-rss,!jboss-seam-debug,!jboss-seam-gen,!jboss-seam-ioc,!jboss-seam-mail,!jboss-seam-remoting,!jboss-seam-resteasy,!jboss-seam-excel,!jboss-seam-flex,!jboss-seam-wicket,!seam-integration-tests' \
-          -am \
+          -pl ':seam-parent,:bom,:jboss-seam-jakarta,:jboss-seam-ui-jakarta,:jboss-seam-pdf-jakarta,:jboss-seam-rss-jakarta' \
           -Dsortpom.skip=true \
           -Dgpg.passphrase="${MAVEN_CENTRAL_GPG_PASSPHRASE}"
       env:
