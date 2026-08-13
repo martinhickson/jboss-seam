@@ -26,30 +26,30 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam</artifactId>
             <type>ejb</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam-mail</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam-ui</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam-debug</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam-pdf</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-        	<groupId>org.jboss.seam</groupId>
+        	<groupId>io.github.martinhickson</groupId>
         	<artifactId>seam-excel</artifactId>
         	<scope>runtime</scope>
         </dependency>

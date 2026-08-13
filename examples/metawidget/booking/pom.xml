@@ -4,7 +4,7 @@
     <groupId>org.jboss.seam.examples.metawidget</groupId>
     <artifactId>booking</artifactId>
     <parent>
-        <groupId>org.jboss.seam</groupId>
+        <groupId>io.github.martinhickson</groupId>
         <artifactId>examples</artifactId>
         <version>2.3.1.Final</version>
         <relativePath>../../pom.xml</relativePath>

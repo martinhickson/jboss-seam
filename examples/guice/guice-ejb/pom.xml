@@ -15,12 +15,12 @@
     
     <dependencies>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam</artifactId>
             <type>ejb</type>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam-ioc</artifactId>
         </dependency>
         <dependency>

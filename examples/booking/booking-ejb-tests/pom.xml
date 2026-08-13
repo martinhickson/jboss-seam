@@ -83,7 +83,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>jboss-seam-jakarta</artifactId>
             <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
             <exclusions>
@@ -98,7 +98,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>jboss-seam-ui-jakarta</artifactId>
             <version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
         </dependency>

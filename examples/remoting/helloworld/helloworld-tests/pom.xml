@@ -26,7 +26,7 @@
             <artifactId>selenium-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>functional-tests</artifactId>
             <scope>test</scope>
         </dependency>

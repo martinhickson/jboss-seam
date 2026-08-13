@@ -35,21 +35,21 @@
          <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>org.jboss.seam</groupId>
+         <groupId>io.github.martinhickson</groupId>
          <artifactId>seam-ui</artifactId>
          <exclusions>
             <exclusion>
-               <groupId>org.jboss.seam</groupId>
+               <groupId>io.github.martinhickson</groupId>
                <artifactId>seam</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam-debug</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>org.jboss.seam</groupId>
+                    <groupId>io.github.martinhickson</groupId>
                     <artifactId>seam</artifactId>
                 </exclusion>
             </exclusions>

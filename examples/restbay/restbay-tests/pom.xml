@@ -14,13 +14,13 @@
     
     <dependencies>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam</artifactId>
             <type>ejb</type>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>seam-resteasy</artifactId>
         </dependency>
         <dependency>
@@ -37,7 +37,7 @@
             <artifactId>selenium-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>functional-tests</artifactId>
             <scope>test</scope>
         </dependency>

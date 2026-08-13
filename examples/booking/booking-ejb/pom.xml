@@ -41,7 +41,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam</groupId>
+            <groupId>io.github.martinhickson</groupId>
             <artifactId>jboss-seam-jakarta</artifactId>
             <scope>provided</scope>
         </dependency>

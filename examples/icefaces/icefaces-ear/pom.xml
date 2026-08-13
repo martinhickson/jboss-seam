@@ -27,7 +27,7 @@
             <type>ejb</type>
         </dependency>
         <dependency>
-           <groupId>org.jboss.seam</groupId>
+           <groupId>io.github.martinhickson</groupId>
            <artifactId>seam</artifactId>
            <scope>runtime</scope>
            <type>ejb</type>
@@ -71,7 +71,7 @@
                             <bundleFileName>icefaces-ejb.jar</bundleFileName>
                         </ejbModule>
                        <ejbModule>
-                          <groupId>org.jboss.seam</groupId>
+                          <groupId>io.github.martinhickson</groupId>
                           <artifactId>seam</artifactId>
                           <bundleFileName>jboss-seam.jar</bundleFileName>
                        </ejbModule>

@@ -4,7 +4,7 @@
     <groupId>org.jboss.seam.examples</groupId>
     <artifactId>jee6</artifactId>
     <parent>
-        <groupId>org.jboss.seam</groupId>
+        <groupId>io.github.martinhickson</groupId>
         <artifactId>examples</artifactId>
         <version>2.3.1.Final</version>
         <relativePath>../pom.xml</relativePath>

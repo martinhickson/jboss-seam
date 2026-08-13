@@ -4,11 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       release_version:
-        description: 'Release version (e.g., 2.4.1.bravura.1)'
+        description: 'Release version (e.g., 2.4.1-bravura-31)'
         required: true
         type: string
       run_integration_tests:
         description: 'Run Seam WildFly integration tests'
+        required: false
+        default: false
+        type: boolean
+      deploy_to_maven_central:
+        description: 'Also publish to Maven Central (io.github.martinhickson)'
         required: false
         default: false
         type: boolean
@@ -31,54 +36,57 @@ jobs:
       RELEASE_VERSION: ${{ github.event.inputs.release_version }}
       BRANCH_NAME: v${{ github.event.inputs.release_version }}
       TAG_NAME: v${{ github.event.inputs.release_version }}-release
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
         token: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: Configure Git
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-    
+
     - name: Create release branch
       run: |
         git checkout -b ${{ env.BRANCH_NAME }}
         echo "Created branch: ${{ env.BRANCH_NAME }}"
-    
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-    
+
     - name: Update versions in all POM files
       run: |
         # Set the project version (updates root pom.xml and all parent references in child POMs)
         mvn versions:set -DnewVersion=${RELEASE_VERSION} -DprocessAllModules -DgenerateBackupPoms=false
-        
+
         # Update the version.seam property in root pom.xml using sed (simple and reliable)
         sed -i "s|<version.seam>.*</version.seam>|<version.seam>${RELEASE_VERSION}</version.seam>|" pom.xml
-        
+
         echo "Version update completed"
       env:
         RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
-    
+
     - name: Verify version updates
       run: |
         echo "Verifying version updates..."
         echo "Root POM version:"
         grep -A 2 "<artifactId>seam-parent</artifactId>" pom.xml | grep "<version>" || grep -A 1 "<artifactId>seam-parent</artifactId>" pom.xml
         echo ""
+        echo "GroupId:"
+        grep -m1 "<groupId>" pom.xml
+        echo ""
         echo "Version.seam property:"
         grep "version.seam" pom.xml | head -1
         echo ""
         echo "Sample child POM parent version:"
         grep -A 2 "seam-parent" jboss-seam-jakarta/pom.xml | grep "<version>" || grep -A 1 "seam-parent" jboss-seam-jakarta/pom.xml
-    
+
     - name: Commit and push version changes
       run: |
         git add -A
@@ -88,7 +96,7 @@ jobs:
           git commit -m "Release version ${RELEASE_VERSION}"
           git push origin "${BRANCH_NAME}"
         fi
-    
+
     - name: Cache Maven dependencies
       uses: actions/cache@v3
       with:
@@ -227,7 +235,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_ACTOR: ${{ github.actor }}
-    
+
     - name: Build all modules
       run: mvn clean install -ntp -DskipTests
       env:
@@ -241,19 +249,71 @@ jobs:
           -DfailIfNoTests=false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: Create and push tag
       run: |
         git tag -a "${TAG_NAME}" -m "Release ${RELEASE_VERSION}"
         git push origin "${TAG_NAME}"
-    
+
     - name: Publish to GitHub Packages
       run: |
         mvn deploy -ntp -DskipTests \
           -DaltDeploymentRepository=github-packages::default::https://maven.pkg.github.com/${{ github.repository }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
+    - name: Validate Maven Central configuration
+      if: ${{ github.event.inputs.deploy_to_maven_central == 'true' }}
+      env:
+        MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        MAVEN_CENTRAL_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_CENTRAL_GPG_PRIVATE_KEY }}
+      run: |
+        if [ -z "$MAVEN_CENTRAL_USERNAME" ] || [ -z "$MAVEN_CENTRAL_PASSWORD" ] || [ -z "$MAVEN_CENTRAL_GPG_PRIVATE_KEY" ]; then
+          echo "::error::Maven Central publishing is not configured for this repository."
+          echo "Add secrets: MAVEN_CENTRAL_USERNAME, MAVEN_CENTRAL_PASSWORD, MAVEN_CENTRAL_GPG_PRIVATE_KEY, MAVEN_CENTRAL_GPG_PASSPHRASE"
+          exit 1
+        fi
+
+    - name: Configure Maven Central credentials
+      if: ${{ github.event.inputs.deploy_to_maven_central == 'true' }}
+      env:
+        MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      run: |
+        sed -i "/<\/servers>/i\\
+            <server>\\
+              <id>central</id>\\
+              <username>${MAVEN_CENTRAL_USERNAME}</username>\\
+              <password>${MAVEN_CENTRAL_PASSWORD}</password>\\
+            </server>" ~/.m2/settings.xml
+
+    - name: Import GPG signing key
+      if: ${{ github.event.inputs.deploy_to_maven_central == 'true' }}
+      env:
+        MAVEN_CENTRAL_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_CENTRAL_GPG_PRIVATE_KEY }}
+      run: |
+        echo "${MAVEN_CENTRAL_GPG_PRIVATE_KEY}" | gpg --batch --import --pinentry-mode loopback
+
+    - name: Prepare POMs for Maven Central
+      if: ${{ github.event.inputs.deploy_to_maven_central == 'true' }}
+      run: |
+        SCM_TAG="v${{ github.event.inputs.release_version }}-release"
+        echo "Setting SCM tag to ${SCM_TAG}"
+        mvn -ntp versions:set-scm-tag -DnewTag="${SCM_TAG}" -DgenerateBackupPoms=false || \
+          sed -i "s|<tag>.*</tag>|<tag>${SCM_TAG}</tag>|" pom.xml
+
+    - name: Publish to Maven Central
+      if: ${{ github.event.inputs.deploy_to_maven_central == 'true' }}
+      run: |
+        # Publish only the library modules consumers need (skip ITs / examples reactor noise)
+        mvn deploy -ntp -Pcentral-release -DskipTests \
+          -pl jboss-seam-jakarta,jboss-seam-ui-jakarta,jboss-seam-pdf-jakarta,jboss-seam-rss-jakarta,bom,seam-cdk-helper \
+          -am \
+          -Dgpg.passphrase="${MAVEN_CENTRAL_GPG_PASSPHRASE}"
+      env:
+        MAVEN_CENTRAL_GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_GPG_PASSPHRASE }}
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -264,19 +324,40 @@ jobs:
           **/target/*.ear
         retention-days: 30
         if-no-files-found: warn
-    
+
+    - name: Prepare GitHub release notes
+      run: |
+        {
+          echo "RELEASE_BODY<<EOF"
+          echo "Release ${RELEASE_VERSION}"
+          echo ""
+          echo "Maven coordinates: \`io.github.martinhickson\` (same namespace as webstart-maven-plugin)"
+          echo ""
+          echo "This release includes:"
+          echo "- Maven artifacts published to GitHub Packages"
+          if [ "${{ github.event.inputs.deploy_to_maven_central }}" = "true" ]; then
+            echo "- Maven artifacts published to Maven Central"
+          fi
+          echo "- Release branch: ${BRANCH_NAME}"
+          echo "- Tag: ${TAG_NAME}"
+          echo ""
+          echo "Install with:"
+          echo '```xml'
+          echo "<dependency>"
+          echo "  <groupId>io.github.martinhickson</groupId>"
+          echo "  <artifactId>jboss-seam-jakarta</artifactId>"
+          echo "  <version>${RELEASE_VERSION}</version>"
+          echo "</dependency>"
+          echo '```'
+          echo "EOF"
+        } >> "${GITHUB_ENV}"
+
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ env.TAG_NAME }}
         name: Release ${{ env.RELEASE_VERSION }}
-        body: |
-          Release ${{ env.RELEASE_VERSION }}
-          
-          This release includes:
-          - All Maven artifacts published to GitHub Packages
-          - Release branch: ${{ env.BRANCH_NAME }}
-          - Tag: ${{ env.TAG_NAME }}
+        body: ${{ env.RELEASE_BODY }}
         draft: false
         prerelease: false
         files: |
@@ -285,4 +366,3 @@ jobs:
           **/target/*.ear
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
