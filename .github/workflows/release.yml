@@ -12,11 +12,26 @@ on:
         required: false
         default: false
         type: boolean
+      deploy_to_github_packages:
+        description: 'Publish to GitHub Packages (original groupId by default)'
+        required: false
+        default: true
+        type: boolean
+      packages_group_id:
+        description: 'Maven groupId for GitHub Packages (original Seam coordinates)'
+        required: false
+        default: 'org.jboss.seam'
+        type: string
       deploy_to_maven_central:
         description: 'Also publish to Maven Central (io.github.martinhickson)'
         required: false
         default: false
         type: boolean
+      central_group_id:
+        description: 'Maven groupId for Maven Central (verified namespace)'
+        required: false
+        default: 'io.github.martinhickson'
+        type: string
 
 permissions:
   contents: write
@@ -34,6 +49,8 @@ jobs:
         --add-opens=java.base/java.io=ALL-UNNAMED
         --add-opens=java.base/java.security=ALL-UNNAMED
       RELEASE_VERSION: ${{ github.event.inputs.release_version }}
+      PACKAGES_GROUP_ID: ${{ github.event.inputs.packages_group_id }}
+      CENTRAL_GROUP_ID: ${{ github.event.inputs.central_group_id }}
       BRANCH_NAME: v${{ github.event.inputs.release_version }}
       TAG_NAME: v${{ github.event.inputs.release_version }}-release
 
@@ -51,8 +68,21 @@ jobs:
 
     - name: Create release branch
       run: |
-        git checkout -b ${{ env.BRANCH_NAME }}
-        echo "Created branch: ${{ env.BRANCH_NAME }}"
+        git fetch origin --tags
+        git checkout -B "${BRANCH_NAME}"
+        if git ls-remote --heads origin "${BRANCH_NAME}" | grep -q .; then
+          echo "Release branch origin/${BRANCH_NAME} already exists; will not push it"
+          echo "PUSH_RELEASE_BRANCH=false" >> "${GITHUB_ENV}"
+        else
+          echo "Created branch: ${BRANCH_NAME}"
+          echo "PUSH_RELEASE_BRANCH=true" >> "${GITHUB_ENV}"
+        fi
+        if git ls-remote --tags origin "refs/tags/${TAG_NAME}" | grep -q .; then
+          echo "Tag ${TAG_NAME} already exists; will not recreate it"
+          echo "PUSH_RELEASE_TAG=false" >> "${GITHUB_ENV}"
+        else
+          echo "PUSH_RELEASE_TAG=true" >> "${GITHUB_ENV}"
+        fi
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
@@ -84,8 +114,11 @@ jobs:
         echo "Root POM version:"
         grep -A 2 "<artifactId>seam-parent</artifactId>" pom.xml | grep "<version>" || grep -A 1 "<artifactId>seam-parent</artifactId>" pom.xml
         echo ""
-        echo "GroupId:"
-        grep -m1 "<groupId>" pom.xml
+        echo "GroupId in tree (source / Central default):"
+        chmod +x .github/scripts/rewrite-group-id.sh
+        .github/scripts/rewrite-group-id.sh --print pom.xml
+        echo "GitHub Packages groupId: ${PACKAGES_GROUP_ID}"
+        echo "Maven Central groupId: ${CENTRAL_GROUP_ID}"
         echo ""
         echo "Version.seam property:"
         grep "version.seam" pom.xml | head -1
@@ -100,7 +133,11 @@ jobs:
           echo "No changes to commit"
         else
           git commit -m "Release version ${RELEASE_VERSION}"
-          git push origin "${BRANCH_NAME}"
+          if [ "${PUSH_RELEASE_BRANCH}" = "true" ]; then
+            git push origin "${BRANCH_NAME}"
+          else
+            echo "Skipping push of ${BRANCH_NAME} because it already exists (packages republish)"
+          fi
         fi
 
     - name: Cache Maven dependencies
@@ -258,15 +295,45 @@ jobs:
 
     - name: Create and push tag
       run: |
-        git tag -a "${TAG_NAME}" -m "Release ${RELEASE_VERSION}"
-        git push origin "${TAG_NAME}"
+        if [ "${PUSH_RELEASE_TAG}" = "false" ]; then
+          echo "Skipping tag ${TAG_NAME}; already on origin"
+        else
+          git tag -a "${TAG_NAME}" -m "Release ${RELEASE_VERSION}"
+          git push origin "${TAG_NAME}"
+        fi
+
+    - name: Rewrite groupId for GitHub Packages
+      if: ${{ github.event.inputs.deploy_to_github_packages == 'true' }}
+      run: |
+        chmod +x .github/scripts/rewrite-group-id.sh
+        SOURCE_GROUP="$(.github/scripts/rewrite-group-id.sh --print pom.xml)"
+        echo "SOURCE_GROUP=${SOURCE_GROUP}" >> "${GITHUB_ENV}"
+        echo "Tree groupId=${SOURCE_GROUP}; Packages groupId=${PACKAGES_GROUP_ID}"
+        .github/scripts/rewrite-group-id.sh "${SOURCE_GROUP}" "${PACKAGES_GROUP_ID}"
 
     - name: Publish to GitHub Packages
+      if: ${{ github.event.inputs.deploy_to_github_packages == 'true' }}
       run: |
         mvn deploy -ntp -DskipTests \
           -DaltDeploymentRepository=github-packages::default::https://maven.pkg.github.com/${{ github.repository }}
+        echo "Published ${PACKAGES_GROUP_ID}:*:${RELEASE_VERSION} to GitHub Packages"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Restore groupId for Maven Central
+      if: ${{ github.event.inputs.deploy_to_github_packages == 'true' && github.event.inputs.deploy_to_maven_central == 'true' }}
+      run: |
+        CURRENT_GROUP="$(.github/scripts/rewrite-group-id.sh --print pom.xml)"
+        echo "Restoring ${CURRENT_GROUP} -> ${CENTRAL_GROUP_ID} before Central publish"
+        .github/scripts/rewrite-group-id.sh "${CURRENT_GROUP}" "${CENTRAL_GROUP_ID}"
+
+    - name: Apply Central groupId
+      if: ${{ github.event.inputs.deploy_to_maven_central == 'true' && github.event.inputs.deploy_to_github_packages != 'true' }}
+      run: |
+        chmod +x .github/scripts/rewrite-group-id.sh
+        SOURCE_GROUP="$(.github/scripts/rewrite-group-id.sh --print pom.xml)"
+        echo "SOURCE_GROUP=${SOURCE_GROUP}" >> "${GITHUB_ENV}"
+        .github/scripts/rewrite-group-id.sh "${SOURCE_GROUP}" "${CENTRAL_GROUP_ID}"
 
     - name: Validate Maven Central configuration
       if: ${{ github.event.inputs.deploy_to_maven_central == 'true' }}
@@ -338,24 +405,45 @@ jobs:
           echo "RELEASE_BODY<<EOF"
           echo "Release ${RELEASE_VERSION}"
           echo ""
-          echo "Maven coordinates: \`io.github.martinhickson\` (same namespace as webstart-maven-plugin)"
+          echo "Same version on both destinations; groupId is chosen per repository:"
+          if [ "${{ github.event.inputs.deploy_to_github_packages }}" = "true" ]; then
+            echo "- GitHub Packages: \`${PACKAGES_GROUP_ID}\` (original Seam groupId)"
+          fi
+          if [ "${{ github.event.inputs.deploy_to_maven_central }}" = "true" ]; then
+            echo "- Maven Central: \`${CENTRAL_GROUP_ID}\` (verified namespace)"
+          fi
           echo ""
           echo "This release includes:"
-          echo "- Maven artifacts published to GitHub Packages"
+          if [ "${{ github.event.inputs.deploy_to_github_packages }}" = "true" ]; then
+            echo "- Maven artifacts published to GitHub Packages"
+          fi
           if [ "${{ github.event.inputs.deploy_to_maven_central }}" = "true" ]; then
             echo "- Maven artifacts published to Maven Central"
           fi
           echo "- Release branch: ${BRANCH_NAME}"
           echo "- Tag: ${TAG_NAME}"
           echo ""
-          echo "Install with:"
-          echo '```xml'
-          echo "<dependency>"
-          echo "  <groupId>io.github.martinhickson</groupId>"
-          echo "  <artifactId>jboss-seam-jakarta</artifactId>"
-          echo "  <version>${RELEASE_VERSION}</version>"
-          echo "</dependency>"
-          echo '```'
+          if [ "${{ github.event.inputs.deploy_to_maven_central }}" = "true" ]; then
+            echo "Maven Central:"
+            echo '```xml'
+            echo "<dependency>"
+            echo "  <groupId>${CENTRAL_GROUP_ID}</groupId>"
+            echo "  <artifactId>jboss-seam-jakarta</artifactId>"
+            echo "  <version>${RELEASE_VERSION}</version>"
+            echo "</dependency>"
+            echo '```'
+            echo ""
+          fi
+          if [ "${{ github.event.inputs.deploy_to_github_packages }}" = "true" ]; then
+            echo "GitHub Packages (original groupId):"
+            echo '```xml'
+            echo "<dependency>"
+            echo "  <groupId>${PACKAGES_GROUP_ID}</groupId>"
+            echo "  <artifactId>jboss-seam-jakarta</artifactId>"
+            echo "  <version>${RELEASE_VERSION}</version>"
+            echo "</dependency>"
+            echo '```'
+          fi
           echo "EOF"
         } >> "${GITHUB_ENV}"
 
