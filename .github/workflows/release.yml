@@ -314,9 +314,37 @@ jobs:
     - name: Publish to GitHub Packages
       if: ${{ github.event.inputs.deploy_to_github_packages == 'true' }}
       run: |
-        mvn deploy -ntp -DskipTests \
-          -DaltDeploymentRepository=github-packages::default::https://maven.pkg.github.com/${{ github.repository }}
-        echo "Published ${PACKAGES_GROUP_ID}:*:${RELEASE_VERSION} to GitHub Packages"
+        set -euo pipefail
+        # Consumer modules only. seam-cdk-helper stays io.github.martinhickson
+        # and 409s if that version was already uploaded.
+        modules=(
+          seam-parent
+          bom
+          seam
+          jboss-seam-jakarta
+          jboss-seam-ui-jakarta
+          seam-debug
+          seam-gen
+          jboss-seam-pdf-jakarta
+          jboss-seam-rss-jakarta
+        )
+        repo="https://maven.pkg.github.com/${GITHUB_REPOSITORY}"
+        for artifact in "${modules[@]}"; do
+          echo "::group::Deploy ${PACKAGES_GROUP_ID}:${artifact}:${RELEASE_VERSION}"
+          log="/tmp/deploy-${artifact}.log"
+          if mvn deploy -ntp -DskipTests -Dsortpom.skip=true -pl ":${artifact}" \
+              -DaltDeploymentRepository="github-packages::${repo}" | tee "${log}"; then
+            echo "Published ${PACKAGES_GROUP_ID}:${artifact}:${RELEASE_VERSION}"
+          else
+            if grep -q 'status code: 409' "${log}"; then
+              echo "Already on GitHub Packages (409): ${PACKAGES_GROUP_ID}:${artifact}:${RELEASE_VERSION}"
+            else
+              echo "::error::Deploy failed for ${artifact}"
+              exit 1
+            fi
+          fi
+          echo "::endgroup::"
+        done
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
