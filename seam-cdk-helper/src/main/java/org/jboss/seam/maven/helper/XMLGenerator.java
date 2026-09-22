@@ -66,18 +66,18 @@ public class XMLGenerator
       Node componentNode = tagNode.appendChild(component);
 
       Element description = destDocument.createElement("description");
-      String descriptionContent = xpath.evaluate("//" + converterOrValidator + "/description/text()", srcDocument);
-      description.setTextContent(descriptionContent);
+      String descriptionContent = xpath.evaluate("//*[local-name()='" + converterOrValidator + "']/*[local-name()='description']", srcDocument);
+      description.setTextContent(descriptionContent == null ? "" : descriptionContent.trim());
 
       componentNode.appendChild(description);
 
       Element componentType = destDocument.createElement(converterOrValidator + "-id");
-      String componentTypeContent = xpath.evaluate("//" + converterOrValidator + "-id/text()", srcDocument);
-      componentType.setTextContent(componentTypeContent);
+      String componentTypeContent = xpath.evaluate("//*[local-name()='" + converterOrValidator + "-id']", srcDocument);
+      componentType.setTextContent(componentTypeContent == null ? "" : componentTypeContent.trim());
 
       componentNode.appendChild(componentType);
 
-      NodeList propertyNodes = (NodeList) xpath.evaluate("//property", srcDocument, XPathConstants.NODESET);
+      NodeList propertyNodes = (NodeList) xpath.evaluate("//*[local-name()='property']", srcDocument, XPathConstants.NODESET);
 
       for (int i = 0; i < propertyNodes.getLength(); i++)
       {
@@ -131,16 +131,31 @@ public class XMLGenerator
 
    public void updateFile(File outXML, List<Element> tags) throws Exception
    {
+      if (tags == null || tags.isEmpty())
+      {
+         log.info("No converter/validator tags to append to " + outXML);
+         return;
+      }
+      if (!outXML.isFile())
+      {
+         throw new IOException("CDK taglib not found: " + outXML.getAbsolutePath());
+      }
+
       DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
       Document doc = docBuilder.parse(outXML);
+      Element root = doc.getDocumentElement();
+      if (root == null)
+      {
+         throw new IOException("CDK taglib has no document element: " + outXML.getAbsolutePath());
+      }
+      String ns = root.getNamespaceURI();
 
       for (Element tag : tags)
       {
          Comment comment = doc.createComment("Converter added by seam-cdk-helper plugin");
-         Node firstchild = doc.getFirstChild();
-         firstchild.appendChild(comment);
-         firstchild.appendChild(doc.importNode(tag, true));
+         root.appendChild(comment);
+         root.appendChild(importWithNamespace(doc, tag, ns));
       }
 
       // ///////////////
@@ -179,5 +194,20 @@ public class XMLGenerator
       {
          throw new RuntimeException("DOM 3.0 LS and/or DOM 2.0 Core not supported.");
       }
+   }
+
+   private static Node importWithNamespace(Document doc, Node src, String ns)
+   {
+      if (src.getNodeType() != Node.ELEMENT_NODE)
+      {
+         return doc.importNode(src, true);
+      }
+      Element copy = ns == null ? doc.createElement(src.getNodeName()) : doc.createElementNS(ns, src.getNodeName());
+      NodeList children = src.getChildNodes();
+      for (int i = 0; i < children.getLength(); i++)
+      {
+         copy.appendChild(importWithNamespace(doc, children.item(i), ns));
+      }
+      return copy;
    }
 }

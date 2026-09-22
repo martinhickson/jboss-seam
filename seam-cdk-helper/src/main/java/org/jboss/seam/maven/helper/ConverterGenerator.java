@@ -3,54 +3,94 @@ package org.jboss.seam.maven.helper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.Element;
 
 /**
- * 
- * Generates JSF taglib descriptor for all FacesConverter annotated classes
- * 
- * @author Rafael Benevides <https://community.jboss.org/people/rafabene>
- * @author Marek Novotny <https://community.jboss.org/people/manaRH>
+ * Generates Facelets tags for Seam converters.
  *
+ * RichFaces CDK does not emit {@code <tag>} entries for faces-config
+ * {@code <converter>} fragments (JBSEAM-4955 / RF-12271). The Jakarta UI
+ * module also keeps converter Java under {@code src/generated/jakarta}, so a
+ * {@code @FacesConverter} scan of {@code src/main/java} finds nothing.
+ * Converter XML in {@code src/main/config/component} is the source of truth
+ * for tag names, matching how {@link ValidatorGenerator} works.
  */
 public class ConverterGenerator
 {
 
-   private List<File> converterSources = new ArrayList<File>();
-   private Log log;
-   private String sourceDirectory;
-   private String targetDirectory;
+   private final List<File> converterConfigs = new ArrayList<File>();
+   private final List<File> converterSources = new ArrayList<File>();
+   private final Log log;
+   private final String sourceDirectory;
+   private final File componentConfigDirectory;
+   private final String targetDirectory;
 
-   public ConverterGenerator(String sourceDirectory, String targetDirectory, Log log)
+   public ConverterGenerator(String sourceDirectory, File componentConfigDirectory, String targetDirectory, Log log)
    {
       this.sourceDirectory = sourceDirectory;
+      this.componentConfigDirectory = componentConfigDirectory;
       this.targetDirectory = targetDirectory;
       this.log = log;
    }
 
    public void addFile(File file) throws FileNotFoundException
    {
-      if (fileIsConverterSource(file))
+      if (fileIsConverterConfig(file))
+      {
+         converterConfigs.add(file);
+      }
+      else if (fileIsConverterSource(file))
       {
          converterSources.add(file);
       }
    }
 
+   private boolean fileIsConverterConfig(File file) throws FileNotFoundException
+   {
+      if (!file.getName().endsWith(".xml"))
+      {
+         return false;
+      }
+      Scanner scanner = new Scanner(file);
+      try
+      {
+         if (scanner.findWithinHorizon("<converter>", 0) != null)
+         {
+            log.info("Identified " + file.getName() + " as Converter XML");
+            return true;
+         }
+      }
+      finally
+      {
+         scanner.close();
+      }
+      return false;
+   }
+
    private boolean fileIsConverterSource(File file) throws FileNotFoundException
    {
-      if (file.getName().endsWith(".java"))
+      if (!file.getName().endsWith(".java"))
       {
-         Scanner scanner = new Scanner(file);
-         String find = scanner.findWithinHorizon("@FacesConverter", 0);
-         if (find != null)
+         return false;
+      }
+      Scanner scanner = new Scanner(file);
+      try
+      {
+         if (scanner.findWithinHorizon("@FacesConverter", 0) != null)
          {
             log.info("Identified " + file.getName() + " as Converter source code");
             return true;
          }
+      }
+      finally
+      {
+         scanner.close();
       }
       return false;
    }
@@ -60,23 +100,39 @@ public class ConverterGenerator
       log.info("Generating Converters");
       XMLGenerator xmlGenerator = new XMLGenerator(log);
       File outXML = new File(targetDirectory + "/generated-sources/main/resources/META-INF", "s.taglib.xml");
-      List<Element> tagsToAdd = new ArrayList<Element>();
+      Map<String, File> configsByTag = new LinkedHashMap<String, File>();
+
+      for (File xml : converterConfigs)
+      {
+         configsByTag.put(tagNameForConfig(xml), xml);
+      }
+
       for (File source : converterSources)
       {
          String classFromSource = getClassNameFromSource(source);
          File facesConfigXML = findCorrespondentConfig(classFromSource);
          if (facesConfigXML != null)
          {
-            Element tag = xmlGenerator.getFaceletsTagElementFromFacesconfig(facesConfigXML, facesConfigXML.getName().replace(".xml", ""), "converter");
-            tagsToAdd.add(tag);
+            configsByTag.put(tagNameForConfig(facesConfigXML), facesConfigXML);
          }
          else
          {
-            log.debug("No component config found for converter " + classFromSource);
+            log.warn("No component config found for converter " + classFromSource);
          }
       }
-      xmlGenerator.updateFile(outXML, tagsToAdd);
 
+      List<Element> tagsToAdd = new ArrayList<Element>();
+      for (Map.Entry<String, File> entry : configsByTag.entrySet())
+      {
+         tagsToAdd.add(xmlGenerator.getFaceletsTagElementFromFacesconfig(entry.getValue(), entry.getKey(), "converter"));
+      }
+      log.info("Adding " + tagsToAdd.size() + " converter tags to " + outXML.getName());
+      xmlGenerator.updateFile(outXML, tagsToAdd);
+   }
+
+   private static String tagNameForConfig(File xml)
+   {
+      return xml.getName().replace(".xml", "");
    }
 
    private String getClassNameFromSource(File source) throws FileNotFoundException
@@ -110,20 +166,35 @@ public class ConverterGenerator
 
    private File findCorrespondentConfig(String classFromSource) throws FileNotFoundException
    {
-      String whereToFind = sourceDirectory.replace("/java", "/config/component");
-      log.debug("Searching correspondent config for " + classFromSource + " in " + whereToFind);
-      File componentFolder = new File(whereToFind);
-      for (File f : componentFolder.listFiles())
+      File componentFolder = componentConfigDirectory;
+      if (componentFolder == null || !componentFolder.isDirectory())
       {
-         // Search only files
-         if (f.isFile())
+         String whereToFind = sourceDirectory.replace("/java", "/config/component");
+         componentFolder = new File(whereToFind);
+      }
+      log.debug("Searching correspondent config for " + classFromSource + " in " + componentFolder);
+      File[] files = componentFolder.listFiles();
+      if (files == null)
+      {
+         return null;
+      }
+      for (File f : files)
+      {
+         if (!f.isFile())
          {
-            Scanner scanner = new Scanner(f);
-            String find = scanner.findWithinHorizon(classFromSource, 0);
-            if (find != null)
+            continue;
+         }
+         Scanner scanner = new Scanner(f);
+         try
+         {
+            if (scanner.findWithinHorizon(classFromSource, 0) != null)
             {
                return f;
             }
+         }
+         finally
+         {
+            scanner.close();
          }
       }
       return null;
