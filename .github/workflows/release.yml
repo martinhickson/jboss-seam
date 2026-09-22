@@ -23,9 +23,9 @@ on:
         default: 'org.jboss.seam'
         type: string
       deploy_to_maven_central:
-        description: 'Also publish to Maven Central (io.github.martinhickson)'
+        description: 'Publish to Maven Central (io.github.martinhickson)'
         required: false
-        default: false
+        default: true
         type: boolean
       central_group_id:
         description: 'Maven groupId for Maven Central (verified namespace)'

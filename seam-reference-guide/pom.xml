@@ -2,11 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>seam-parent</artifactId>
-<<<<<<< HEAD
-		<groupId>org.jboss.seam</groupId>
-=======
 		<groupId>io.github.martinhickson</groupId>
->>>>>>> 711b8c5ea (Publish Seam Jakarta modules under io.github.martinhickson for Maven Central.)
 		<version>2.3.1.jakarta.bravura.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>

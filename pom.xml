@@ -110,10 +110,7 @@
 
     <!-- Version string properties -->
     <version.seam>2.3.1.jakarta.bravura.1-SNAPSHOT</version.seam>
-<<<<<<< HEAD
-=======
     <central.publishing.plugin.version>0.9.0</central.publishing.plugin.version>
->>>>>>> 711b8c5ea (Publish Seam Jakarta modules under io.github.martinhickson for Maven Central.)
     <version.arquillian_core>1.8.0.Final</version.arquillian_core>
     <version.wildfly.arquillian>5.0.1.Final</version.wildfly.arquillian>
     <version.wildfly36>36.0.0.Final</version.wildfly36>
