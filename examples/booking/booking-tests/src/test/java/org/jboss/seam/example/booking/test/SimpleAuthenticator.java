@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Logger;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Out;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.example.booking.User;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.security.Credentials;
@@ -40,6 +41,17 @@ public class SimpleAuthenticator {
     public boolean authenticate() {
         log.info("Authenticating user: #0", credentials.getUsername());
 
+        if (Contexts.isSessionContextActive()) {
+            Object pending = Contexts.getSessionContext().get(HotelOidcServlet.OIDC_SUBJECT);
+            if (pending instanceof String && pending.equals(credentials.getUsername())) {
+                Contexts.getSessionContext().remove(HotelOidcServlet.OIDC_SUBJECT);
+                this.user = userForOidc((String) pending);
+                identity.addRole("user");
+                log.info("Accepted identity provider subject: #0", pending);
+                return true;
+            }
+        }
+
         try {
             User user = entityManager.createQuery(
                             "select u from User u where u.username = :username and u.password = :password",
@@ -57,5 +69,18 @@ public class SimpleAuthenticator {
         }
 
         return false;
+    }
+
+    private User userForOidc(String username) {
+        try {
+            return entityManager.createQuery(
+                            "select u from User u where u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            User created = new User(username, Long.toHexString(System.nanoTime()), username);
+            entityManager.persist(created);
+            return created;
+        }
     }
 }

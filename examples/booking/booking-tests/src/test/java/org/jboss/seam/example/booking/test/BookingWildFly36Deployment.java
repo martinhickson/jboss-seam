@@ -22,6 +22,7 @@ import org.jboss.seam.example.booking.demo.SeamUiShowcaseBean;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
@@ -49,6 +50,7 @@ public final class BookingWildFly36Deployment {
                         BookingSessionComponentProbe.class,
                         BookingSeamSessionProbeServlet.class,
                         BookingLoginProbeServlet.class,
+                        HotelOidcServlet.class,
                         SeamUiShowcaseBean.class,
                         MapCacheProvider.class)
                 .addAsLibraries(Maven.resolver()
@@ -70,7 +72,7 @@ public final class BookingWildFly36Deployment {
                 .addAsResource("META-INF/services/jakarta.faces.application.ApplicationFactory")
                 .addAsResource(new ByteArrayAsset(createJandexIndex()), "META-INF/jandex.idx")
                 .addAsWebInfResource("WEB-INF/components.xml", "components.xml")
-                .addAsWebInfResource("WEB-INF/web.xml", "web.xml")
+                .addAsWebInfResource(new StringAsset(webXml()), "web.xml")
                 .addAsWebInfResource("WEB-INF/faces-config.xml", "faces-config.xml")
                 .addAsWebInfResource("WEB-INF/jboss-web.xml", "jboss-web.xml")
                 .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml")
@@ -78,6 +80,23 @@ public final class BookingWildFly36Deployment {
 
         addWebappResources(archive);
         return archive;
+    }
+
+    private static String webXml() throws IOException {
+        String webXml;
+        try (InputStream in = BookingWildFly36Deployment.class.getClassLoader()
+                .getResourceAsStream("WEB-INF/web.xml")) {
+            if (in == null) {
+                throw new IllegalStateException("Missing WEB-INF/web.xml");
+            }
+            webXml = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+        if (Boolean.getBoolean("seam.booking.oidc.enabled")) {
+            webXml = webXml.replace(
+                    "<param-name>oidc.enabled</param-name>\n        <param-value>false</param-value>",
+                    "<param-name>oidc.enabled</param-name>\n        <param-value>true</param-value>");
+        }
+        return webXml;
     }
 
     private static void addWebappResources(WebArchive archive) throws IOException {
@@ -114,6 +133,7 @@ public final class BookingWildFly36Deployment {
         indexClass(indexer, BookingSessionComponentProbe.class);
         indexClass(indexer, BookingSeamSessionProbeServlet.class);
         indexClass(indexer, BookingLoginProbeServlet.class);
+        indexClass(indexer, HotelOidcServlet.class);
         indexClass(indexer, SeamUiShowcaseBean.class);
         indexClass(indexer, MapCacheProvider.class);
         indexClass(indexer, AbstractScanner.class);

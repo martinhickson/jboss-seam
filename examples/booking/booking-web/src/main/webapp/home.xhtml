@@ -38,6 +38,16 @@
                         <li>demo/demo</li>
                     </ul>
                 </div>
+                <div class="notes">
+                    <h:outputLink id="oidcLogin" value="oidc/login"
+                            rendered="#{facesContext.externalContext.initParameterMap['oidc.enabled'] eq 'true'}">
+                        Sign in with the identity provider
+                    </h:outputLink>
+                </div>
+                <div class="errors">
+                    <h:outputText value="Identity provider login failed."
+                            rendered="#{param.oidc eq 'failed'}"/>
+                </div>
 			</fieldset>
             </h:form>
 		</div>

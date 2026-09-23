@@ -77,6 +77,40 @@
         <url-pattern>/probe/login</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>HotelOidcServlet</servlet-name>
+        <servlet-class>org.jboss.seam.example.booking.test.HotelOidcServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HotelOidcServlet</servlet-name>
+        <url-pattern>/oidc/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HotelOidcServlet</servlet-name>
+        <url-pattern>/oidc/callback</url-pattern>
+    </servlet-mapping>
+
+    <context-param>
+        <param-name>oidc.enabled</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oidc.issuer</param-name>
+        <param-value>http://127.0.0.12:8080/demo-as</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oidc.client.id</param-name>
+        <param-value>seam-booking</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oidc.client.secret</param-name>
+        <param-value>seam-booking-secret</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oidc.redirect.uri</param-name>
+        <param-value>http://127.0.0.11:8080/seam-booking/oidc/callback</param-value>
+    </context-param>
+
     <!-- Security -->
     <security-constraint>
         <display-name>Restrict raw XHTML Documents</display-name>
